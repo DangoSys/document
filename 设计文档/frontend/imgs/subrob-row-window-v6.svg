@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="520" viewBox="0 0 1180 520">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#455a64"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#1565c0"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#c56a00"/>
+    </marker>
+    <style>
+      .bg { fill:#fafafa; stroke:#d8dee3; stroke-width:2; rx:12; }
+      .active { fill:#eaf4ff; stroke:#1565c0; stroke-width:2.4; rx:10; }
+      .next { fill:#fff7e8; stroke:#c56a00; stroke-width:2.2; rx:10; }
+      .later { fill:#f5f5f5; stroke:#90a4ae; stroke-width:2; rx:10; }
+      .slot { fill:#fff; stroke:#90a4ae; stroke-width:1.8; rx:8; }
+      .slotHot { fill:#ffffff; stroke:#1565c0; stroke-width:2.2; rx:8; }
+      .slotWait { fill:#ffffff; stroke:#c56a00; stroke-width:2.1; rx:8; }
+      .exec { fill:#ffffff; stroke:#455a64; stroke-width:2; rx:8; }
+      .scheduler { fill:#ffffff; stroke:#1565c0; stroke-width:2.3; rx:10; }
+      .gate { fill:#ffffff; stroke:#263238; stroke-width:2; rx:8; }
+      .t { font:700 16px "Microsoft YaHei", Arial, sans-serif; fill:#111; text-anchor:middle; }
+      .s { font:13px "Microsoft YaHei", Arial, sans-serif; fill:#455a64; text-anchor:middle; }
+      .l { stroke:#455a64; stroke-width:2; fill:none; marker-end:url(#arrow); }
+      .blue { stroke:#1565c0; marker-end:url(#arrow-blue); }
+      .orange { stroke:#c56a00; marker-end:url(#arrow-orange); }
+      .dash { stroke-dasharray:7 6; }
+    </style>
+  </defs>
+
+  <rect x="24" y="24" width="1132" height="472" class="bg"/>
+
+  <rect x="70" y="70" width="650" height="112" class="active"/>
+  <text x="110" y="105" class="t">row0</text>
+  <text x="110" y="131" class="s">active</text>
+  <rect x="170" y="96" width="118" height="58" class="slotHot"/>
+  <text x="229" y="120" class="t">slot0</text>
+  <text x="229" y="142" class="s">MVIN</text>
+  <rect x="310" y="96" width="118" height="58" class="slotHot"/>
+  <text x="369" y="120" class="t">slot1</text>
+  <text x="369" y="142" class="s">PRELOAD</text>
+  <rect x="450" y="96" width="118" height="58" class="slotHot"/>
+  <text x="509" y="120" class="t">slot2</text>
+  <text x="509" y="142" class="s">MSET</text>
+  <rect x="590" y="96" width="96" height="58" class="slotHot"/>
+  <text x="638" y="120" class="t">slot3</text>
+  <text x="638" y="142" class="s">COMPUTE</text>
+
+  <rect x="70" y="226" width="650" height="112" class="next"/>
+  <text x="110" y="261" class="t">row1</text>
+  <text x="110" y="287" class="s">after row0</text>
+  <rect x="170" y="252" width="118" height="58" class="slotWait"/>
+  <text x="229" y="276" class="t">slot0</text>
+  <text x="229" y="298" class="s">COMPUTE</text>
+  <rect x="310" y="252" width="118" height="58" class="slotWait"/>
+  <text x="369" y="276" class="t">slot1</text>
+  <text x="369" y="298" class="s">MVOUT</text>
+  <rect x="450" y="252" width="118" height="58" class="slotWait"/>
+  <text x="509" y="276" class="t">slot2</text>
+  <text x="509" y="298" class="s">MSET_FREE</text>
+  <rect x="590" y="252" width="96" height="58" class="slot"/>
+  <text x="638" y="276" class="t">slot3</text>
+  <text x="638" y="298" class="s">invalid</text>
+
+  <rect x="70" y="382" width="650" height="72" class="later"/>
+  <text x="110" y="414" class="t">row2</text>
+  <text x="110" y="438" class="s">after row1</text>
+  <rect x="170" y="396" width="118" height="44" class="slot"/>
+  <text x="229" y="423" class="s">MVOUT</text>
+  <rect x="310" y="396" width="118" height="44" class="slot"/>
+  <text x="369" y="423" class="s">FREE</text>
+  <rect x="450" y="396" width="118" height="44" class="slot"/>
+  <text x="509" y="423" class="s">SYNC</text>
+  <rect x="590" y="396" width="96" height="44" class="slot"/>
+  <text x="638" y="423" class="s">invalid</text>
+
+  <rect x="790" y="210" width="156" height="96" class="scheduler"/>
+  <text x="868" y="248" class="t">GlobalScheduler</text>
+  <text x="868" y="275" class="s">domain route</text>
+
+  <rect x="1012" y="92" width="104" height="48" class="exec"/>
+  <text x="1064" y="122" class="t">Mem</text>
+  <rect x="1012" y="214" width="104" height="48" class="exec"/>
+  <text x="1064" y="244" class="t">Ball</text>
+  <rect x="1012" y="336" width="104" height="48" class="exec"/>
+  <text x="1064" y="366" class="t">GP</text>
+
+  <path d="M720 126 H756 V232 H790" class="l blue"/>
+  <path d="M720 282 H790" class="l orange"/>
+  <path d="M720 418 H756 V296 H790" class="l"/>
+
+  <path d="M946 238 H980 V116 H1012" class="l blue"/>
+  <path d="M946 258 H1012" class="l"/>
+  <path d="M946 278 H980 V360 H1012" class="l orange"/>
+
+  <rect x="790" y="386" width="156" height="52" class="gate"/>
+  <text x="868" y="407" class="t">row order</text>
+  <text x="868" y="428" class="s">row0 → row1 → row2</text>
+
+  <path d="M395 182 V226" class="l orange"/>
+  <path d="M395 338 V382" class="l orange"/>
+</svg>

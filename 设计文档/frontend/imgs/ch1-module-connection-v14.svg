@@ -1,0 +1,171 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="820" viewBox="0 0 1280 820">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,8 L11,4 z" fill="#263238"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,8 L11,4 z" fill="#1565c0"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,8 L11,4 z" fill="#c56a00"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,8 L11,4 z" fill="#6a45b8"/>
+    </marker>
+    <style>
+      .page { fill: #fafafa; stroke: #d8dee3; stroke-width: 2; rx: 12; }
+    .npu { fill: #ffffff; stroke: #37474f; stroke-width: 2.1; rx: 10; }
+      .zoom { fill: none; stroke: #546e7a; stroke-width: 2.3; stroke-dasharray: 10 7; rx: 14; }
+      .external { fill: #ffffff; stroke: #90a4ae; stroke-width: 2.1; rx: 14; }
+      .frontend { fill: #eaf4ff; stroke: #1565c0; stroke-width: 2.3; rx: 10; }
+      .memory { fill: #fff5e5; stroke: #c56a00; stroke-width: 2.3; rx: 10; }
+      .arch { fill: #f3efff; stroke: #6a45b8; stroke-width: 2.3; rx: 10; }
+      .host { fill: #ffffff; stroke: #37474f; stroke-width: 2.1; rx: 10; }
+      .inner { fill: #ffffff; stroke: #78909c; stroke-width: 1.8; rx: 8; }
+      .label { font: 700 20px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #111; }
+      .module { font: 700 16px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #111; text-anchor: middle; }
+      .text { font: 14px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #333; text-anchor: middle; }
+      .leftText { font: 14px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #333; }
+      .small { font: 13px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #455a64; }
+      .tag { fill: #fafafa; stroke: none; }
+      .line { stroke: #263238; stroke-width: 2.15; fill: none; marker-end: url(#arrow); }
+      .blue { stroke: #1565c0; marker-end: url(#arrow-blue); }
+      .orange { stroke: #c56a00; marker-end: url(#arrow-orange); }
+      .purple { stroke: #6a45b8; marker-end: url(#arrow-purple); }
+      .dash { stroke-dasharray: 8 6; }
+      .thin { stroke-width: 1.75; }
+      .rocket { fill: none; stroke: #37474f; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+      .flame { fill: #ffb74d; stroke: #c56a00; stroke-width: 1.5; }
+      .chipText { font: 700 12px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; fill: #37474f; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect x="24" y="24" width="1232" height="772" class="page"/>
+
+  <!-- Upper part: macro architecture. RoCC is outside NPU and has the same height. -->
+  <rect x="64" y="54" width="164" height="318" class="host"/>
+  <text x="146" y="100" class="label" text-anchor="middle">RoCC</text>
+  <text x="146" y="126" class="text">Rocket Chip</text>
+  <text x="146" y="148" class="text">host interface</text>
+  <g transform="translate(116 198)">
+    <path class="rocket" d="M30 0 C50 18 54 52 36 78 C18 60 14 26 30 0 Z"/>
+    <path class="rocket" d="M24 54 L7 68 L20 74"/>
+    <path class="rocket" d="M42 54 L59 68 L46 74"/>
+    <circle cx="34" cy="28" r="7" class="rocket"/>
+    <path class="flame" d="M30 80 C26 92 34 102 34 110 C42 98 43 90 38 80 Z"/>
+  </g>
+
+  <rect x="282" y="54" width="898" height="318" class="npu"/>
+    <g transform="translate(342 78) scale(0.82)">
+    <rect x="0" y="0" width="78" height="78" rx="10" fill="none" stroke="#37474f" stroke-width="2.2"/>
+    <rect x="18" y="18" width="42" height="42" rx="6" fill="none" stroke="#37474f" stroke-width="2.2"/>
+    <path class="rocket" d="M8 18 H0 M8 32 H0 M8 46 H0 M8 60 H0"/>
+    <path class="rocket" d="M78 18 H70 M78 32 H70 M78 46 H70 M78 60 H70"/>
+    <path class="rocket" d="M18 8 V0 M32 8 V0 M46 8 V0 M60 8 V0"/>
+    <path class="rocket" d="M18 78 V70 M32 78 V70 M46 78 V70 M60 78 V70"/>
+    <text x="39" y="43" class="chipText">NPU</text>
+  </g>
+
+  <rect id="macro-frontend" x="326" y="126" width="230" height="188" class="frontend"/>
+  <text x="441" y="160" class="label" text-anchor="middle">前端域</text>
+  <rect x="352" y="184" width="80" height="44" class="inner"/>
+  <text x="392" y="211" class="text">Decoder</text>
+  <rect x="452" y="184" width="80" height="44" class="inner"/>
+  <text x="492" y="211" class="text">Scheduler</text>
+  <rect x="352" y="246" width="80" height="44" class="inner"/>
+  <text x="392" y="273" class="text">ROB</text>
+  <rect x="452" y="246" width="80" height="44" class="inner"/>
+  <text x="492" y="273" class="text">SubROB</text>
+
+  <rect x="662" y="126" width="214" height="188" class="memory"/>
+  <text x="769" y="160" class="label" text-anchor="middle">内存域</text>
+  <rect x="688" y="184" width="72" height="44" class="inner"/>
+  <text x="724" y="211" class="text">RS</text>
+  <rect x="778" y="184" width="72" height="44" class="inner"/>
+  <text x="814" y="211" class="text">DMA</text>
+  <rect x="688" y="246" width="162" height="44" class="inner"/>
+  <text x="769" y="273" class="text">Mem Router</text>
+
+  <rect x="968" y="126" width="172" height="188" class="arch"/>
+  <text x="1054" y="160" class="label" text-anchor="middle">计算域</text>
+  <rect x="992" y="184" width="56" height="44" class="inner"/>
+  <text x="1020" y="211" class="text">Ball</text>
+  <rect x="1064" y="184" width="56" height="44" class="inner"/>
+  <text x="1092" y="211" class="text">GP</text>
+  <rect x="992" y="246" width="128" height="44" class="inner"/>
+  <text x="1056" y="273" class="text">Local RS</text>
+
+  <path d="M228 188 H326" class="line blue"/>
+  <path d="M326 218 H228" class="line thin"/>
+
+  <path d="M556 184 H662" class="line orange"/>
+  <path d="M662 214 H556" class="line orange dash"/>
+
+  <path d="M500 126 V104 H1016 V126" class="line purple"/>
+  <path d="M1092 126 V80 H474 V126" class="line purple dash"/>
+
+  <path d="M876 210 H968" class="line"/>
+  <path d="M968 240 H876" class="line dash"/>
+
+  <path d="M1048 314 V350 H492 V314" class="line blue dash"/>
+
+  <!-- Lower part: frontend detail and external execution domains. -->
+  <rect x="64" y="432" width="806" height="316" class="zoom"/>
+
+  <rect x="116" y="482" width="210" height="78" class="frontend"/>
+  <text x="221" y="512" class="module">GlobalDecoder</text>
+  <text x="221" y="539" class="text">全局解码器</text>
+
+  <rect x="406" y="482" width="210" height="78" class="frontend"/>
+  <text x="511" y="512" class="module">GlobalScheduler</text>
+  <text x="511" y="539" class="text">全局调度器</text>
+
+  <rect x="406" y="640" width="210" height="68" class="inner"/>
+  <text x="511" y="666" class="module">GlobalROB</text>
+  <text x="511" y="690" class="text">主指令窗口</text>
+
+  <rect x="116" y="640" width="210" height="68" class="inner"/>
+  <text x="221" y="666" class="module">SubROB</text>
+  <text x="221" y="690" class="text">微指令窗口</text>
+
+  <rect x="654" y="640" width="184" height="68" class="inner"/>
+  <text x="746" y="662" class="module">BAT /</text>
+  <text x="746" y="684" class="module">Scoreboard</text>
+
+  <rect x="920" y="432" width="260" height="316" class="external"/>
+  <rect x="984" y="462" width="132" height="56" class="arch"/>
+  <text x="1050" y="496" class="module">Ball</text>
+  <rect x="984" y="570" width="132" height="56" class="memory"/>
+  <text x="1050" y="604" class="module">Mem</text>
+  <rect x="984" y="678" width="132" height="56" class="arch"/>
+  <text x="1050" y="712" class="module">GP</text>
+
+  <!-- Internal frontend connections -->
+  <path d="M326 521 H406" class="line blue"/>
+  <path d="M510 560 V640" class="line"/>
+
+  <path d="M221 640 V604 H511 V560" class="line blue"/>
+  
+  <path d="M326 684 H406" class="line blue dash"/>
+  
+  <path d="M616 660 H654" class="line"/>
+  <path d="M654 688 H616" class="line dash"/>
+    
+  <!-- Issue lanes from Scheduler to external domains. -->
+  <path d="M616 498 H900 V490 H984" class="line purple"/>
+  <path d="M616 521 H884 V598 H984" class="line orange"/>
+  <path d="M616 544 H868 V706 H984" class="line purple"/>
+
+  <!-- Completion lanes return to the Scheduler top edge on separated rails. -->
+  <path d="M1116 490 H1144 V450 H556 V482" class="line purple dash"/>
+  <path d="M1116 598 H1162 V442 H536 V482" class="line orange dash"/>
+  <path d="M1116 706 H1180 V434 H516 V482" class="line purple dash"/>
+
+  <!-- Ball-generated micro-ops return directly to SubROB. -->
+  <path d="M984 510 H910 V760 H221 V708" class="line blue dash"/>
+
+  <!-- Zoom relation from macro frontend to frontend detail box. -->
+  <path d="M441 314 V432" class="line dash"/>
+</svg>
+
+

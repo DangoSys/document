@@ -1,0 +1,40 @@
+{
+  "recentFiles": [
+    {
+      "basename": "编译器",
+      "path": "设计文档/编译器/编译器.md"
+    },
+    {
+      "basename": "banner",
+      "path": "设计文档/编译器/imgs/banner.avif"
+    },
+    {
+      "basename": "仓库概览与环境搭建",
+      "path": "教程/仓库概览与环境搭建.md"
+    },
+    {
+      "basename": "logo-darkblue",
+      "path": "resource/images/logo-darkblue.png"
+    },
+    {
+      "basename": "logo-blue",
+      "path": "resource/images/logo-blue.png"
+    },
+    {
+      "basename": "image1-2",
+      "path": "教程/imgs/image1-2.png"
+    },
+    {
+      "basename": "image1-1",
+      "path": "教程/imgs/image1-1.png"
+    },
+    {
+      "basename": "frontend_dataflow_architecture",
+      "path": "设计文档/frontend/frontend_dataflow_architecture.md"
+    }
+  ],
+  "omittedPaths": [],
+  "omittedTags": [],
+  "updateOn": "file-open",
+  "omitBookmarks": false
+}

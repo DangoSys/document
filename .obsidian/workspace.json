@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Buckyball.md",
-                "mode": "source",
+                "file": "设计文档/编译器/编译器.md",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Buckyball"
+              "title": "编译器"
             }
           }
         ]
@@ -73,6 +73,16 @@
               "icon": "lucide-bookmark",
               "title": "书签"
             }
+          },
+          {
+            "id": "fc5296009cf70fbc",
+            "type": "leaf",
+            "state": {
+              "type": "recent-files",
+              "state": {},
+              "icon": "clock",
+              "title": "Recent files"
+            }
           }
         ]
       }
@@ -94,7 +104,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Buckyball.md",
+                "file": "教程/仓库概览与环境搭建.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +114,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Buckyball 的反向链接列表"
+              "title": "仓库概览与环境搭建 的反向链接列表"
             }
           },
           {
@@ -191,9 +201,41 @@
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
       "bases:新建数据库": false,
-      "obsidian-git:Open Git source control": false
+      "obsidian-git:Open Git source control": false,
+      "obsidian42-brat:BRAT": false,
+      "obsidian-excalidraw-plugin:新建绘图文件": false,
+      "publish:发布更改": false,
+      "markdown-importer:打开 Markdown 格式转换器": false,
+      "quartz-syncer:Quartz Syncer publication center": false,
+      "yet-another-memos-sync:智能同步备忘录": false
     }
   },
   "active": "007b0d7083acf013",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "设计文档/编译器/编译器.md",
+    "设计文档/编译器/imgs/banner.avif",
+    "教程/仓库概览与环境搭建.md",
+    "resource/images/logo-darkblue.png",
+    "resource/images/logo-blue.png",
+    "resource/images/logo-long.png",
+    "resource/images",
+    "resource",
+    "设计文档/编译器/imgs/未命名.md",
+    "设计文档/编译器/imgs",
+    "设计文档/编译器",
+    "未命名.base",
+    "教程/imgs/image1-2.png",
+    "教程/imgs/image1-1.png",
+    "教程/imgs/image1-3.png",
+    "教程/imgs",
+    "设计文档/frontend/frontend_dataflow_architecture.md",
+    "Excalidraw/Drawing 2026-06-28 15.09.19.excalidraw.md",
+    "Excalidraw",
+    "设计文档/frontend/imgs/subrob-row-window-v6.svg",
+    "设计文档/frontend/imgs/micro-life-split-v2.svg",
+    "设计文档/frontend/imgs/micro-life-schedule-v2.svg",
+    "设计文档/frontend/imgs",
+    "设计文档/frontend",
+    "设计文档"
+  ]
 }

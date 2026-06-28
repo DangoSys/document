@@ -1,0 +1,14 @@
+{
+  "profiles": [],
+  "attachmentFolderPath": "attachments",
+  "createMissingDailyNotes": true,
+  "useCalloutFormat": false,
+  "useListCalloutFormat": false,
+  "skipImages": false,
+  "enableAutoSyncOnStartup": false,
+  "startupSyncDelay": 5,
+  "skipIfSyncedToday": true,
+  "periodicSyncInterval": 0,
+  "lastSyncByProfile": {},
+  "lastSyncDate": ""
+}
