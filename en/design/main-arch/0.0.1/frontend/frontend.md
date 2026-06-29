@@ -1,6 +1,6 @@
 # BB Frontend Domain Architecture
 
-> Pending translation. See [中文版](zh/设计文档/主线架构/0.0.1/frontend/frontend.md).
+> Pending translation. See [中文版](前端域架构.md).
 
 ## 1 Introduction
 

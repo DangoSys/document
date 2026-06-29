@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "zh/教程/1-什么是Ball & 如何写一个Ball.md",
+                "file": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
                 "mode": "preview",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "1-什么是Ball & 如何写一个Ball"
+              "title": "前端域架构"
             }
           }
         ]
@@ -210,10 +210,11 @@
   },
   "active": "6f722e71b1ecbe00",
   "lastOpenFiles": [
-    "zh/设计文档/主线架构/0.0.1/frontend/frontend.md",
     "zh/设计文档/主线架构/0.0.1/Overview/0_Overview.md",
-    "zh/设计文档/主线架构/0.0.1/Overview/1_ISA.md",
+    "en/design/main-arch/0.0.1/frontend/frontend.md",
+    "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
     "zh/教程/1-什么是Ball & 如何写一个Ball.md",
+    "zh/设计文档/主线架构/0.0.1/Overview/1_ISA.md",
     "zh/设计文档/主线架构/0.0.1/boot流程/Overview.md",
     "zh/设计文档/主线架构/0.0.1/frontend/images/subrob-row-window-v6.svg",
     "Pasted image 20260629173705.png",
@@ -227,7 +228,6 @@
     "en/design/chips/pebble/ISA.md",
     "en/design/chips/pebble/overview.md",
     "en/design/main-arch/0.0.1/compiler/compiler.md",
-    "en/design/main-arch/0.0.1/frontend/frontend.md",
     "en/design/main-arch/0.0.1/boot-flow/overview.md",
     "en/design/main-arch/0.0.1/overview/ISA.md",
     "en/design/main-arch/0.0.1/overview/overview.md",
