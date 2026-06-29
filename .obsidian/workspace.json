@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "a77eae21ee045087",
+        "id": "348425d9171ad037",
         "type": "tabs",
         "children": [
           {
-            "id": "54e502c4e2b4bc06",
+            "id": "a7c0d4be51134970",
             "type": "leaf",
             "state": {
-              "type": "split-diff-view",
+              "type": "markdown",
               "state": {
-                "aFile": ".obsidian/workspace.json",
-                "bFile": ".obsidian/workspace.json",
-                "aRef": ""
+                "file": "zh/教程/什么是Ball & 如何写一个Ball.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "diff",
-              "title": "Diff: workspace.json  (Working Tree)"
+              "icon": "lucide-file",
+              "title": "什么是Ball & 如何写一个Ball"
             }
           }
         ]
@@ -208,7 +208,7 @@
       "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "54e502c4e2b4bc06",
+  "active": "a7c0d4be51134970",
   "lastOpenFiles": [
     "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
     "zh/教程/仓库概览与环境搭建.md",

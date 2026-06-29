@@ -1,6 +1,10 @@
 {
   "recentFiles": [
     {
+      "basename": "什么是Ball & 如何写一个Ball",
+      "path": "zh/教程/什么是Ball & 如何写一个Ball.md"
+    },
+    {
       "basename": "前端域架构",
       "path": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md"
     },
@@ -27,10 +31,6 @@
     {
       "basename": "frontend",
       "path": "en/design/main-arch/0.0.1/frontend/frontend.md"
-    },
-    {
-      "basename": "什么是Ball & 如何写一个Ball",
-      "path": "zh/教程/什么是Ball & 如何写一个Ball.md"
     },
     {
       "basename": "ISA",
