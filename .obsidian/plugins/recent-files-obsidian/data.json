@@ -1,20 +1,20 @@
 {
   "recentFiles": [
     {
-      "basename": "kernel",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/kernel.md"
+      "basename": "Overview",
+      "path": "zh/设计文档/主线架构/0.0.1/编译器/Overview.md"
     },
     {
-      "basename": "kernel",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/images/kernel.md"
-    },
-    {
-      "basename": "compiler",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/compiler.md"
+      "basename": "banner",
+      "path": "zh/设计文档/主线架构/0.0.1/编译器/imaegs/banner.avif"
     },
     {
       "basename": "Overview",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/Overview.md"
+      "path": "zh/设计文档/具体芯片/pebble/Overview.md"
+    },
+    {
+      "basename": "ISA",
+      "path": "zh/设计文档/具体芯片/pebble/ISA.md"
     },
     {
       "basename": "ISA",
@@ -25,18 +25,6 @@
       "path": "zh/设计文档/主线架构/0.0.1/Overview/Overview.md"
     },
     {
-      "basename": "仓库概览与环境搭建",
-      "path": "zh/教程/仓库概览与环境搭建.md"
-    },
-    {
-      "basename": "workload",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/workload.md"
-    },
-    {
-      "basename": "Overview",
-      "path": "zh/设计文档/具体芯片/pebble/Overview.md"
-    },
-    {
       "basename": "banner",
       "path": "zh/设计文档/主线架构/0.0.1/Overview/images/banner.avif"
     },
@@ -45,12 +33,28 @@
       "path": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md"
     },
     {
-      "basename": "编译器",
-      "path": "zh/设计文档/主线架构/0.0.1/编译器/编译器.md"
+      "basename": "workload",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/workload.md"
     },
     {
-      "basename": "banner",
-      "path": "zh/设计文档/主线架构/0.0.1/编译器/imaegs/banner.avif"
+      "basename": "Overview",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/Overview.md"
+    },
+    {
+      "basename": "compiler",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/compiler.md"
+    },
+    {
+      "basename": "kernel",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/kernel.md"
+    },
+    {
+      "basename": "kernel",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/images/kernel.md"
+    },
+    {
+      "basename": "仓库概览与环境搭建",
+      "path": "zh/教程/仓库概览与环境搭建.md"
     },
     {
       "basename": "banner",
@@ -59,10 +63,6 @@
     {
       "basename": "什么是Ball & 如何写一个Ball",
       "path": "zh/教程/什么是Ball & 如何写一个Ball.md"
-    },
-    {
-      "basename": "ISA",
-      "path": "zh/设计文档/具体芯片/pebble/ISA.md"
     },
     {
       "basename": "README",

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "zh/设计文档/主线架构/0.0.1/工具链/kernel.md",
+                "file": "zh/设计文档/主线架构/0.0.1/编译器/Overview.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "kernel"
+              "title": "Overview"
             }
           }
         ]
@@ -210,29 +210,29 @@
   },
   "active": "b3140cd3b05c16ac",
   "lastOpenFiles": [
+    "zh/设计文档/主线架构/0.0.1/编译器/imaegs/banner.avif",
+    "zh/设计文档/具体芯片/pebble/Overview.md",
+    "zh/设计文档/具体芯片/pebble/ISA.md",
+    "zh/设计文档/主线架构/0.0.1/Overview/ISA.md",
+    "zh/设计文档/主线架构/0.0.1/Overview/Overview.md",
+    "zh/设计文档/主线架构/0.0.1/Overview/images/banner.avif",
+    "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
+    "zh/设计文档/主线架构/0.0.1/工具链/workload.md",
+    "zh/设计文档/主线架构/0.0.1/工具链/Overview.md",
+    "zh/设计文档/主线架构/0.0.1/工具链/compiler.md",
+    "zh/设计文档/主线架构/0.0.1/编译器/Overview.md",
     "zh/设计文档/主线架构/0.0.1/工具链/kernel.md",
     "Pasted Image 20260630024345_177.png",
     "zh/设计文档/主线架构/0.0.1/工具链/images/kernel.md",
     "zh/设计文档/主线架构/0.0.1/工具链/images/kernel.svg",
-    "zh/设计文档/主线架构/0.0.1/工具链/compiler.md",
-    "zh/设计文档/主线架构/0.0.1/工具链/Overview.md",
     "Excalidraw",
-    "zh/设计文档/主线架构/0.0.1/Overview/ISA.md",
-    "zh/设计文档/主线架构/0.0.1/Overview/Overview.md",
     "zh/教程/仓库概览与环境搭建.md",
-    "zh/设计文档/主线架构/0.0.1/工具链/workload.md",
-    "zh/设计文档/具体芯片/pebble/Overview.md",
-    "zh/设计文档/主线架构/0.0.1/Overview/images/banner.avif",
-    "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
-    "zh/设计文档/主线架构/0.0.1/编译器/编译器.md",
-    "zh/设计文档/主线架构/0.0.1/编译器/imaegs/banner.avif",
     "Overview 1.md",
     "zh/设计文档/主线架构/0.0.1/工具链/images/banner.jpg",
     "zh/设计文档/主线架构/0.0.1/工具链/images",
     "zh/设计文档/主线架构/0.0.1/工具链",
     "zh/设计文档/主线架构/0.0.1/Overview/images",
     "zh/教程/什么是Ball & 如何写一个Ball.md",
-    "zh/设计文档/具体芯片/pebble/ISA.md",
     "README.md",
     "en/design/main-arch/0.0.1/frontend/frontend.md",
     "zh/设计文档/主线架构/0.0.1/boot流程/Overview.md",

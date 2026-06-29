@@ -3,6 +3,7 @@ banner: "[[zh/设计文档/主线架构/0.0.1/编译器/imaegs/banner.avif]]"
 banner-height: 200
 banner_y: 45.0%
 ---
+# Overview
 本文描述 buddy 编译链如何把高层算子降到 buckyball intrinsic，再变成 RISC-V 自定义指令。入口通常是 Linalg 或已导出的 MLIR；出口是带 `@llvm.riscv.bb.*` 的 LLVM IR，经 `buddy-llc -mattr=+buddyext` 链接进 workload。
 
 中间经过 Tile 层做 shape 对齐和分块，Buckyball dialect 表达算子语义，Bank SSA 展开 bank 数据流，assign-physical-banks 绑定物理 bank ID。任何 pass 遇到 shape 或 bank 数量不匹配会直接报错，不会悄悄降级。
