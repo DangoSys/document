@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "zh/教程/0-仓库概览与环境搭建.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "0-仓库概览与环境搭建"
+              "title": "README"
             }
           }
         ]
@@ -210,6 +210,8 @@
   },
   "active": "6f722e71b1ecbe00",
   "lastOpenFiles": [
+    "zh/教程/0-仓库概览与环境搭建.md",
+    "README.md",
     "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
     "zh/设计文档/主线架构/0.0.1/Overview/0_Overview.md",
     "en/design/main-arch/0.0.1/frontend/frontend.md",
@@ -223,7 +225,6 @@
     "zh/教程/5-端到端实现 LeNet 加速 (下).md",
     "zh/教程/3-端到端实现 LeNet 加速 (上).md",
     "zh/教程/4-端到端实现 LeNet 加速 (中).md",
-    "zh/教程/0-仓库概览与环境搭建.md",
     "en/tutorial/repo-overview-and-setup.md.tmp.30668.05451ad525c0",
     "en/design/chips/pebble/ISA.md",
     "en/design/chips/pebble/overview.md",

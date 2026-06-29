@@ -1,6 +1,10 @@
 {
   "recentFiles": [
     {
+      "basename": "README",
+      "path": "README.md"
+    },
+    {
       "basename": "0-仓库概览与环境搭建",
       "path": "zh/教程/0-仓库概览与环境搭建.md"
     },
