@@ -1,0 +1,52 @@
+.site-body-left-column-site-logo {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.site-body-left-column-site-name {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  margin-bottom: 8px;
+}
+
+.lang-switcher-icon {
+  font-size: 16px;
+}
+
+.lang-switcher-select {
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+.lang-switcher-select:hover {
+  border-color: var(--text-accent);
+}
+
+.lang-switcher-select:focus {
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 2px var(--background-modifier-border);
+}
+
+.nav-folder > .nav-folder-title[data-path="en"],
+.nav-folder > .nav-folder-title[data-path="zh"] {
+  display: none;
+}
+
+.nav-folder-children:has(> .nav-folder > .nav-folder-title[data-path="en"]) > .nav-folder:has(> .nav-folder-title[data-path="en"]),
+.nav-folder-children:has(> .nav-folder > .nav-folder-title[data-path="zh"]) > .nav-folder:has(> .nav-folder-title[data-path="zh"]) {
+  display: none;
+}
