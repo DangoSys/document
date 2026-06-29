@@ -1,6 +1,10 @@
 {
   "recentFiles": [
     {
+      "basename": "前端域架构",
+      "path": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md"
+    },
+    {
       "basename": "仓库概览与环境搭建",
       "path": "zh/教程/仓库概览与环境搭建.md"
     },
@@ -19,10 +23,6 @@
     {
       "basename": "Overview",
       "path": "zh/设计文档/主线架构/0.0.1/Overview/Overview.md"
-    },
-    {
-      "basename": "前端域架构",
-      "path": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md"
     },
     {
       "basename": "frontend",

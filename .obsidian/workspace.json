@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "d56bb8e9bf1afa4b",
+        "id": "a77eae21ee045087",
         "type": "tabs",
         "children": [
           {
-            "id": "6f722e71b1ecbe00",
+            "id": "54e502c4e2b4bc06",
             "type": "leaf",
             "state": {
               "type": "split-diff-view",
               "state": {
-                "aFile": ".obsidian/plugins/recent-files-obsidian/data.json",
-                "bFile": ".obsidian/plugins/recent-files-obsidian/data.json",
+                "aFile": ".obsidian/workspace.json",
+                "bFile": ".obsidian/workspace.json",
                 "aRef": ""
               },
               "icon": "diff",
-              "title": "Diff: data.json  (Working Tree)"
+              "title": "Diff: workspace.json  (Working Tree)"
             }
           }
         ]
@@ -208,14 +208,14 @@
       "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "6f722e71b1ecbe00",
+  "active": "54e502c4e2b4bc06",
   "lastOpenFiles": [
+    "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
     "zh/教程/仓库概览与环境搭建.md",
     "zh/设计文档/具体芯片/pebble/Overview.md",
     "zh/设计文档/具体芯片/pebble/ISA.md",
     "zh/设计文档/主线架构/0.0.1/Overview/Overview.md",
     "README.md",
-    "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
     "en/design/main-arch/0.0.1/frontend/frontend.md",
     "zh/教程/什么是Ball & 如何写一个Ball.md",
     "zh/设计文档/主线架构/0.0.1/Overview/ISA.md",
