@@ -4,402 +4,57 @@ banner-height: 200
 banner_y: 45.0%
 ---
 # Overview
-本文描述 buddy 编译链如何把高层算子降到 buckyball intrinsic，再变成 RISC-V 自定义指令。入口通常是 Linalg 或已导出的 MLIR；出口是带 `@llvm.riscv.bb.*` 的 LLVM IR，经 `buddy-llc -mattr=+buddyext` 链接进 workload。
 
-中间经过 Tile 层做 shape 对齐和分块，Buckyball dialect 表达算子语义，Bank SSA 展开 bank 数据流，assign-physical-banks 绑定物理 bank ID。任何 pass 遇到 shape 或 bank 数量不匹配会直接报错，不会悄悄降级。
+Buckyball 编译器负责把模型或手写 MLIR 里的算子，逐步降到 Buckyball 自定义指令。入口通常是 `linalg.matmul`、`linalg.conv_2d_*` 这类 Linalg op，也可以从已经写好的 Tile/Buckyball MLIR 开始；出口是带 `@llvm.riscv.bb.*` 的 LLVM IR，后面再由 `buddy-translate --buddy-to-llvmir` 和 `buddy-llc -mattr=+buddyext` 生成 RISC-V 代码。
 
-## Linalg Dialect
+这条链路不是直接从 Linalg 跳到指令。中间故意分了几层：Linalg 只表达普通算子语义，Tile 负责把 shape 处理成硬件能吃的块，Buckyball high-level op 表达“我要做一次硬件算子”，Bank SSA 把片上 bank 的数据流显式写出来，physical bank assignment 再把虚拟 bank handle 绑定到具体 bank ID。这样做的好处是每一层只处理一类问题：shape 不在指令层补，bank 生命周期不在 Linalg 层猜，最终指令编码也不反过来污染高层算子语义。
 
-Linalg 层表示普通计算语义
+主流程大致如下：
 
-MNK矩阵乘输入输出：
-
-```
-input:
-  linalg.matmul
-  A: memref<MxKxf32>
-  B: memref<KxNxf32>
-  C: memref<MxNxf32>
-
-output:
-  仍是普通 memref 语义
-  C = A * B
-```
-
-## Tile Dialect
-
-Tile dialect 是硬件无关和硬件相关之间的中间层。它仍然操作 memref，但开始承担 shape 规则化、padding、分块和 partial accumulation。
-
-```jsx
--convert-linalg-to-tile
-```
-
-### `tile.tile_matmul`
-
-`tile.tile_matmul` 的输入输出：
-
-```
-input:
-  A: memref<MxKxf32>
-  B: memref<KxNxf32>
-  C: memref<MxNxf32>
-
-semantic:
-  C = A * B
+```text
+Linalg
+  |
+  | convert-linalg-to-tile
+  v
+Tile
+  |
+  | convert-tile-to-buckyball
+  v
+Buckyball high-level ops
+  |
+  | lower-buckyball-to-bank-ssa
+  v
+Bank SSA
+  |
+  | assign-physical-banks
+  v
+Buckyball ops with physical bank IDs
+  |
+  | lower-bank-ssa-to-intrinsics
+  v
+Buckyball intrinsic wrapper
+  |
+  | lower-buckyball
+  v
+LLVM IR
 ```
 
-Tile 层当前会做三类事：
+`convert-linalg-to-tile` 来自 buddy-mlir，负责把 Linalg 的 matmul、batch matmul、部分 conv2d 变成 `tile.*` op。Buckyball 自己实现的主线从 `convert-tile-to-buckyball` 开始，代码在 `compiler/src/Conversion`。如果 workload 里已经是 `tile.*` 或 `buckyball.*`，就可以从中间层开始测，不一定每次都从 Linalg 跑完整链路。
 
-1. **检查 shape**
-   
-    ```
-    A.shape = M x K
-    B.shape = K x N
-    C.shape = M x N
-    ```
-    
-2. **Pad 到 Buckyball 友好的尺寸（16 对齐）**
-   
-    ```
-    M_pad = ceil(M, 16) * 16
-    K_pad = ceil(K, 16) * 16
-    N_pad = ceil(N, 16) * 16
-    ```
-    
-    如果原始 shape 不是 16 对齐，Tile 层会：
-    
-    ```
-    alloc A_pad: M_pad x K_pad
-    alloc B_pad: K_pad x N_pad
-    alloc C_pad: M_pad x N_pad
-    fill zero
-    copy 原始 A/B 到 padded buffer 的有效区域
-    在 padded buffer 上计算
-    copy C_pad 的有效区域回原始 C
-    ```
-    
-3. **决定 tile size 并生成 `buckyball.matmul`**
-   
-    Tile 层使用的基本单位：
-    
-    ```
-    M 方向基本粒度: lane = 16
-    N 方向基本粒度: lane = 16
-    K 方向基本粒度: warp，通常也是 16 的倍数
-    ```
-    
-    Tile 层会根据 bank depth 限制选择：
-    
-    ```
-    mTileSize
-    nTileSize
-    kTileSize
-    ```
-    
-    然后生成类似：
-    
-    ```
-    for k in 0..K_pad step kTileSize:
-      for m in 0..M_pad step mTileSize:
-        for n in 0..N_pad step nTileSize:
-          aTile = A_pad[m : m + mTileSize, k : k + kTileSize]
-          bTile = B_pad[k : k + kTileSize, n : n + nTileSize]
-          cTile = C_pad[m : m + mTileSize, n : n + nTileSize]
-          buckyball.matmul aTile, bTile, cTile
-    ```
-    
-    如果 K 被拆成多个 tile，Tile 层会用 partial buffer 做累加：
-    
-    ```
-    partial = A_tile * B_tile
-    C_tile += partial
-    ```
-    
-    也就是说，K 方向 partial accumulation 属于 Tile 层职责。Buckyball 层最好保持“单次 matmul 覆盖写一个 C tile”的语义。
-    
+Tile 层是这条链路里最重要的缓冲层。比如 matmul 的原始输入可以是 `127x17 @ 17x127`，但硬件的基本粒度是 16 行、16 列和 16-byte bank row。Tile pass 会先检查 `A[M,K]`、`B[K,N]`、`C[M,N]` 是否匹配，再把 M/K/N pad 到 16 的倍数，按 bank depth 和 mvin/mvout 深度限制选择 tile size。如果 K 被拆成多段，partial accumulation 也在 Tile 层完成。这样后面的 `buckyball.matmul` 就可以保持简单语义：一次 op 只覆盖写一个规则 tile。
 
-## Buckyball Dialect
+Buckyball 层分两种形态。第一种是 high-level op，例如 `buckyball.matmul`，它仍然看起来像一个算子。第二种是 Bank SSA，例如 `buckyball.bank_mvin`、`buckyball.bank_fp2int`、`buckyball.bank_mul_warp16`、`buckyball.bank_mvout`，这里已经能看到数据先搬进 bank、量化、转置、计算、反量化、搬出的顺序。Bank SSA 里的 bank 还是虚拟 handle，不是最终物理 bank ID。
 
-由tile dialect过渡到buckyball dialect需要经过几层Pass转换
+`assign-physical-banks` 把虚拟 bank handle 分配成物理 bank ID，并插入 `buckyball.mset`。如果同一时刻需要的 bank 数超过 `bank_num`，或者 release 找不到对应 alloc，pass 会直接报错。这个行为是故意的：bank 数量和生命周期是硬件正确性问题，不应该在编译器里用默认值或兜底逻辑掩盖。
 
-### 1. High-Level Ops
+最后两步把 Buckyball op 降到 LLVM IR。`lower-bank-ssa-to-intrinsics` 把已经分配好物理 bank 的 Buckyball op 改写成 `buckyball.intr.*` 这类 intrinsic wrapper；`lower-buckyball` 再把这些 wrapper 降到 LLVM dialect 里的 RISC-V intrinsic。再往后，问题就交给 LLVM 后端和 Buckyball RISC-V 扩展处理。
 
-Buckyball high-level ops 是硬件算子的抽象表示，还没有显式 bank 生命周期，也没有物理 bank ID。
-
-矩阵乘 op：
-
-```
-buckyball.matmul A B C
-```
-
-输入输出：
-
-```
-input:
-  A: memref<MxKxf32>
-  B: memref<KxNxf32>
-  C: memref<MxNxf32>
-
-required:
-  K % 16 == 0
-  N % 16 == 0
-
-semantic:
-  C = A * B
-```
-
-一个需要明确的重要约定：
-
-```
-mul_warp16 的天然硬件粒度是 16 output columns。
-因此在 lowering 到 mul_warp16 之前，单个 buckyball.matmul 最好满足 N = 16。
-```
-
-如果 buckyball.matmul 直接拿到：
-
-```
-A: 1 x 128
-B: 128 x 96
-C: 1 x 96
-```
-
-它在语义上是合法矩阵乘，但对当前 `mul_warp16` / accumulator bank layout 来说太宽。更合理的形式是先拆成 6 个 16-column tile：
-
-```
-A[1x128] @ B[:,  0:16] -> C[:,  0:16]
-A[1x128] @ B[:, 16:32] -> C[:, 16:32]
-A[1x128] @ B[:, 32:48] -> C[:, 32:48]
-A[1x128] @ B[:, 48:64] -> C[:, 48:64]
-A[1x128] @ B[:, 64:80] -> C[:, 64:80]
-A[1x128] @ B[:, 80:96] -> C[:, 80:96]
-```
-
-每个子 op 都是：
-
-```
-MxK @ Kx16 -> Mx16
-```
-
-这和 `mul_warp16` 的硬件粒度一致。
-
-### 2. Bank SSA
-
-Bank SSA 层把 high-level `buckyball.matmul` 展开成显式 bank 数据流。这里仍然使用虚拟 bank handle，而不是最终物理 bank ID。
-
-相关 pass：
-
-```
--lower-buckyball-to-bank-ssa
-```
-
-pass 输入：
-
-```
-buckyball.matmul
-```
-
-pass 输出：
-
-```
-buckyball.bank_alloc
-buckyball.bank_mvin
-buckyball.bank_fp2int
-buckyball.bank_transpose
-buckyball.bank_mul_warp16
-buckyball.bank_int2fp
-buckyball.bank_mvout
-buckyball.bank_release
-buckyball.fence
-```
-
-当前 Bank SSA matmul lowering 的结构大致是：
-
-```
-for m in 0..M step 16:
-  for n in 0..N step 16:
-    aTile = A[m:m+16, 0:K]
-    bTile = B[0:K, n:n+16]
-    cTile = C[m:m+16, n:n+16]
-
-    aFp32 = bank_alloc(col=4)
-    bFp32 = bank_alloc(col=4)
-    aI8   = bank_alloc(col=1)
-    bI8   = bank_alloc(col=1)
-    aI8T  = bank_alloc(col=1)
-    cI32  = bank_alloc(col=4)
-    cFp32 = bank_alloc(col=4)
-
-    bank_mvin(aTile -> aFp32)
-    bank_mvin(bTile -> bFp32)
-    bank_fp2int(aFp32 -> aI8)
-    bank_fp2int(bFp32 -> bI8)
-    bank_transpose(aI8 -> aI8T)
-    bank_mul_warp16(aI8T, bI8 -> cI32)
-    bank_int2fp(cI32 -> cFp32)
-    bank_mvout(cFp32 -> cTile)
-    fence
-    bank_release(...)
-```
-
-这个 path 已经按 N 的 16-column tile 拆分。每次 `bank_mul_warp16` 只处理一个：
-
-```
-16 x K @ K x 16 -> 16 x 16
-```
-
-Bank SSA 层当前要求：
-
-```
-M % 16 == 0
-K % 16 == 0
-N % 16 == 0
-```
-
-所以不规则 M/N/K 应该在 Tile 层提前 padding。
-
-### 3. Physical Bank Assignment
-
-Bank SSA 层里的 bank 是虚拟 handle。物理 bank assignment pass 把这些虚拟 handle 分配到具体 bank ID，并插入 mset。
-
-相关 pass：
-
-```
--assign-physical-banks
-```
-
-pass 输入：
-
-```
-buckyball.bank_alloc
-buckyball.bank_release
-virtual bank handles
-```
-
-pass 输出：
-
-```
-buckyball.mset(bankId, alloc=true, row, col)
-buckyball.mset(bankId, alloc=false, row=0, col=0)
-bank_* ops 中的虚拟 handle 被替换为物理 bank ID
-```
-
-如果同时存活的 bank 超过可用物理 bank 数，pass 会报错，而不是兜底。
-
-### 4. Bank SSA To Intrinsics
-
-这个 pass 把 `buckyball.bank_*` op 降到更接近 ISA 的 intrinsic wrapper。
-
-相关 pass：
-
-```
--lower-bank-ssa-to-intrinsics
-```
-
-pass 输入：
-
-```
-buckyball.bank_mvin
-buckyball.bank_mvout
-buckyball.bank_mul_warp16
-buckyball.bank_fp2int
-buckyball.bank_int2fp
-buckyball.bank_transpose
-...
-```
-
-pass 输出：
-
-```
-buckyball.mvin
-buckyball.mvout
-buckyball.mul_warp16
-buckyball.fp2int
-buckyball.int2fp
-buckyball.transpose
-...
-```
-
-这一层已经没有虚拟 bank handle，操作数应当是物理 bank ID 和 immediate-like 参数。
-
-### 5. Intrinsics To LLVM
-
-最后 Buckyball intrinsic wrapper 会降到 LLVM intrinsic，再由 backend 选成 RISC-V 自定义指令。
-
-相关 pass：
-
-```
--lower-buckyball
-```
-
-pass 输入：
-
-```
-buckyball.mset
-buckyball.mvin
-buckyball.mvout
-buckyball.mul_warp16
-buckyball.fp2int
-buckyball.int2fp
-buckyball.transpose
-buckyball.fence
-```
-
-pass 输出：
-
-```
-@llvm.riscv.bb.mset
-@llvm.riscv.bb.mvin
-@llvm.riscv.bb.mvout
-@llvm.riscv.bb.mul.warp16
-@llvm.riscv.bb.fp2int
-@llvm.riscv.bb.int2fp
-@llvm.riscv.bb.transpose
-...
-```
-
-再经过：
-
-```
-buddy-translate --buddy-to-llvmir
-buddy-llc -mattr=+buddyext
-```
-
-最终生成 RISC-V 指令：
-
-```
-bb_mset
-bb_mvin
-bb_mvout
-bb_mul_warp16
-...
-```
-
-### Depth / Stride 约定
-
-`mvin` / `mvout` 的核心参数：
-
-```
-depth: logical bank row count
-stride: 以 16-byte bank row 为单位的行跨度
-col: logical bank 一行横跨多少个 physical bank
-```
-
-地址公式：
-
-```
-addr = base + row * col * 16 * stride + group * 16
-```
-
-对于一个 `16x16xf32` 输出 tile：
-
-```
-col = 4
-depth = 16
-stride = parent_row_stride / 16
-```
-
-每一行写：
-
-```
-4 groups * 16 bytes = 64 bytes = 16xf32
-```
+相关文档：
+- [[dialect]]：Linalg、Tile、Buckyball 三层 dialect 的定位。
+- [[convert-linalg-to-tile]]：从 Linalg 到 Tile。
+- [[convert-tile-to-buckyball]]：Tile 层 padding、tiling 和 partial accumulation。
+- [[lower-buckyball-to-bank-ssa]]：`buckyball.matmul` 到显式 bank 数据流。
+- [[assign-physical-banks]]：虚拟 bank 到物理 bank ID。
+- [[lower-bank-ssa-to-intrinsics]]：Bank SSA 到 Buckyball intrinsic wrapper。
+- [[lower-buckyball]]：Buckyball wrapper 到 LLVM IR。
+- [[report-bank-usage]]：根据 `mset` 统计 bank 使用峰值。
