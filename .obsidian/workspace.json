@@ -208,10 +208,13 @@
       "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "a7c0d4be51134970",
+  "active": "2a103d4571738831",
   "lastOpenFiles": [
-    "zh/设计文档/主线架构/0.0.1/Overview/images/banner.avif",
+    "zh/设计文档/主线架构/0.0.1/工具链/workload.md",
+    "zh/设计文档/主线架构/0.0.1/工具链/kernel.md",
+    "zh/设计文档/主线架构/0.0.1/工具链/compiler.md",
     "zh/设计文档/主线架构/0.0.1/Overview/ISA.md",
+    "zh/设计文档/主线架构/0.0.1/Overview/images/banner.avif",
     "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
     "zh/设计文档/主线架构/0.0.1/Overview/Overview.md",
     "zh/设计文档/主线架构/0.0.1/编译器/编译器.md",
@@ -250,8 +253,6 @@
     "en/design/main-arch/0.0.1/boot-flow",
     "zh/设计文档/主线架构/0.0.1/frontend/images/bat-scoreboard-clean.svg",
     "resource/images/favicon-32x32.png",
-    "en/tutorial/repo-overview-and-setup.md",
-    "en/design/compiler/compiler.md",
     "resource/images/logo-darkblue.png",
     "resource/images/logo-blue.png",
     "resource/images/logo-long.png"
