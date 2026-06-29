@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "35b30ecca9dfd83b",
+        "id": "d56bb8e9bf1afa4b",
         "type": "tabs",
         "children": [
           {
-            "id": "007b0d7083acf013",
+            "id": "6f722e71b1ecbe00",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "zh/设计文档/主线架构/0.0.1/boot流程/Overview.md",
-                "mode": "source",
+                "file": "zh/教程/1-什么是Ball & 如何写一个Ball.md",
+                "mode": "preview",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "Overview"
+              "title": "1-什么是Ball & 如何写一个Ball"
             }
           }
         ]
@@ -205,21 +205,24 @@
       "obsidian42-brat:BRAT": false,
       "obsidian-excalidraw-plugin:新建绘图文件": false,
       "publish:发布更改": false,
-      "markdown-importer:打开 Markdown 格式转换器": false,
-      "quartz-syncer:Quartz Syncer publication center": false,
-      "yet-another-memos-sync:智能同步备忘录": false
+      "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "007b0d7083acf013",
+  "active": "6f722e71b1ecbe00",
   "lastOpenFiles": [
-    "zh/设计文档/主线架构/0.0.1/编译器/编译器.md",
     "zh/设计文档/主线架构/0.0.1/frontend/frontend.md",
+    "zh/设计文档/主线架构/0.0.1/Overview/0_Overview.md",
+    "zh/设计文档/主线架构/0.0.1/Overview/1_ISA.md",
+    "zh/教程/1-什么是Ball & 如何写一个Ball.md",
+    "zh/设计文档/主线架构/0.0.1/boot流程/Overview.md",
+    "zh/设计文档/主线架构/0.0.1/frontend/images/subrob-row-window-v6.svg",
+    "Pasted image 20260629173705.png",
+    "zh/设计文档/主线架构/0.0.1/编译器/编译器.md",
     "zh/教程/2-Ball的仿真，验证，评估.md",
     "zh/教程/5-端到端实现 LeNet 加速 (下).md",
     "zh/教程/3-端到端实现 LeNet 加速 (上).md",
     "zh/教程/4-端到端实现 LeNet 加速 (中).md",
     "zh/教程/0-仓库概览与环境搭建.md",
-    "zh/教程/1-什么是Ball & 如何写一个Ball.md",
     "en/tutorial/repo-overview-and-setup.md.tmp.30668.05451ad525c0",
     "en/design/chips/pebble/ISA.md",
     "en/design/chips/pebble/overview.md",
@@ -236,12 +239,9 @@
     "en/design/main-arch/0.0.1/boot-flow",
     "en/design/main-arch/0.0.1",
     "en/design/main-arch",
-    "zh/设计文档/主线架构/0.0.1/Overview/1_ISA.md",
     "zh/设计文档/具体芯片/pebble/0_Overview.md",
     "zh/设计文档/具体芯片/pebble/1_ISA.md",
     "zh/设计文档/主线架构/0.0.1/Overview",
-    "zh/设计文档/主线架构/0.0.1/Overview/0_Overview.md",
-    "zh/设计文档/主线架构/0.0.1/boot流程/Overview.md",
     "zh/设计文档/主线架构/0.0.1/frontend/images/bat-scoreboard-clean.svg",
     "resource/images/favicon-32x32.png",
     "en/tutorial/repo-overview-and-setup.md",
@@ -253,10 +253,7 @@
     "resource/images/logo-darkblue.png",
     "resource/images/logo-blue.png",
     "resource/images/logo-long.png",
-    "设计文档/编译器/imgs/未命名.md",
     "zh/教程/images/image1-2.png",
-    "zh/教程/images/image1-1.png",
-    "zh/教程/images/image1-3.png",
-    "zh/设计文档/主线架构/0.0.1/frontend/images/subrob-row-window-v6.svg"
+    "zh/教程/images/image1-1.png"
   ]
 }

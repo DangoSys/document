@@ -1,3 +1,7 @@
+
+
+<div style="background:#f0f0f0;border-radius:8px;padding:16px;display:inline-block"><b>Thanks to</b><br><br><a href="https://github.com/Gekyume777" style="text-decoration:none;color:inherit;margin-right:20px"><img src="https://avatars.githubusercontent.com/u/147403260?v=4" width="48" height="48" style="border-radius:50%;vertical-align:middle"> <span style="vertical-align:middle">Patrick.Qian</span></div>
+
 # BB 前端域架构
 
 ## 1 导言
