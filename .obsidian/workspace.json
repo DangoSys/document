@@ -11,10 +11,14 @@
             "id": "b3140cd3b05c16ac",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "zh/设计文档/主线架构/0.0.1/工具链/kernel.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "kernel"
             }
           }
         ]
@@ -204,7 +208,7 @@
       "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "2a103d4571738831",
+  "active": "b3140cd3b05c16ac",
   "lastOpenFiles": [
     "zh/设计文档/主线架构/0.0.1/工具链/kernel.md",
     "Pasted Image 20260630024345_177.png",
