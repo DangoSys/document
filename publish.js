@@ -118,15 +118,46 @@ function hideLanguageFolders() {
   });
 }
 
+function insertBanner() {
+  if (document.querySelector(".publish-banner")) return;
+
+  var fm = document.querySelector(".frontmatter");
+  if (!fm) return;
+
+  var text = fm.textContent || "";
+  var m = text.match(/banner:\s*(.+)/);
+  if (!m) return;
+
+  var bannerPath = m[1].trim().replace(/^["']|["']$/g, "").replace(/^\[\[|\]\]$/g, "");
+  var hm = text.match(/banner-height:\s*(\d+)/);
+  var ym = text.match(/banner_y:\s*([\d.]+)/);
+  var height = hm ? hm[1] : "200";
+  var ypos = ym ? ym[1] : "50";
+
+  var img = document.createElement("img");
+  img.className = "publish-banner";
+  img.src = "https://publish-01.obsidian.md/access/cc4279b5ea98c87259c868da91291e6f/" + encodeURI(bannerPath);
+  img.style.cssText = "width:100%;max-width:100%;height:" + height + "px;object-fit:cover;object-position:center " + ypos + "%;border-radius:8px;margin-bottom:16px;display:block;box-sizing:border-box";
+
+  var sizer = document.querySelector(".markdown-preview-sizer");
+  if (sizer) {
+    sizer.prepend(img);
+  } else {
+    fm.insertAdjacentElement("afterend", img);
+  }
+}
+
 function init() {
   insertSwitcher();
   hideLanguageFolders();
+  insertBanner();
 
   const observer = new MutationObserver(() => {
     if (!document.querySelector(".lang-switcher")) {
       insertSwitcher();
     }
     hideLanguageFolders();
+    insertBanner();
   });
   observer.observe(document.body, { childList: true, subtree: true });
 }

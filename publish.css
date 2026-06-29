@@ -7,14 +7,8 @@
   overflow: hidden;
 }
 
-.site-body-right-column {
-  display: none;
-}
 
-.site-body-center-column {
-  max-width: 100%;
-  width: 100%;
-}
+
 
 .lang-switcher {
   display: flex;
@@ -46,6 +40,13 @@
 .lang-switcher-select:focus {
   border-color: var(--text-accent);
   box-shadow: 0 0 0 2px var(--background-modifier-border);
+}
+
+.publish-banner {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  display: block !important;
 }
 
 .nav-folder > .nav-folder-title[data-path="en"],
