@@ -1,16 +1,24 @@
 {
   "recentFiles": [
     {
+      "basename": "仓库概览与环境搭建",
+      "path": "zh/教程/仓库概览与环境搭建.md"
+    },
+    {
+      "basename": "Overview",
+      "path": "zh/设计文档/具体芯片/pebble/Overview.md"
+    },
+    {
+      "basename": "ISA",
+      "path": "zh/设计文档/具体芯片/pebble/ISA.md"
+    },
+    {
       "basename": "README",
       "path": "README.md"
     },
     {
       "basename": "Overview",
       "path": "zh/设计文档/主线架构/0.0.1/Overview/Overview.md"
-    },
-    {
-      "basename": "仓库概览与环境搭建",
-      "path": "zh/教程/仓库概览与环境搭建.md"
     },
     {
       "basename": "前端域架构",
@@ -55,14 +63,6 @@
     {
       "basename": "端到端实现 LeNet 加速 (中)",
       "path": "zh/教程/端到端实现 LeNet 加速 (中).md"
-    },
-    {
-      "basename": "Overview",
-      "path": "zh/设计文档/具体芯片/pebble/Overview.md"
-    },
-    {
-      "basename": "ISA",
-      "path": "zh/设计文档/具体芯片/pebble/ISA.md"
     },
     {
       "basename": "bat-scoreboard-clean",
