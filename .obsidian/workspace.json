@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
-                "mode": "preview",
+                "file": "zh/教程/0-仓库概览与环境搭建.md",
+                "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "前端域架构"
+              "title": "0-仓库概览与环境搭建"
             }
           }
         ]
@@ -210,9 +210,9 @@
   },
   "active": "6f722e71b1ecbe00",
   "lastOpenFiles": [
+    "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
     "zh/设计文档/主线架构/0.0.1/Overview/0_Overview.md",
     "en/design/main-arch/0.0.1/frontend/frontend.md",
-    "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
     "zh/教程/1-什么是Ball & 如何写一个Ball.md",
     "zh/设计文档/主线架构/0.0.1/Overview/1_ISA.md",
     "zh/设计文档/主线架构/0.0.1/boot流程/Overview.md",

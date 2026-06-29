@@ -1,6 +1,10 @@
 {
   "recentFiles": [
     {
+      "basename": "0-仓库概览与环境搭建",
+      "path": "zh/教程/0-仓库概览与环境搭建.md"
+    },
+    {
       "basename": "前端域架构",
       "path": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md"
     },
@@ -47,10 +51,6 @@
     {
       "basename": "4-端到端实现 LeNet 加速 (中)",
       "path": "zh/教程/4-端到端实现 LeNet 加速 (中).md"
-    },
-    {
-      "basename": "0-仓库概览与环境搭建",
-      "path": "zh/教程/0-仓库概览与环境搭建.md"
     },
     {
       "basename": "0_Overview",
