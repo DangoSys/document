@@ -10,14 +10,13 @@
 
 `workload build` 用于编译 workload。命令会进入 `bb-tests/build`，执行 `cmake -G Ninja ..` 和 `ninja`，基于 CMake + Ninja 进行构建。用法如下：
 
-```
+```shell
 bbdev workload --build 
 bbdev workload --build '--model lenet'
 ```
 
-==参数==
-- 不带参数时，构建除了端到端模型外的所有 workload，包括 tutorial、CTest、OpTest、embench、coremark 等常规测试程序。构建结束后，会自动将 `*-baremetal`、`*-linux` 这些可执行文件同步到 `bb-tests/output/workloads`。
-- 通过 `--model` 可指定端到端模型目标，当前支持 `lenet`、`mobilenet`、`resnet`、`yolo`、`bert`、`qwen3`、`gemma4`、`deepseekr1`、`llama2`、`stable-diffusion`、`whisper`。指定 `--model` 时只构建对应 ModelTest 目标，并不会更新其它 workload 如ctest。
+不带参数时，构建除了端到端模型外的所有 workload，包括 tutorial、CTest、OpTest、embench、coremark 等常规测试程序。构建结束后，会自动将 `*-baremetal`、`*-linux` 这些可执行文件同步到 `bb-tests/output/workloads`。
+==参数 model  ==通过 `--model` 可指定端到端模型目标，当前支持 `lenet`、`mobilenet`、`resnet`、`yolo`、`bert`、`qwen3`、`gemma4`、`deepseekr1`、`llama2`、`stable-diffusion`、`whisper`。指定 `--model` 时只构建对应 ModelTest 目标，并不会更新其它 workload 如ctest。
 
 
 ## tohex

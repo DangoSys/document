@@ -44,6 +44,7 @@ bb-tests/output/kernel/fw_payload.hex
 
 其中 `.bin` 是 OpenSBI fw_payload，`.hex` 是给 FPGA 的 DDR 后门加载用的 hex 文件。
 
+> [!NOTE] 注意
 > 真实系统中提前向DDR烧录数据并不现实，具体芯片的boot流程中我们请查看对应文档。
 
 `kernel build` 的实际执行步骤如下：
@@ -73,17 +74,14 @@ bbdev workload --build '--model lenet'
 
 否则 kernel 构建时找不到模型运行文件，会直接报错。指定模型也会影响产物文件名，例如 `--model lenet` 会生成 `fw_payload-lenet.bin` 和 `fw_payload-lenet.hex`。
 
-[] TODO: 将模型构建加入自动workflow
+- [ ] TODO: 将模型构建加入自动workflow
 
-==参数2 total-hart-count==
 
-`--total-hart-count` 用于指定硬件里一共有多少个 hart。默认值等于 `visible-hart-count`。
+==参数2 total-hart-count== `--total-hart-count` 用于指定硬件里一共有多少个 hart。默认值等于 `visible-hart-count`。
 
 这个参数主要用于多核或异构核配置。硬件里可能有很多 hart，但不一定都要交给 Linux 管理。`total-hart-count` 表示硬件总数，OpenSBI 会根据这个数量处理平台初始化和 DTB 里的 hart 信息。
 
-==参数3 visible-hart-count==
-
-`--visible-hart-count` 用于指定 Linux 能看到多少个 hart，默认是 64。
+==参数3 visible-hart-count== `--visible-hart-count` 用于指定 Linux 能看到多少个 hart，默认是 64。
 
 这个参数会传给 OpenSBI 和 Linux 启动配置。Linux 启动后，只会调度这些 visible hart。其它 hart 即使硬件存在，也会在启动时从 DTB 里隐藏掉，不交给 Linux 使用。
 

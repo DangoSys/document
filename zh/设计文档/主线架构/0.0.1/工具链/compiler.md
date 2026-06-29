@@ -11,7 +11,6 @@
 1. 在 `compiler/thirdparty/buddy-mlir/build` 目录下先执行 `cmake --build . --target python-package-buddy`，构建 buddy 的 Python package。这步重新编译器前端代码。
 2. 再执行 `ninja -j$(nproc)`，编译 buddy-mlir 里的其它目标。这步更新中端与后端的代码。
 
-
 用法如下：
 
 ```bash
