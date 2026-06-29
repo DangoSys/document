@@ -5,8 +5,16 @@
       "path": "zh/设计文档/主线架构/0.0.1/工具链/kernel.md"
     },
     {
+      "basename": "kernel",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/images/kernel.md"
+    },
+    {
       "basename": "compiler",
       "path": "zh/设计文档/主线架构/0.0.1/工具链/compiler.md"
+    },
+    {
+      "basename": "Overview",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/Overview.md"
     },
     {
       "basename": "ISA",
@@ -23,10 +31,6 @@
     {
       "basename": "workload",
       "path": "zh/设计文档/主线架构/0.0.1/工具链/workload.md"
-    },
-    {
-      "basename": "Overview",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/Overview.md"
     },
     {
       "basename": "Overview",

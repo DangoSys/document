@@ -24,6 +24,8 @@ Buckyball 的 kernel 镜像主要包含三部分：第一部分是 OpenSBI，负
                             rootfs 里放 BusyBox、/init、workload 或模型文件
 ```
 
+![kernel](kernel.svg)
+
 启动流程：
 1. 系统上电，烧录 Kernel 进入 DDR。
 2. DDR烧录完成，CPU上电 reset。
@@ -44,8 +46,8 @@ bb-tests/output/kernel/fw_payload.hex
 
 其中 `.bin` 是 OpenSBI fw_payload，`.hex` 是给 FPGA 的 DDR 后门加载用的 hex 文件。
 
-> [!NOTE] 注意
-> 真实系统中提前向DDR烧录数据并不现实，具体芯片的boot流程中我们请查看对应文档。
+> [!tip] 注意
+> 真实系统中提前向DDR烧录数据并不现实，具体芯片的boot流程请查看对应文档。
 
 `kernel build` 的实际执行步骤如下：
 

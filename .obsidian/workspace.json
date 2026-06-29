@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "348425d9171ad037",
+        "id": "c3c4e1d5295d1597",
         "type": "tabs",
         "children": [
           {
-            "id": "a7c0d4be51134970",
+            "id": "207d9ebb16854ead",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -208,15 +208,19 @@
       "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "a7c0d4be51134970",
+  "active": "207d9ebb16854ead",
   "lastOpenFiles": [
+    "Pasted Image 20260630024345_177.png",
+    "zh/设计文档/主线架构/0.0.1/工具链/kernel.md",
+    "zh/设计文档/主线架构/0.0.1/工具链/images/kernel.md",
+    "zh/设计文档/主线架构/0.0.1/工具链/images/kernel.svg",
     "zh/设计文档/主线架构/0.0.1/工具链/compiler.md",
+    "zh/设计文档/主线架构/0.0.1/工具链/Overview.md",
+    "Excalidraw",
     "zh/设计文档/主线架构/0.0.1/Overview/ISA.md",
     "zh/设计文档/主线架构/0.0.1/Overview/Overview.md",
     "zh/教程/仓库概览与环境搭建.md",
-    "zh/设计文档/主线架构/0.0.1/工具链/kernel.md",
     "zh/设计文档/主线架构/0.0.1/工具链/workload.md",
-    "zh/设计文档/主线架构/0.0.1/工具链/Overview.md",
     "zh/设计文档/具体芯片/pebble/Overview.md",
     "zh/设计文档/主线架构/0.0.1/Overview/images/banner.avif",
     "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
@@ -243,18 +247,13 @@
     "en/design/chips/pebble/overview.md",
     "en/design/main-arch/0.0.1/compiler/compiler.md",
     "en/design/main-arch/0.0.1/boot-flow/overview.md",
-    "en/design/main-arch/0.0.1/overview/ISA.md",
-    "en/design/main-arch/0.0.1/overview/overview.md",
     "en/design/chips/pebble",
     "en/design/chips",
     "en/design/main-arch/0.0.1/overview",
     "en/design/main-arch/0.0.1/frontend",
     "en/design/main-arch/0.0.1/compiler",
-    "en/design/main-arch/0.0.1/boot-flow",
     "zh/设计文档/主线架构/0.0.1/frontend/images/bat-scoreboard-clean.svg",
     "resource/images/favicon-32x32.png",
-    "resource/images/logo-darkblue.png",
-    "resource/images/logo-blue.png",
-    "resource/images/logo-long.png"
+    "resource/images/logo-darkblue.png"
   ]
 }
