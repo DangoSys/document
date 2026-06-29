@@ -5,28 +5,28 @@
       "path": "README.md"
     },
     {
-      "basename": "0-仓库概览与环境搭建",
-      "path": "zh/教程/0-仓库概览与环境搭建.md"
+      "basename": "Overview",
+      "path": "zh/设计文档/主线架构/0.0.1/Overview/Overview.md"
+    },
+    {
+      "basename": "仓库概览与环境搭建",
+      "path": "zh/教程/仓库概览与环境搭建.md"
     },
     {
       "basename": "前端域架构",
       "path": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md"
     },
     {
-      "basename": "0_Overview",
-      "path": "zh/设计文档/主线架构/0.0.1/Overview/0_Overview.md"
-    },
-    {
       "basename": "frontend",
       "path": "en/design/main-arch/0.0.1/frontend/frontend.md"
     },
     {
-      "basename": "1-什么是Ball & 如何写一个Ball",
-      "path": "zh/教程/1-什么是Ball & 如何写一个Ball.md"
+      "basename": "什么是Ball & 如何写一个Ball",
+      "path": "zh/教程/什么是Ball & 如何写一个Ball.md"
     },
     {
-      "basename": "1_ISA",
-      "path": "zh/设计文档/主线架构/0.0.1/Overview/1_ISA.md"
+      "basename": "ISA",
+      "path": "zh/设计文档/主线架构/0.0.1/Overview/ISA.md"
     },
     {
       "basename": "Overview",
@@ -41,28 +41,28 @@
       "path": "zh/设计文档/主线架构/0.0.1/编译器/编译器.md"
     },
     {
-      "basename": "2-Ball的仿真，验证，评估",
-      "path": "zh/教程/2-Ball的仿真，验证，评估.md"
+      "basename": "Ball的仿真，验证，评估",
+      "path": "zh/教程/Ball的仿真，验证，评估.md"
     },
     {
-      "basename": "5-端到端实现 LeNet 加速 (下)",
-      "path": "zh/教程/5-端到端实现 LeNet 加速 (下).md"
+      "basename": "端到端实现 LeNet 加速 (下)",
+      "path": "zh/教程/端到端实现 LeNet 加速 (下).md"
     },
     {
-      "basename": "3-端到端实现 LeNet 加速 (上)",
-      "path": "zh/教程/3-端到端实现 LeNet 加速 (上).md"
+      "basename": "端到端实现 LeNet 加速 (上)",
+      "path": "zh/教程/端到端实现 LeNet 加速 (上).md"
     },
     {
-      "basename": "4-端到端实现 LeNet 加速 (中)",
-      "path": "zh/教程/4-端到端实现 LeNet 加速 (中).md"
+      "basename": "端到端实现 LeNet 加速 (中)",
+      "path": "zh/教程/端到端实现 LeNet 加速 (中).md"
     },
     {
-      "basename": "0_Overview",
-      "path": "zh/设计文档/具体芯片/pebble/0_Overview.md"
+      "basename": "Overview",
+      "path": "zh/设计文档/具体芯片/pebble/Overview.md"
     },
     {
-      "basename": "1_ISA",
-      "path": "zh/设计文档/具体芯片/pebble/1_ISA.md"
+      "basename": "ISA",
+      "path": "zh/设计文档/具体芯片/pebble/ISA.md"
     },
     {
       "basename": "bat-scoreboard-clean",

@@ -1,6 +1,6 @@
 # Pebble Overview
 
-> Pending translation. See [中文版](../../../../zh/设计文档/具体芯片/pebble/0_Overview.md).
+> Pending translation. See [中文版](zh/设计文档/具体芯片/pebble/Overview.md).
 
 This chip is developed based on main architecture v0.0.1, targeting resource-constrained edge scenarios with acceleration for CNN-class workloads.
 

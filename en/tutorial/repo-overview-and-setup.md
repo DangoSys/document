@@ -1,6 +1,6 @@
 # Repository Overview and Environment Setup
 
-> Pending translation. See [中文版](0-仓库概览与环境搭建.md).
+> Pending translation. See [中文版](仓库概览与环境搭建.md).
 
 ## What is Buckyball?
 
