@@ -1,12 +1,19 @@
 .site-body-left-column-site-logo {
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 8px;
+  float: left;
+  margin-right: 6px;
 }
 
 .site-body-left-column-site-name {
-  display: inline-block;
-  vertical-align: middle;
+  overflow: hidden;
+}
+
+.site-body-right-column {
+  display: none;
+}
+
+.site-body-center-column {
+  max-width: 100%;
+  width: 100%;
 }
 
 .lang-switcher {

@@ -7,14 +7,24 @@ const LANGUAGES = [
 
 const FILE_MAP = {
   zh: {
-    "设计文档/frontend/frontend_dataflow_architecture": "design/frontend/frontend-dataflow-architecture",
-    "设计文档/编译器/编译器": "design/compiler/compiler",
     "教程/仓库概览与环境搭建": "tutorial/repo-overview-and-setup",
+    "设计文档/主线架构/0.0.1/0_Overview/0_Overview": "design/main-arch/0.0.1/overview/overview",
+    "设计文档/主线架构/0.0.1/0_Overview/1_ISA": "design/main-arch/0.0.1/overview/ISA",
+    "设计文档/主线架构/0.0.1/1_boot流程/Overview": "design/main-arch/0.0.1/boot-flow/overview",
+    "设计文档/主线架构/0.0.1/2_frontend/frontend": "design/main-arch/0.0.1/frontend/frontend",
+    "设计文档/主线架构/0.0.1/编译器/编译器": "design/main-arch/0.0.1/compiler/compiler",
+    "设计文档/具体芯片/pebble/0_Overview": "design/chips/pebble/overview",
+    "设计文档/具体芯片/pebble/1_ISA": "design/chips/pebble/ISA",
   },
   en: {
-    "design/frontend/frontend-dataflow-architecture": "设计文档/frontend/frontend_dataflow_architecture",
-    "design/compiler/compiler": "设计文档/编译器/编译器",
     "tutorial/repo-overview-and-setup": "教程/仓库概览与环境搭建",
+    "design/main-arch/0.0.1/overview/overview": "设计文档/主线架构/0.0.1/0_Overview/0_Overview",
+    "design/main-arch/0.0.1/overview/ISA": "设计文档/主线架构/0.0.1/0_Overview/1_ISA",
+    "design/main-arch/0.0.1/boot-flow/overview": "设计文档/主线架构/0.0.1/1_boot流程/Overview",
+    "design/main-arch/0.0.1/frontend/frontend": "设计文档/主线架构/0.0.1/2_frontend/frontend",
+    "design/main-arch/0.0.1/compiler/compiler": "设计文档/主线架构/0.0.1/编译器/编译器",
+    "design/chips/pebble/overview": "设计文档/具体芯片/pebble/0_Overview",
+    "design/chips/pebble/ISA": "设计文档/具体芯片/pebble/1_ISA",
   },
 };
 
@@ -79,23 +89,12 @@ function insertSwitcher() {
 
   container.appendChild(select);
 
-  // Try multiple known Obsidian Publish selectors
-  const targets = [
-    ".site-body-left-column-site-name",
-    ".nav-view-outer",
-    ".site-body-left-column",
-    ".published-container",
-  ];
-
-  for (const sel of targets) {
-    const el = document.querySelector(sel);
-    if (el) {
-      el.insertAdjacentElement("afterend", container);
-      return;
-    }
+  const target = document.querySelector(".site-body-left-column-site-name");
+  if (target) {
+    target.insertAdjacentElement("afterend", container);
+    return;
   }
 
-  // Fallback: insert at top of body
   document.body.prepend(container);
 }
 
