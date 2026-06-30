@@ -118,33 +118,44 @@ function hideLanguageFolders() {
   });
 }
 
-function insertBanner() {
-  if (document.querySelector(".publish-banner")) return;
+function getBannerInfo(fm) {
+  const text = fm.textContent || "";
+  const match = text.match(/banner:\s*(.+)/);
+  if (!match) return null;
 
+  const path = match[1].trim().replace(/^["']|["']$/g, "").replace(/^\[\[|\]\]$/g, "");
+  const heightMatch = text.match(/banner-height:\s*(\d+)/);
+  const yMatch = text.match(/banner_y:\s*([\d.]+)/);
+
+  return {
+    path,
+    height: heightMatch ? heightMatch[1] : "200",
+    ypos: yMatch ? yMatch[1] : "50",
+  };
+}
+
+function insertBanner() {
   var fm = document.querySelector(".frontmatter");
+  document.querySelectorAll(".publish-banner").forEach((banner) => {
+    if (!fm || banner.dataset.page !== window.location.pathname) banner.remove();
+  });
   if (!fm) return;
 
-  var text = fm.textContent || "";
-  var m = text.match(/banner:\s*(.+)/);
-  if (!m) return;
+  var info = getBannerInfo(fm);
+  if (!info) return;
 
-  var bannerPath = m[1].trim().replace(/^["']|["']$/g, "").replace(/^\[\[|\]\]$/g, "");
-  var hm = text.match(/banner-height:\s*(\d+)/);
-  var ym = text.match(/banner_y:\s*([\d.]+)/);
-  var height = hm ? hm[1] : "200";
-  var ypos = ym ? ym[1] : "50";
+  var current = document.querySelector(".publish-banner");
+  if (current && current.dataset.src === info.path) return;
+  if (current) current.remove();
 
   var img = document.createElement("img");
   img.className = "publish-banner";
-  img.src = "https://publish-01.obsidian.md/access/cc4279b5ea98c87259c868da91291e6f/" + encodeURI(bannerPath);
-  img.style.cssText = "width:100%;max-width:100%;height:" + height + "px;object-fit:cover;object-position:center " + ypos + "%;border-radius:8px;margin-bottom:16px;display:block;box-sizing:border-box";
+  img.dataset.page = window.location.pathname;
+  img.dataset.src = info.path;
+  img.src = "https://publish-01.obsidian.md/access/cc4279b5ea98c87259c868da91291e6f/" + encodeURI(info.path);
+  img.style.cssText = "height:" + info.height + "px;object-fit:cover;object-position:center " + info.ypos + "%;border-radius:8px;margin-bottom:16px";
 
-  var sizer = document.querySelector(".markdown-preview-sizer");
-  if (sizer) {
-    sizer.prepend(img);
-  } else {
-    fm.insertAdjacentElement("afterend", img);
-  }
+  fm.insertAdjacentElement("afterend", img);
 }
 
 function init() {

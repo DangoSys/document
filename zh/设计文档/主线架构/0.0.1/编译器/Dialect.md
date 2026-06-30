@@ -1,4 +1,4 @@
-# dialect
+# Dialect
 
 Buckyball 编译链里主要看三层 dialect：Linalg、Tile、Buckyball。它们不是同一种抽象的不同名字，而是负责不同阶段的问题。
 

@@ -1,5 +1,5 @@
 ---
-banner: "[[zh/设计文档/主线架构/0.0.1/编译器/imaegs/banner.avif]]"
+banner: "[[zh/设计文档/主线架构/0.0.1/编译器/images/banner.avif]]"
 banner-height: 200
 banner_y: 45.0%
 ---
