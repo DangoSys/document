@@ -5,10 +5,6 @@
       "path": "zh/设计文档/主线架构/0.0.1/编译器/Overview.md"
     },
     {
-      "basename": "banner",
-      "path": "zh/设计文档/主线架构/0.0.1/编译器/imaegs/banner.avif"
-    },
-    {
       "basename": "Overview",
       "path": "zh/设计文档/具体芯片/pebble/Overview.md"
     },
