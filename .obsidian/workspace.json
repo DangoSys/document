@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "f172d3e34fdfa2e2",
+        "id": "859bad077d3d05d5",
         "type": "tabs",
         "children": [
           {
-            "id": "b3140cd3b05c16ac",
+            "id": "45c516690d561053",
             "type": "leaf",
             "state": {
               "type": "split-diff-view",
               "state": {
-                "aFile": ".obsidian/plugins/recent-files-obsidian/data.json",
-                "bFile": ".obsidian/plugins/recent-files-obsidian/data.json",
+                "aFile": ".obsidian/workspace.json",
+                "bFile": ".obsidian/workspace.json",
                 "aRef": ""
               },
               "icon": "diff",
-              "title": "Diff: data.json  (Working Tree)"
+              "title": "Diff: workspace.json  (Working Tree)"
             }
           }
         ]
@@ -208,7 +208,7 @@
       "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "b3140cd3b05c16ac",
+  "active": "45c516690d561053",
   "lastOpenFiles": [
     "zh/设计文档/主线架构/0.0.1/编译器/pass/report-bank-usage.md",
     "zh/设计文档/主线架构/0.0.1/编译器/images/banner.avif",
