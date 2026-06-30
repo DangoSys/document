@@ -1,6 +1,10 @@
 {
   "recentFiles": [
     {
+      "basename": "workload",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/workload.md"
+    },
+    {
       "basename": "Overview",
       "path": "zh/设计文档/主线架构/0.0.1/编译器/Overview.md"
     },
@@ -27,10 +31,6 @@
     {
       "basename": "前端域架构",
       "path": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md"
-    },
-    {
-      "basename": "workload",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/workload.md"
     },
     {
       "basename": "Overview",

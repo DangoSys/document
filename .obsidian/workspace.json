@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "859bad077d3d05d5",
+        "id": "1354905d7d3f8d76",
         "type": "tabs",
         "children": [
           {
-            "id": "45c516690d561053",
+            "id": "e7cd7e888bda0964",
             "type": "leaf",
             "state": {
               "type": "split-diff-view",
               "state": {
-                "aFile": ".obsidian/workspace.json",
-                "bFile": ".obsidian/workspace.json",
+                "aFile": ".obsidian/plugins/recent-files-obsidian/data.json",
+                "bFile": ".obsidian/plugins/recent-files-obsidian/data.json",
                 "aRef": ""
               },
               "icon": "diff",
-              "title": "Diff: workspace.json  (Working Tree)"
+              "title": "Diff: data.json  (Working Tree)"
             }
           }
         ]
@@ -208,8 +208,9 @@
       "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "45c516690d561053",
+  "active": "e7cd7e888bda0964",
   "lastOpenFiles": [
+    "zh/设计文档/主线架构/0.0.1/工具链/workload.md",
     "zh/设计文档/主线架构/0.0.1/编译器/pass/report-bank-usage.md",
     "zh/设计文档/主线架构/0.0.1/编译器/images/banner.avif",
     "zh/设计文档/主线架构/0.0.1/编译器/images",
@@ -238,7 +239,6 @@
     "zh/设计文档/主线架构/0.0.1/Overview/Overview.md",
     "zh/设计文档/主线架构/0.0.1/Overview/images/banner.avif",
     "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
-    "zh/设计文档/主线架构/0.0.1/工具链/workload.md",
     "zh/设计文档/主线架构/0.0.1/工具链/Overview.md",
     "zh/设计文档/主线架构/0.0.1/工具链/compiler.md",
     "Pasted Image 20260630024345_177.png",
