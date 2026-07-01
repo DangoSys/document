@@ -1,12 +1,76 @@
 {
   "recentFiles": [
     {
-      "basename": "workload",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/workload.md"
+      "basename": "ISA",
+      "path": "zh/设计文档/主线架构/0.0.1/Overview/ISA.md"
+    },
+    {
+      "basename": "riscv-isa",
+      "path": "zh/设计文档/主线架构/0.0.1/Overview/images/riscv-isa.md"
+    },
+    {
+      "basename": "banner",
+      "path": "zh/设计文档/主线架构/0.0.1/Overview/images/banner.avif"
+    },
+    {
+      "basename": "kernel",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/images/kernel.md"
+    },
+    {
+      "basename": "kernel",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/images/kernel.svg"
+    },
+    {
+      "basename": "kernel",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/kernel.md"
+    },
+    {
+      "basename": "Overview",
+      "path": "zh/设计文档/主线架构/0.0.1/Overview/Overview.md"
+    },
+    {
+      "basename": "README",
+      "path": "README.md"
+    },
+    {
+      "basename": "compiler",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/compiler.md"
+    },
+    {
+      "basename": "Overview",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/Overview.md"
     },
     {
       "basename": "Overview",
       "path": "zh/设计文档/主线架构/0.0.1/编译器/Overview.md"
+    },
+    {
+      "basename": "Dialect",
+      "path": "zh/设计文档/主线架构/0.0.1/编译器/Dialect.md"
+    },
+    {
+      "basename": "前端域架构",
+      "path": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md"
+    },
+    {
+      "basename": "端到端实现 LeNet 加速 (上)",
+      "path": "zh/教程/端到端实现 LeNet 加速 (上).md"
+    },
+    {
+      "basename": "端到端实现 LeNet 加速 (下)",
+      "path": "zh/教程/端到端实现 LeNet 加速 (下).md"
+    },
+    {
+      "basename": "端到端实现 LeNet 加速 (中)",
+      "path": "zh/教程/端到端实现 LeNet 加速 (中).md"
+    },
+    {
+      "basename": "Ball的仿真，验证，评估",
+      "path": "zh/教程/Ball的仿真，验证，评估.md"
+    },
+    {
+      "basename": "什么是Ball & 如何写一个Ball",
+      "path": "zh/教程/什么是Ball & 如何写一个Ball.md"
     },
     {
       "basename": "Overview",
@@ -17,52 +81,20 @@
       "path": "zh/设计文档/具体芯片/pebble/ISA.md"
     },
     {
-      "basename": "ISA",
-      "path": "zh/设计文档/主线架构/0.0.1/Overview/ISA.md"
-    },
-    {
-      "basename": "Overview",
-      "path": "zh/设计文档/主线架构/0.0.1/Overview/Overview.md"
-    },
-    {
-      "basename": "banner",
-      "path": "zh/设计文档/主线架构/0.0.1/Overview/images/banner.avif"
-    },
-    {
-      "basename": "前端域架构",
-      "path": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md"
-    },
-    {
-      "basename": "Overview",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/Overview.md"
-    },
-    {
-      "basename": "compiler",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/compiler.md"
-    },
-    {
-      "basename": "kernel",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/kernel.md"
-    },
-    {
-      "basename": "kernel",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/images/kernel.md"
-    },
-    {
       "basename": "仓库概览与环境搭建",
       "path": "zh/教程/仓库概览与环境搭建.md"
     },
     {
+      "basename": "image1-1",
+      "path": "zh/教程/images/image1-1.png"
+    },
+    {
+      "basename": "workload",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/workload.md"
+    },
+    {
       "basename": "banner",
       "path": "zh/设计文档/主线架构/0.0.1/工具链/images/banner.jpg"
-    },
-    {
-      "basename": "什么是Ball & 如何写一个Ball",
-      "path": "zh/教程/什么是Ball & 如何写一个Ball.md"
-    },
-    {
-      "basename": "README",
-      "path": "README.md"
     },
     {
       "basename": "frontend",
@@ -75,22 +107,6 @@
     {
       "basename": "subrob-row-window-v6",
       "path": "zh/设计文档/主线架构/0.0.1/frontend/images/subrob-row-window-v6.svg"
-    },
-    {
-      "basename": "Ball的仿真，验证，评估",
-      "path": "zh/教程/Ball的仿真，验证，评估.md"
-    },
-    {
-      "basename": "端到端实现 LeNet 加速 (下)",
-      "path": "zh/教程/端到端实现 LeNet 加速 (下).md"
-    },
-    {
-      "basename": "端到端实现 LeNet 加速 (上)",
-      "path": "zh/教程/端到端实现 LeNet 加速 (上).md"
-    },
-    {
-      "basename": "端到端实现 LeNet 加速 (中)",
-      "path": "zh/教程/端到端实现 LeNet 加速 (中).md"
     },
     {
       "basename": "bat-scoreboard-clean",
@@ -107,10 +123,6 @@
     {
       "basename": "image1-2",
       "path": "zh/教程/images/image1-2.png"
-    },
-    {
-      "basename": "image1-1",
-      "path": "zh/教程/images/image1-1.png"
     }
   ],
   "omittedPaths": [],
