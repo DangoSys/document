@@ -1,8 +1,40 @@
 {
   "recentFiles": [
     {
+      "basename": "端到端实现 LeNet 加速 (上)",
+      "path": "zh/教程/端到端实现 LeNet 加速 (上).md"
+    },
+    {
+      "basename": "Ball的仿真，验证，评估",
+      "path": "zh/教程/Ball的仿真，验证，评估.md"
+    },
+    {
+      "basename": "端到端实现 LeNet 加速 (中)",
+      "path": "zh/教程/端到端实现 LeNet 加速 (中).md"
+    },
+    {
+      "basename": "端到端实现 LeNet 加速 (下)",
+      "path": "zh/教程/端到端实现 LeNet 加速 (下).md"
+    },
+    {
+      "basename": "什么是Ball & 如何写一个Ball",
+      "path": "zh/教程/什么是Ball & 如何写一个Ball.md"
+    },
+    {
       "basename": "Overview",
       "path": "zh/设计文档/Overview.md"
+    },
+    {
+      "basename": "Overview",
+      "path": "zh/设计文档/主线架构/0.0.1/Overview/Overview.md"
+    },
+    {
+      "basename": "ISA",
+      "path": "zh/设计文档/具体芯片/pebble/ISA.md"
+    },
+    {
+      "basename": "kernel",
+      "path": "zh/设计文档/主线架构/0.0.1/工具链/kernel.md"
     },
     {
       "basename": "仓库概览与环境搭建",
@@ -33,14 +65,6 @@
       "path": "zh/设计文档/主线架构/0.0.1/工具链/images/kernel.svg"
     },
     {
-      "basename": "kernel",
-      "path": "zh/设计文档/主线架构/0.0.1/工具链/kernel.md"
-    },
-    {
-      "basename": "Overview",
-      "path": "zh/设计文档/主线架构/0.0.1/Overview/Overview.md"
-    },
-    {
       "basename": "README",
       "path": "README.md"
     },
@@ -65,32 +89,8 @@
       "path": "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md"
     },
     {
-      "basename": "端到端实现 LeNet 加速 (上)",
-      "path": "zh/教程/端到端实现 LeNet 加速 (上).md"
-    },
-    {
-      "basename": "端到端实现 LeNet 加速 (下)",
-      "path": "zh/教程/端到端实现 LeNet 加速 (下).md"
-    },
-    {
-      "basename": "端到端实现 LeNet 加速 (中)",
-      "path": "zh/教程/端到端实现 LeNet 加速 (中).md"
-    },
-    {
-      "basename": "Ball的仿真，验证，评估",
-      "path": "zh/教程/Ball的仿真，验证，评估.md"
-    },
-    {
-      "basename": "什么是Ball & 如何写一个Ball",
-      "path": "zh/教程/什么是Ball & 如何写一个Ball.md"
-    },
-    {
       "basename": "Overview",
       "path": "zh/设计文档/具体芯片/pebble/Overview.md"
-    },
-    {
-      "basename": "ISA",
-      "path": "zh/设计文档/具体芯片/pebble/ISA.md"
     },
     {
       "basename": "image1-1",

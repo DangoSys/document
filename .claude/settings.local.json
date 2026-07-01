@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:obsidian.md)",
+      "Bash(python -c \"from PIL import Image; img = Image.open\\(r'C:\\\\Users\\\\32027\\\\Desktop\\\\buckyball\\\\document\\\\resource\\\\images\\\\logo-blue.png'\\); img = img.resize\\(\\(32, 32\\), Image.LANCZOS\\); img.save\\(r'C:\\\\Users\\\\32027\\\\Desktop\\\\buckyball\\\\document\\\\favicon-32x32.png'\\)\")",
+      "Bash(pip install *)",
+      "WebFetch(domain:www.buckyball.tech)",
+      "WebFetch(domain:buckyball.tech)",
+      "mcp__visualize__read_me",
+      "WebFetch(domain:publish.obsidian.md)"
+    ]
+  }
+}
