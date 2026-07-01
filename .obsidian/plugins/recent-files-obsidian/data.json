@@ -1,12 +1,24 @@
 {
   "recentFiles": [
     {
+      "basename": "Overview",
+      "path": "zh/设计文档/Overview.md"
+    },
+    {
+      "basename": "仓库概览与环境搭建",
+      "path": "zh/教程/仓库概览与环境搭建.md"
+    },
+    {
       "basename": "ISA",
       "path": "zh/设计文档/主线架构/0.0.1/Overview/ISA.md"
     },
     {
       "basename": "riscv-isa",
       "path": "zh/设计文档/主线架构/0.0.1/Overview/images/riscv-isa.md"
+    },
+    {
+      "basename": "riscv-isa",
+      "path": "zh/设计文档/主线架构/0.0.1/Overview/images/riscv-isa.svg"
     },
     {
       "basename": "banner",
@@ -79,10 +91,6 @@
     {
       "basename": "ISA",
       "path": "zh/设计文档/具体芯片/pebble/ISA.md"
-    },
-    {
-      "basename": "仓库概览与环境搭建",
-      "path": "zh/教程/仓库概览与环境搭建.md"
     },
     {
       "basename": "image1-1",

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "zh/设计文档/主线架构/0.0.1/Overview/ISA.md",
+                "file": "zh/设计文档/Overview.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ISA"
+              "title": "Overview"
             }
           }
         ]
@@ -210,11 +210,14 @@
   },
   "active": "a2c1c0a84ad63659",
   "lastOpenFiles": [
+    "zh/教程/仓库概览与环境搭建.md",
+    "zh/设计文档/Overview.md",
+    "zh/设计文档/主线架构/0.0.1/Overview/ISA.md",
+    "未命名.md",
     "zh/设计文档/主线架构/0.0.1/Overview/images/riscv-isa.md",
     "zh/设计文档/主线架构/0.0.1/Overview/images/riscv-isa.svg",
     "zh/设计文档/主线架构/0.0.1/Overview/images/banner.avif",
     "zh/设计文档/主线架构/0.0.1/Overview/images/Drawing 2026-07-01 18.22.20.svg",
-    "zh/设计文档/主线架构/0.0.1/Overview/ISA.md",
     "Excalidraw/Drawing 2026-07-01 18.39.48.md",
     "Excalidraw/Drawing 2026-07-01 18.39.48.svg",
     "zh/设计文档/主线架构/0.0.1/Overview/images/Drawing 2026-07-01 18.39.36.md",
@@ -240,13 +243,11 @@
     "zh/教程/什么是Ball & 如何写一个Ball.md",
     "zh/设计文档/具体芯片/pebble/Overview.md",
     "zh/设计文档/具体芯片/pebble/ISA.md",
-    "zh/教程/仓库概览与环境搭建.md",
     "zh/教程/images/image1-1.png",
     "zh/设计文档/主线架构/0.0.1/工具链/workload.md",
     "zh/设计文档/主线架构/0.0.1/编译器/pass/report-bank-usage.md",
     "zh/设计文档/主线架构/0.0.1/编译器/images/banner.avif",
     "zh/设计文档/主线架构/0.0.1/编译器/images",
-    "zh/设计文档/主线架构/0.0.1/编译器/Pass/lower-buckyball-to-bank-ssa.md",
     "zh/设计文档/主线架构/0.0.1/编译器/Pass",
     "zh/设计文档/主线架构/0.0.1/编译器/pass",
     "zh/设计文档/主线架构/0.0.1/工具链/images",

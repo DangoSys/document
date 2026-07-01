@@ -23,7 +23,7 @@ buckyball的指令统一使用RISC-V的R型指令，通过RoCC协议由CPU发给
 | `rs2`    | 64  | 该寄存器为用户自由分配                            |
 | `rd`     | 64  | 该寄存器传输返回值，暂时预留，固定为 `x0`                |
 
-也就是自定义一条指令，需要遵循buckyball在`fuct7`与`rs1`的约定即可被buckyball识别并统一进行优化和调度
+也就是自定义一条指令，需要遵循buckyball在`fuct7`与`rs1`的约定即可被buckyball识别并统一进行优化和调度。
 
 ### Funct7的约定
 
