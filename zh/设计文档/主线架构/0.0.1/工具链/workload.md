@@ -6,16 +6,30 @@
 - OpTest 是编译器算子测试，用于快速验证编译器实现。输入为 MLIR，检查 Linalg、Tile、Buckyball 这些编译层级能不能正确降到 RISC-V workload。
 - ModelTest 是端到端模型测试，用于进行实际任务的性能评估。把 LeNet、YOLO、Llama、Qwen 等模型从 pytorch 编译到加速器能运行的指令流。
 
+## clean
+
+`workload clean` 用于清理 workload 输出目录，只会删除 `bb-tests/output`，不会删除 `bb-tests/build`。因此清理后会保留 CMake/Ninja 的构建缓存，下一次 `workload build` 仍可复用已有构建目录。
+
+这个命令适合在切换 chip 重新构建 workload 前使用，避免 `bb-tests/output` 中残留其它 chip 的 ELF，导致 bebop 生成测试列表时出现重复用例名。
+
+用法如下：
+
+```bash
+bbdev workload --clean
+```
+
+该 API 没有参数。
+
 ## build
 
 `workload build` 用于编译 workload。命令会进入 `bb-tests/build`，执行 `cmake -G Ninja ..` 和 `ninja`，基于 CMake + Ninja 进行构建。用法如下：
 
 ```shell
-bbdev workload --build 
-bbdev workload --build '--model lenet'
+bbdev workload --build '--chip toy'
+bbdev workload --build '--chip toy --model lenet'
 ```
 
-不带参数时，构建除了端到端模型外的所有 workload，包括 tutorial、CTest、OpTest、embench、coremark 等常规测试程序。构建结束后，会自动将 `*-baremetal`、`*-linux` 这些可执行文件同步到 `bb-tests/output/workloads`。
+`--chip` 是必填参数。不指定 `--model` 时，构建指定 chip 下除了端到端模型外的所有 workload，包括 tutorial、CTest、OpTest、embench、coremark 等常规测试程序。构建结束后，会自动将 `*-baremetal`、`*-linux` 这些可执行文件同步到 `bb-tests/output/workloads`。对于路径形态为 `*/chips/<chip>` 的 chip workload，只会同步 `--chip` 指定的 chip 目录。
 ==参数 model==通过 `--model` 可指定端到端模型目标，当前支持 `lenet`、`mobilenet`、`resnet`、`yolo`、`bert`、`qwen3`、`gemma4`、`deepseekr1`、`llama2`、`stable-diffusion`、`whisper`。指定 `--model` 时只构建对应 ModelTest 目标，并不会更新其它 workload 如ctest。
 
 
