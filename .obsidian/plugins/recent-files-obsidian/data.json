@@ -1,6 +1,10 @@
 {
   "recentFiles": [
     {
+      "basename": "Spec",
+      "path": "zh/设计文档/具体芯片/pebble/Quant Ball/Spec.md"
+    },
+    {
       "basename": "端到端实现 LeNet 加速 (上)",
       "path": "zh/教程/端到端实现 LeNet 加速 (上).md"
     },

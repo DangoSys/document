@@ -3,5 +3,5 @@
 
 设计目标：
 1. 对LeNet，ResNet，MobileNetv3，YOLO26进行优化
-2. 可部署在入门级FPGA
+2. 可部署在入门级FPGA（kintex7 xc7k160t 约 10w LUTs）
 

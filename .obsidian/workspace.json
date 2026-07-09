@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "7197a7eeb78c70c9",
+        "id": "ad51d128126581c1",
         "type": "tabs",
         "children": [
           {
-            "id": "a2c1c0a84ad63659",
+            "id": "4ada4b2fb56d670f",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "split-diff-view",
               "state": {
-                "file": "zh/设计文档/Overview.md",
-                "mode": "source",
-                "source": false
+                "aFile": ".obsidian/plugins/recent-files-obsidian/data.json",
+                "bFile": ".obsidian/plugins/recent-files-obsidian/data.json",
+                "aRef": ""
               },
-              "icon": "lucide-file",
-              "title": "Overview"
+              "icon": "diff",
+              "title": "Diff: data.json  (Working Tree)"
             }
           }
         ]
@@ -88,7 +88,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 359.5
+    "width": 254.5
   },
   "right": {
     "id": "e513cee91f4ffe6c",
@@ -208,10 +208,23 @@
       "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "a2c1c0a84ad63659",
+  "active": "4ada4b2fb56d670f",
   "lastOpenFiles": [
-    "zh/教程/仓库概览与环境搭建.md",
+    "zh/设计文档/具体芯片/pebble/Quant Ball/Spec.md",
+    "zh/设计文档/具体芯片/pebble/Overview.md",
+    "zh/设计文档/具体芯片/pebble/ISA.md",
+    "zh/设计文档/具体芯片/pebble/SystolicArray Ball/Spec.md",
+    "zh/设计文档/具体芯片/pebble/Permute Ball/Spec.md",
+    "zh/设计文档/具体芯片/pebble/流片/images/进度.md",
+    "zh/设计文档/具体芯片/pebble/流片/images/进度.svg",
+    "zh/设计文档/具体芯片/pebble/流片/流片进度.md",
+    "zh/设计文档/具体芯片/pebble/Permute Ball",
+    "zh/设计文档/具体芯片/pebble/SystolicArray Ball",
+    "zh/设计文档/具体芯片/pebble/Quant Ball",
+    "zh/设计文档/具体芯片/pebble/流片/images",
+    "zh/设计文档/具体芯片/pebble/流片",
     "zh/设计文档/Overview.md",
+    "zh/教程/仓库概览与环境搭建.md",
     "zh/设计文档/主线架构/0.0.1/Overview/ISA.md",
     "未命名.md",
     "zh/设计文档/主线架构/0.0.1/Overview/images/riscv-isa.md",
@@ -238,23 +251,10 @@
     "zh/设计文档/主线架构/0.0.1/frontend/前端域架构.md",
     "zh/教程/端到端实现 LeNet 加速 (上).md",
     "zh/教程/端到端实现 LeNet 加速 (下).md",
-    "zh/教程/端到端实现 LeNet 加速 (中).md",
-    "zh/教程/Ball的仿真，验证，评估.md",
-    "zh/教程/什么是Ball & 如何写一个Ball.md",
-    "zh/设计文档/具体芯片/pebble/Overview.md",
-    "zh/设计文档/具体芯片/pebble/ISA.md",
     "zh/教程/images/image1-1.png",
-    "zh/设计文档/主线架构/0.0.1/工具链/workload.md",
-    "zh/设计文档/主线架构/0.0.1/编译器/pass/report-bank-usage.md",
-    "zh/设计文档/主线架构/0.0.1/编译器/images/banner.avif",
     "zh/设计文档/主线架构/0.0.1/编译器/images",
     "zh/设计文档/主线架构/0.0.1/编译器/Pass",
     "zh/设计文档/主线架构/0.0.1/编译器/pass",
-    "zh/设计文档/主线架构/0.0.1/工具链/images",
-    "zh/设计文档/主线架构/0.0.1/工具链",
-    "zh/设计文档/主线架构/0.0.1/Overview/images",
-    "en/tutorial/repo-overview-and-setup.md.tmp.30668.05451ad525c0",
-    "en/design/chips/pebble",
-    "en/design/chips"
+    "zh/设计文档/主线架构/0.0.1/工具链/images"
   ]
 }
