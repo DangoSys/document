@@ -6,16 +6,19 @@
 
 ## build
 
-`compiler build` 每次增量编译 buddy-mlir。实际执行步骤如下：
+`compiler build` 按指定 chip 配置并编译 buddy-mlir。实际执行步骤如下：
 
-1. 在 `compiler/thirdparty/buddy-mlir/build` 目录下先执行 `cmake --build . --target python-package-buddy`，构建 buddy 的 Python package。这步重新编译器前端代码。
-2. 再执行 `ninja -j$(nproc)`，编译 buddy-mlir 里的其它目标。这步更新中端与后端的代码。
+1. 用 cmake 配置 `compiler/thirdparty/buddy-mlir/build`，并把 `BUDDY_EXTERNAL_DIALECTS_DIR` 指到 `examples/chips/<chip>/compiler`。也就是说不同 chip 编出来的编译器扩展不一样。
+2. 再 `ninja` 编 `buddy-opt`、`buddy-translate`、`buddy-llc` 这三个后续 workload 会用到的工具。
 
 用法如下：
 
 ```bash
-bbdev compiler --build
+bbdev compiler --build '--chip toy'
+bbdev compiler --build '--chip pebble'
 ```
 
-该 API 没有参数。
+==参数1 chip== `--chip` 必填。指定构建哪个 chip 的编译器扩展，比如 `toy`、`pebble`、`goban`。对应目录必须存在 `examples/chips/<chip>/compiler/CMakeLists.txt`。
+
+==参数2 stable== `--stable` 可选。按稳定构建路径编译；日常开发一般不用开。
 

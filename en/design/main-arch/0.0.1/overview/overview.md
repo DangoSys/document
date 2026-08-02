@@ -1,5 +1,5 @@
-# Overview
+---
+banner: en/design/main-arch/0.0.1/overview/images/banner.avif
+---
 
-> Pending translation. See [中文版](zh/设计文档/主线架构/0.0.1/Overview/Overview.md).
-
-This document records the architecture of Buckyball release versions. Chip-specific implementations do not modify the main architecture — they are always based on the corresponding architecture version.
+This document records the architecture of Buckyball release versions. Chip-specific implementations do not modify the main architecture; they are always built on the corresponding architecture version.

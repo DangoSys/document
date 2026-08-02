@@ -21,5 +21,30 @@ bbdev 支持以下命令：
 | `yosys`           | 开源综合与时序分析                  |
 | `dc`              | Design Compiler RTL 导出     |
 
+日常验证按这条链路走就行：
 
+```text
+compiler build → workload build → bebop-bemu → bebop-verilator
+```
 
+先把功能在 `bebop-bemu` 跑通，再上 `bebop-verilator` 对 RTL。单测用 `sim`，回归用 `batch`。详细参数看同目录下各命令文档：
+
+- [[compiler]]
+- [[workload]]
+- [[kernel]]
+- [[bebop-bemu]]
+- [[bebop-verilator]]
+
+人直接敲 CLI；Agent 走仓库根目录 `.mcp.json` 里的 `buckyball-dev`（Claude Code / Codex / Cursor 都读这份），对应 tool 是 `bbdev_compiler_build`、`bbdev_workload_build`、`bbdev_bemu_sim`、`bbdev_bebop_verilator_run` 等。MCP 会自己拉起 bbdev HTTP，端口是动态选的，不是写死 `5000`。
+
+一个最小例子（toy）：
+
+```bash
+bbdev compiler --build '--chip toy'
+bbdev workload --clean
+bbdev workload --build '--chip toy'
+bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-singlecore-baremetal'
+bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig'
+```
+
+pebble 把上面的 `toy` 换成 `pebble`，verilator config 换成 `sims.verilator.BuckyballPebbleVerilatorConfig` 即可。

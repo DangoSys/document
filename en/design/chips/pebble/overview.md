@@ -1,9 +1,6 @@
-# Pebble Overview
+This chip is developed on main architecture v0.0.1. It targets resource-constrained edge scenarios and accelerates CNN-class workloads.
 
-> Pending translation. See [中文版](zh/设计文档/具体芯片/pebble/Overview.md).
-
-This chip is developed based on main architecture v0.0.1, targeting resource-constrained edge scenarios with acceleration for CNN-class workloads.
 
 Design goals:
-1. Optimize for LeNet, ResNet, MobileNetv3, YOLO26
-2. Deployable on entry-level FPGAs
+1. Optimize for LeNet, ResNet, MobileNetv3, and YOLO26
+2. Deployable on entry-level FPGAs (Kintex-7 xc7k160t, ~100k LUTs)
