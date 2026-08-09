@@ -74,7 +74,7 @@ Execution steps:
 2. Check `bebop/target/debug/bebop` and the build marker.
 3. Find the ELF by name under `bb-tests/output/workloads/src`.
 4. Run `bebop run verilator --elf ...`.
-5. Logs default to `arch/log/<timestamp>-<binary>`; waveforms default to `arch/waveform/<timestamp>-<binary>`.
+5. Logs go to `log/<timestamp>-verilator-<binary>`; waveforms go to `waveform/` under that directory.
 
 Usage:
 
@@ -88,11 +88,11 @@ bbdev bebop-verilator --sim '--binary pebble_conv_im2col_test-singlecore-baremet
 
 ==Parameter 2 binary== `--binary` is required. Provide the workload artifact name; same search under `bb-tests/output/workloads/src` as bemu.
 
-==Parameter 3 log-dir / fst-dir== `--log-dir`, `--fst-dir` are optional. Specify text log and waveform directories respectively.
+==Parameter 3 no-wave== `--no-wave` is optional. Disables waveforms; enable for batch or pass/fail-only runs for a speedup.
 
-==Parameter 4 no-wave== `--no-wave` is optional. Disables waveforms; enable for batch or pass/fail-only runs for a speedup.
+==Parameter 4 trace flags== `--itrace`, `--mtrace`, `--pmctrace`, `--ctrace`, `--banktrace` are all optional. Enable when you need instruction flow, memory access, PMC, control flow, or bank access. Enabling all slows runs significantly and produces much larger logs.
 
-==Parameter 5 trace flags== `--itrace`, `--mtrace`, `--pmctrace`, `--ctrace`, `--banktrace` are all optional. Enable when you need instruction flow, memory access, PMC, control flow, or bank access. Enabling all slows runs significantly and produces much larger logs.
+Direct `bebop run verilator` requires `--log-dir`; waveforms go to `log_dir/waveform/`.
 
 
 ## run
@@ -106,7 +106,7 @@ bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singleco
 bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig --itrace --mtrace --pmctrace --ctrace --banktrace'
 ```
 
-Parameters align with `clean` / `verilog` / `build` / `sim`: `--config`, `--binary` required; `--jobs`, trace flags, `--log-dir`, `--fst-dir`, `--no-wave` optional.
+Parameters align with `clean` / `verilog` / `build` / `sim`: `--config`, `--binary` required; `--jobs`, trace flags, `--no-wave` optional.
 
 
 ## batch

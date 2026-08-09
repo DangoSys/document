@@ -53,7 +53,7 @@ bb-tests/output/kernel/fw_payload.hex
 
 1. 在 `bb-tests/workloads/lib/kernel` 的 `build` 目录开始执行命令。
 2. 构建 BusyBox，并把它放进 initramfs。
-3. 创建 rootfs。如果不指定模型，会把 `bb-tests/output/workloads` 里的 workload 安装进 `/root`；如果指定 `--model`，只把对应 ModelTest 的运行文件安装进 `/root`。
+3. 创建 rootfs。默认用共享 overlay（交互 shell）；指定 `--chip` 时再叠一层该 chip 的 OS overlay（`examples/chips/<chip>/kernel/overlay`），并把该 chip 的 bemu `workloads-pk.toml` 里的 `*-linux` 装进 `/root`。指定 `--model` 时只装对应 ModelTest 运行文件。`--chip` 与 `--model` 互斥。
 4. 构建带 initramfs 的 Linux Image。
 5. 用 OpenSBI 把 Linux Image 打包成 `fw_payload.bin`。
 6. 把 `fw_payload.bin` 转成 `fw_payload.hex`。
@@ -62,11 +62,21 @@ bb-tests/output/kernel/fw_payload.hex
 
 ```bash
 bbdev kernel --build
+bbdev kernel --build '--chip pebble'
+bbdev kernel --build '--model lenet'
+bbdev kernel --build '--model lenet --interactive'
 bbdev kernel --build '--visible-hart-count 64 --total-hart-count 256'
-bbdev kernel --build '--visible-hart-count 64 --total-hart-count 256 --model lenet'
 ```
 
-==参数1 model== `--model` 用于指定要打包进 rootfs 的端到端模型。指定后，kernel 只会安装这个模型对应的 ModelTest 运行文件，不会把所有 workload 都放进 `/root`。当前支持的 model 参数包括：`bert`, `deepseekr1`, `gemma4`, `lenet`,`llama2`,`mobilenet`,`qwen3`,`resnet`,`stable-diffusion`,`yolo`。
+==参数1 chip== `--chip` 指定 per-chip Linux OS。每个 chip 在 `examples/chips/<chip>/kernel/` 维护自己的 OS（至少 `overlay/init`）。指定后：
+
+- overlay：共享 `bb-tests/workloads/lib/kernel/overlay` + chip overlay 覆盖
+- `/root`：只安装该 chip `regression/batch/bemu/workloads-pk.toml` 中的 `*-linux`（缺文件直接失败）
+- 产物：`fw_payload-<chip>-pk.bin` / `.hex`
+- chip 的 `/init` 负责串跑 `/root/*-linux`；全过 `poweroff -f`（OpenSBI → `scu_sim_exit=0`），失败 `reboot -f`（`sim_exit=1`）
+- cmdline 带 `panic=1`：kernel panic 会冷重启，同样走 OpenSBI → `sim_exit=1`
+
+==参数2 model== `--model` 用于指定要打包进 rootfs 的端到端模型。指定后，kernel 只会安装这个模型对应的 ModelTest 运行文件，不会把所有 workload 都放进 `/root`。当前支持的 model 参数包括：`bert`, `deepseekr1`, `gemma4`, `lenet`,`llama2`,`mobilenet`,`qwen3`,`resnet`,`stable-diffusion`,`yolo`。
 
 指定 `--model` 前，需要先构建对应 ModelTest workload。
 
@@ -76,14 +86,18 @@ bbdev workload --build '--model lenet'
 
 否则 kernel 构建时找不到模型运行文件，会直接报错。指定模型也会影响产物文件名，例如 `--model lenet` 会生成 `fw_payload-lenet.bin` 和 `fw_payload-lenet.hex`。
 
+`--model` 的 `/init` 会在 `/root` 下自动执行对应 `buddy-buckyball-*-run`：成功 `poweroff -f`，失败 `reboot -f`（与 chip pk 回归一致）。
+
+==参数3 interactive== `--interactive` 保留共享 overlay 的交互 shell（`/init` → `/bin/sh -i`），不自动跑 chip/model 用例。仍会把对应 `/root` 文件打进 rootfs，便于手动执行。可与 `--chip` 或 `--model` 合用。
+
 - [ ] TODO: 将模型构建加入自动workflow
 
 
-==参数2 total-hart-count== `--total-hart-count` 用于指定硬件里一共有多少个 hart。默认值等于 `visible-hart-count`。
+==参数4 total-hart-count== `--total-hart-count` 用于指定硬件里一共有多少个 hart。默认值等于 `visible-hart-count`。
 
 这个参数主要用于多核或异构核配置。硬件里可能有很多 hart，但不一定都要交给 Linux 管理。`total-hart-count` 表示硬件总数，OpenSBI 会根据这个数量处理平台初始化和 DTB 里的 hart 信息。
 
-==参数3 visible-hart-count== `--visible-hart-count` 用于指定 Linux 能看到多少个 hart，默认是 64。
+==参数5 visible-hart-count== `--visible-hart-count` 用于指定 Linux 能看到多少个 hart，默认是 64。
 
 这个参数会传给 OpenSBI 和 Linux 启动配置。Linux 启动后，只会调度这些 visible hart。其它 hart 即使硬件存在，也会在启动时从 DTB 里隐藏掉，不交给 Linux 使用。
 

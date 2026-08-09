@@ -17,8 +17,8 @@ bbdev workload --build '--chip toy'
 
 1. 按 `--chip` 找到 `examples/chips/<chip>/emu/Cargo.toml`。找不到就直接报错。
 2. 在 `bb-tests/output/workloads/src` 里按名字搜 ELF。优先找 `CTest/chips/<chip>` 下的，找不到再找非 chip 专属的同名产物。搜不到同样直接报错。
-3. `cargo run` 启动该 chip 的 BEMU，加载 ELF 执行。
-4. 日志默认写到 `arch/log/<时间戳>-<binary>-bemu`。
+3. `cargo run --release` 启动该 chip 的优化版 BEMU，加载 ELF 执行。
+4. 日志写到 `log/<时间戳>-bemu-<binary>`。
 
 用法如下：
 
@@ -26,6 +26,8 @@ bbdev workload --build '--chip toy'
 bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-singlecore-baremetal'
 bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-linux --pk'
 bbdev bebop-bemu --sim '--chip pebble --binary pebble_conv_im2col_test-singlecore-baremetal'
+bbdev bebop-bemu --sim '--binary buddy-buckyball-mobilenetv3-run --pk --chip pebble --disasm'
+bbdev bebop-bemu --sim '--binary buddy-buckyball-mobilenetv3-run --pk --chip pebble'
 ```
 
 ==参数1 chip== `--chip` 必填。指定用哪个 chip 的 BEMU，比如 `toy`、`pebble`、`goban`。对应目录必须存在 `examples/chips/<chip>/emu/Cargo.toml`。
@@ -34,7 +36,9 @@ bbdev bebop-bemu --sim '--chip pebble --binary pebble_conv_im2col_test-singlecor
 
 ==参数3 pk== `--pk` 可选。加上以后走 proxy kernel 路径，用来跑 Linux 用户态那类 `-linux` workload。baremetal ELF 不要加这个参数。
 
-==参数4 log-dir== `--log-dir` 可选。指定日志目录。不写就用默认的 `arch/log/...`。
+==参数4 disasm== `--disasm` 可选。启用逐指令反汇编日志 `disasm.log`，仅在调试指令执行时使用；默认关闭。
+
+==参数5 tool-profile== `--tool-profile` 可选。输出 NPU 功能模型与 Spike/guest CPU 执行的粗粒度 host 时间占比；默认关闭。
 
 
 ## batch

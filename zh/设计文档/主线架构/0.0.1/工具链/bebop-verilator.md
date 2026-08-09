@@ -74,7 +74,7 @@ bbdev bebop-verilator --build '--jobs 16 --config sims.verilator.BuckyballToyVer
 2. 检查 `bebop/target/debug/bebop` 和 build marker。
 3. 在 `bb-tests/output/workloads/src` 里按名字找 ELF。
 4. 执行 `bebop run verilator --elf ...`。
-5. 日志默认写到 `arch/log/<时间戳>-<binary>`，波形默认写到 `arch/waveform/<时间戳>-<binary>`。
+5. 日志写到 `log/<时间戳>-verilator-<binary>`；波形写到该目录下的 `waveform/`。
 
 用法如下：
 
@@ -88,11 +88,11 @@ bbdev bebop-verilator --sim '--binary pebble_conv_im2col_test-singlecore-baremet
 
 ==参数2 binary== `--binary` 必填。写 workload 产物名，和 bemu 一样先搜 `bb-tests/output/workloads/src`。
 
-==参数3 log-dir / fst-dir== `--log-dir`、`--fst-dir` 可选。分别指定文本日志和波形目录。
+==参数3 no-wave== `--no-wave` 可选。关掉波形，batch 或只关心 pass/fail 时可以开，会快一点。
 
-==参数4 no-wave== `--no-wave` 可选。关掉波形，batch 或只关心 pass/fail 时可以开，会快一点。
+==参数4 各类 trace== `--itrace`、`--mtrace`、`--pmctrace`、`--ctrace`、`--banktrace` 都是可选开关。需要看指令流、访存、PMC、控制流、bank 访问时再开，全开会慢很多，日志也会更大。
 
-==参数5 各类 trace== `--itrace`、`--mtrace`、`--pmctrace`、`--ctrace`、`--banktrace` 都是可选开关。需要看指令流、访存、PMC、控制流、bank 访问时再开，全开会慢很多，日志也会更大。
+直接调 `bebop run verilator` 时 `--log-dir` 必填；波形写到 `log_dir/waveform/`。
 
 
 ## run
@@ -106,7 +106,7 @@ bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singleco
 bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig --itrace --mtrace --pmctrace --ctrace --banktrace'
 ```
 
-参数和 `clean` / `verilog` / `build` / `sim` 那几项基本同一套：`--config`、`--binary` 必填，`--jobs`、各类 trace、`--log-dir`、`--fst-dir`、`--no-wave` 可选。
+参数和 `clean` / `verilog` / `build` / `sim` 那几项基本同一套：`--config`、`--binary` 必填，`--jobs`、各类 trace、`--no-wave` 可选。
 
 
 ## batch

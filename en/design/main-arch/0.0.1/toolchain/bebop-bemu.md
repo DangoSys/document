@@ -17,8 +17,8 @@ bbdev workload --build '--chip toy'
 
 1. Find `examples/chips/<chip>/emu/Cargo.toml` by `--chip`. Error if not found.
 2. Search for the ELF by name under `bb-tests/output/workloads/src`. Prefer `CTest/chips/<chip>` first; if not found, search for a non-chip-specific artifact with the same name. Error if not found.
-3. `cargo run` starts that chip's BEMU and loads the ELF for execution.
-4. Logs default to `arch/log/<timestamp>-<binary>-bemu`.
+3. `cargo run --release` starts that chip's optimized BEMU and loads the ELF for execution.
+4. Logs go to `log/<timestamp>-bemu-<binary>`.
 
 Usage:
 
@@ -26,6 +26,8 @@ Usage:
 bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-singlecore-baremetal'
 bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-linux --pk'
 bbdev bebop-bemu --sim '--chip pebble --binary pebble_conv_im2col_test-singlecore-baremetal'
+bbdev bebop-bemu --sim '--binary buddy-buckyball-mobilenetv3-run --pk --chip pebble --disasm'
+bbdev bebop-bemu --sim '--binary buddy-buckyball-mobilenetv3-run --pk --chip pebble --step-n 256'
 ```
 
 ==Parameter 1 chip== `--chip` is required. Specifies which chip's BEMU to use, e.g. `toy`, `pebble`, `goban`. Directory `examples/chips/<chip>/emu/Cargo.toml` must exist.
@@ -34,7 +36,13 @@ bbdev bebop-bemu --sim '--chip pebble --binary pebble_conv_im2col_test-singlecor
 
 ==Parameter 3 pk== `--pk` is optional. When set, uses the proxy kernel path to run Linux userspace `-linux` workloads. Do not use this for baremetal ELFs.
 
-==Parameter 4 log-dir== `--log-dir` is optional. Specifies the log directory. Defaults to `arch/log/...`.
+==Parameter 4 disasm== `--disasm` is optional. Enables the per-instruction `disasm.log`, intended only for instruction-level debugging; it is disabled by default.
+
+==Parameter 5 tool-profile== `--tool-profile` is optional. Prints a coarse host-time breakdown between the NPU functional model and Spike/guest CPU execution; it is disabled by default.
+
+==Parameter 6 step-n== `--step-n` is optional and defaults to `1`. It processes up to `N` guest instructions in one Rust-to-native BEMU call. Syscall, exit, and PC checks remain per guest instruction in native code; larger values reduce host wrapper overhead.
+
+Direct `bebop run bemu` requires `--log-dir`.
 
 
 ## batch
