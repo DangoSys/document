@@ -40,7 +40,7 @@ compiler build → workload build → bebop-bemu → bebop-verilator
 一个最小例子（toy）：
 
 ```bash
-bbdev compiler --build '--chip toy'
+bbdev compiler --build '--core toy'
 bbdev workload --clean
 bbdev workload --build '--chip toy'
 bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-singlecore-baremetal'

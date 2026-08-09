@@ -40,7 +40,7 @@ Humans run the CLI directly; Agents use `buckyball-dev` from `.mcp.json` at the 
 A minimal example (toy):
 
 ```bash
-bbdev compiler --build '--chip toy'
+bbdev compiler --build '--core toy'
 bbdev workload --clean
 bbdev workload --build '--chip toy'
 bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-singlecore-baremetal'

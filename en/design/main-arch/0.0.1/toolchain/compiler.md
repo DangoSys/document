@@ -6,18 +6,18 @@ This builds `compiler/thirdparty/buddy-mlir` in the repository. After compilatio
 
 ## build
 
-`compiler build` configures and compiles buddy-mlir for the specified chip. Execution steps:
+`compiler build` configures and compiles buddy-mlir for the selected Core. A Chip may select its default compiler Core through `chip.toml`. Execution steps:
 
-1. Configure `compiler/thirdparty/buddy-mlir/build` with cmake and set `BUDDY_EXTERNAL_DIALECTS_DIR` to `examples/chips/<chip>/compiler`. Different chips produce different compiler extensions.
+1. Configure `compiler/thirdparty/buddy-mlir/build` with cmake and set `BUDDY_EXTERNAL_DIALECTS_DIR` to `examples/cores/<core>/compiler`. Different Cores produce different compiler extensions.
 2. Then `ninja` builds `buddy-opt`, `buddy-translate`, and `buddy-llc` — the three tools workload build uses next.
 
 Usage:
 
 ```bash
 bbdev compiler --build '--chip toy'
-bbdev compiler --build '--chip pebble'
+bbdev compiler --build '--core pebble'
 ```
 
-==Parameter 1 chip== `--chip` is required. Specifies which chip's compiler extension to build, e.g. `toy`, `pebble`, `goban`. Directory `examples/chips/<chip>/compiler/CMakeLists.txt` must exist.
+==Parameter 1 core/chip== Specify exactly one target. `--core` directly selects a compiler Core such as `toy`, `pebble`, or `goban`; its package must contain `examples/cores/<core>/compiler/CMakeLists.txt`. `--chip` selects a runtime Chip and resolves its default Core through `examples/chips/<chip>/chip.toml`.
 
 ==Parameter 2 stable== `--stable` is optional. Builds via the stable build path; usually not needed for day-to-day development.
