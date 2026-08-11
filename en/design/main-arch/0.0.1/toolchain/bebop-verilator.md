@@ -129,6 +129,13 @@ bbdev bebop-verilator --build '--jobs 16 --config sims.verilator.BuckyballPebble
 bbdev bebop-verilator --batch '--chip pebble --config sims.verilator.BuckyballPebbleVerilatorConfig --test elf-tests --clean-before'
 ```
 
+Batch DiffTest requires building the chip-specific Verilator+BEMU executable with `--diff`, then passing `--diff` to batch:
+
+```bash
+bbdev bebop-verilator --build '--diff --jobs 16 --config sims.verilator.BuckyballToyVerilatorConfig'
+bbdev bebop-verilator --batch '--diff --chip toy --config sims.verilator.BuckyballToyVerilatorConfig --test elf-tests --clean-before'
+```
+
 ==Parameter 1 chip== `--chip` is required. Determines which chip's regression toml to read.
 
 ==Parameter 2 config== `--config` is required. Determines which built Verilator RTL/simulator to use.
@@ -136,6 +143,8 @@ bbdev bebop-verilator --batch '--chip pebble --config sims.verilator.BuckyballPe
 ==Parameter 3 test== `--test` is required; `elf-tests` or `pk-tests`.
 
 ==Parameter 4 clean-before== `--clean-before` is optional. Clears `bebop/test-artifacts` before running.
+
+==Parameter 5 diff== `--diff` is optional. It runs every workload with both Verilator RTL and the selected chip's BEMU and performs bank DiffTest. It cannot be combined with `--rushB`. Each case writes `bank_diff.ndjson` under `examples/chips/<chip>/emu/test-artifacts/difftest-<timestamp>-<workload>/log/`.
 
 
 ## Common Pitfalls

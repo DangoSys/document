@@ -129,6 +129,13 @@ bbdev bebop-verilator --build '--jobs 16 --config sims.verilator.BuckyballPebble
 bbdev bebop-verilator --batch '--chip pebble --config sims.verilator.BuckyballPebbleVerilatorConfig --test elf-tests --clean-before'
 ```
 
+批量 DiffTest 需要先用 `--diff` 构建对应 chip 的 Verilator+BEMU 可执行文件，再在 batch 中加入 `--diff`：
+
+```bash
+bbdev bebop-verilator --build '--diff --jobs 16 --config sims.verilator.BuckyballToyVerilatorConfig'
+bbdev bebop-verilator --batch '--diff --chip toy --config sims.verilator.BuckyballToyVerilatorConfig --test elf-tests --clean-before'
+```
+
 ==参数1 chip== `--chip` 必填。决定读哪个 chip 的 regression toml。
 
 ==参数2 config== `--config` 必填。决定用哪套已构建好的 Verilator RTL/仿真器。
@@ -136,6 +143,8 @@ bbdev bebop-verilator --batch '--chip pebble --config sims.verilator.BuckyballPe
 ==参数3 test== `--test` 必填，`elf-tests` 或 `pk-tests`。
 
 ==参数4 clean-before== `--clean-before` 可选。清 `bebop/test-artifacts` 后再跑。
+
+==参数5 diff== `--diff` 可选。让列表中的每个 workload 同时运行 Verilator RTL 与对应 chip 的 BEMU，并执行 bank DiffTest。该参数不能与 `--rushB` 同时使用；每个用例的 `bank_diff.ndjson` 保存在 `examples/chips/<chip>/emu/test-artifacts/difftest-<时间>-<workload>/log/` 下。
 
 
 ## 常见踩坑
