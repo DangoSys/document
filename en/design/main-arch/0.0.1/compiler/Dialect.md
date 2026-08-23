@@ -13,7 +13,7 @@ B: memref<KxNxf32>
 C: memref<MxNxf32>
 ```
 
-This layer does not care how many banks Buckyball has, or how many columns `mul_warp16` can process in one shot. It only states that `C = A * B`. Models exported from PyTorch, or hand-written OpTests, usually land here or lower first.
+This layer does not care how many banks Buckyball has, or how many columns `vecmat16` can process in one shot. It only states that `C = A * B`. Models exported from PyTorch, or hand-written MLIRTests, usually land here or lower first.
 
 ## Tile Dialect
 
@@ -52,7 +52,7 @@ buckyball.bank_alloc
 buckyball.bank_mvin
 buckyball.bank_fp2int
 buckyball.bank_transpose
-buckyball.bank_mul_warp16
+buckyball.bank_vecmat16
 buckyball.bank_int2fp
 buckyball.bank_mvout
 buckyball.bank_release
@@ -66,7 +66,7 @@ The third category is intrinsic wrappers, for example:
 buckyball.mset
 buckyball.mvin
 buckyball.mvout
-buckyball.mul_warp16
+buckyball.vecmat16
 buckyball.fp2int
 buckyball.int2fp
 buckyball.transpose

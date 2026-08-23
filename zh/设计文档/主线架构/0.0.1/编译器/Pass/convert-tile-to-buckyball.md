@@ -47,8 +47,13 @@ K 方向: 16
 pass 会优先尝试增大 K tile，再增大 N tile，最后增大 M tile。每个候选 tile 都要满足当前 bank depth，以及代码里写死的 mvin/mvout 深度限制：
 
 ```text
-kMaxI8MvinDepthLines = 1024
-kMaxAccMvoutDepthLines = 256
+kMaxMvinDepth8b = 1024
+kMaxMvoutDepth32b = 256
+kBankLane = 16
+
+Tilting is bank-unit: each `smatmul_matmul` covers at most one bank depth on M
+and one bank lane on N/K (8-bit), or full K with bank-SSA lane splitting (f32).
+Not one matmul for an entire problem tile; HW scoreboard overlaps multi-bank work.
 ```
 
 如果 K 方向只需要一个 tile，lowering 结构大致是：
@@ -95,7 +100,7 @@ filter: [KH, KW, C, OC]
 output: [N, OH, OW, OC]
 ```
 
-lowering 会把卷积改写成 im2col + matmul 风格的数据流。输入通道 C 会在需要时 pad 到满足 16-byte bank row 的排布。之后通过 `bank_im2col` 从输入 feature map 取 patch，通过 `bank_mul_warp16` 做计算，再把结果写回 output。
+lowering 会把卷积改写成 im2col + matmul 风格的数据流。输入通道 C 会在需要时 pad 到满足 16-byte bank row 的排布。之后通过 `bank_im2col` 从输入 feature map 取 patch，通过 `bank_vecmat16` 做计算，再把结果写回 output。
 
 用法示例：
 
@@ -106,5 +111,5 @@ buddy-opt input.mlir -convert-tile-to-buckyball
 相关测试可以看：
 
 ```text
-bb-tests/workloads/src/OpTest/tile
+bb-tests/workloads/src/MLIRTest/tile
 ```

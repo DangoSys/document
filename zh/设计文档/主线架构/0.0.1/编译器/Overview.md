@@ -43,7 +43,7 @@ LLVM IR
 
 Tile 层是这条链路里最重要的缓冲层。比如 matmul 的原始输入可以是 `127x17 @ 17x127`，但硬件的基本粒度是 16 行、16 列和 16-byte bank row。Tile pass 会先检查 `A[M,K]`、`B[K,N]`、`C[M,N]` 是否匹配，再把 M/K/N pad 到 16 的倍数，按 bank depth 和 mvin/mvout 深度限制选择 tile size。如果 K 被拆成多段，partial accumulation 也在 Tile 层完成。这样后面的 `buckyball.matmul` 就可以保持简单语义：一次 op 只覆盖写一个规则 tile。
 
-Buckyball 层分两种形态。第一种是 high-level op，例如 `buckyball.matmul`，它仍然看起来像一个算子。第二种是 Bank SSA，例如 `buckyball.bank_mvin`、`buckyball.bank_fp2int`、`buckyball.bank_mul_warp16`、`buckyball.bank_mvout`，这里已经能看到数据先搬进 bank、量化、转置、计算、反量化、搬出的顺序。Bank SSA 里的 bank 还是虚拟 handle，不是最终物理 bank ID。
+Buckyball 层分两种形态。第一种是 high-level op，例如 `buckyball.matmul`，它仍然看起来像一个算子。第二种是 Bank SSA，例如 `buckyball.bank_mvin`、`buckyball.bank_fp2int`、`buckyball.bank_vecmat16`、`buckyball.bank_mvout`，这里已经能看到数据先搬进 bank、量化、转置、计算、反量化、搬出的顺序。Bank SSA 里的 bank 还是虚拟 handle，不是最终物理 bank ID。
 
 `assign-physical-banks` 把虚拟 bank handle 分配成物理 bank ID，并插入 `buckyball.mset`。如果同一时刻需要的 bank 数超过 `bank_num`，或者 release 找不到对应 alloc，pass 会直接报错。这个行为是故意的：bank 数量和生命周期是硬件正确性问题，不应该在编译器里用默认值或兜底逻辑掩盖。
 

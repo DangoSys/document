@@ -25,26 +25,26 @@ Artifacts default to `arch/build/<config-name>/`.
 Usage:
 
 ```bash
-bbdev bebop-verilator --clean '--config sims.verilator.BuckyballToyVerilatorConfig'
+bbdev bebop-verilator --clean '--chip toy'
 ```
 
-==Parameter 1 config== `--config` is required. Full Scala/Chipyard simulation config name.
+==Parameter 1 chip== `--chip` is required. Mill class comes from `chip.toml` `runtime.verilatorConfig`.
 
 ==Parameter 2 output-dir== `--output-dir` is optional. Specifies the directory to clean. Defaults to the path derived from config.
 
 
 ## verilog
 
-`bebop-verilator verilog` only exports RTL; it does not compile the simulator. It invokes mill by `--config` and generates Chisel output to `arch/build/<config-name>/`.
+`bebop-verilator verilog` only exports RTL; it does not compile the simulator. It invokes mill from `--chip` (`runtime.verilatorConfig`) and generates Chisel output to `arch/build/<config-name>/`.
 
 Usage:
 
 ```bash
-bbdev bebop-verilator --verilog '--config sims.verilator.BuckyballToyVerilatorConfig'
-bbdev bebop-verilator --verilog '--config sims.verilator.BuckyballPebbleVerilatorConfig'
+bbdev bebop-verilator --verilog '--chip toy'
+bbdev bebop-verilator --verilog '--chip pebble'
 ```
 
-==Parameter 1 config== `--config` is required.
+==Parameter 1 chip== `--chip` is required.
 
 ==Parameter 2 output-dir== `--output-dir` is optional. Specifies the Verilog output directory.
 
@@ -56,10 +56,10 @@ bbdev bebop-verilator --verilog '--config sims.verilator.BuckyballPebbleVerilato
 Usage:
 
 ```bash
-bbdev bebop-verilator --build '--jobs 16 --config sims.verilator.BuckyballToyVerilatorConfig'
+bbdev bebop-verilator --build '--jobs 16'
 ```
 
-==Parameter 1 config== `--config` is required.
+==Parameter 1 chip== `--chip` is required.
 
 ==Parameter 2 jobs== `--jobs` is optional, default `16`. Parallelism passed to `cargo build`.
 
@@ -71,22 +71,22 @@ bbdev bebop-verilator --build '--jobs 16 --config sims.verilator.BuckyballToyVer
 Execution steps:
 
 1. Check that `arch/build/<config-name>` exists.
-2. Check `bebop/target/debug/bebop` and the build marker.
-3. Find the ELF by name under `bb-tests/output/workloads/src`.
+2. Check `bebop/target/<chip>/release/bebop` and the build marker (`bebop/target/<chip>/.bbdev-verilator-build.json`).
+3. Find the ELF by name under `bb-tests/output/<chip>/workloads/src`.
 4. Run `bebop run verilator --elf ...`.
 5. Logs go to `log/<timestamp>-verilator-<binary>`; waveforms go to `waveform/` under that directory.
 
 Usage:
 
 ```bash
-bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig'
-bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig --itrace --mtrace --pmctrace --ctrace --banktrace'
-bbdev bebop-verilator --sim '--binary pebble_conv_im2col_test-singlecore-baremetal --config sims.verilator.BuckyballPebbleVerilatorConfig --no-wave'
+bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-baremetal'
+bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
+bbdev bebop-verilator --sim '--binary pebble_conv_im2col_test-baremetal --no-wave'
 ```
 
-==Parameter 1 config== `--config` is required.
+==Parameter 1 chip== `--chip` is required.
 
-==Parameter 2 binary== `--binary` is required. Provide the workload artifact name; same search under `bb-tests/output/workloads/src` as bemu.
+==Parameter 2 binary== `--binary` is required. Provide the workload artifact name; same search under `bb-tests/output/<chip>/workloads/src` as bemu.
 
 ==Parameter 3 no-wave== `--no-wave` is optional. Disables waveforms; enable for batch or pass/fail-only runs for a speedup.
 
@@ -102,11 +102,11 @@ Direct `bebop run verilator` requires `--log-dir`; waveforms go to `log_dir/wave
 Usage:
 
 ```bash
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig'
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig --itrace --mtrace --pmctrace --ctrace --banktrace'
+bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal'
+bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
 ```
 
-Parameters align with `clean` / `verilog` / `build` / `sim`: `--config`, `--binary` required; `--jobs`, trace flags, `--no-wave` optional.
+Parameters align with `clean` / `verilog` / `build` / `sim`: `--chip`, `--binary` required; `--jobs`, trace flags, `--no-wave` optional.
 
 
 ## batch
@@ -118,27 +118,27 @@ examples/chips/<chip>/regression/batch/verilator/workloads-elf.toml
 examples/chips/<chip>/regression/batch/verilator/workloads-pk.toml
 ```
 
-Note: batch does not rebuild for you. Ensure `--config` has completed `verilog` + `build` before running, or it will fail due to missing `VSRC_PATH` or a mismatched simulator.
+Note: batch does not rebuild for you. Ensure `--chip` has completed `verilog` + `build` before running, or it will fail due to missing `VSRC_PATH` or a mismatched simulator.
 
 Usage:
 
 ```bash
-bbdev bebop-verilator --clean '--config sims.verilator.BuckyballPebbleVerilatorConfig'
-bbdev bebop-verilator --verilog '--config sims.verilator.BuckyballPebbleVerilatorConfig'
-bbdev bebop-verilator --build '--jobs 16 --config sims.verilator.BuckyballPebbleVerilatorConfig'
-bbdev bebop-verilator --batch '--chip pebble --config sims.verilator.BuckyballPebbleVerilatorConfig --test elf-tests --clean-before'
+bbdev bebop-verilator --clean '--chip pebble'
+bbdev bebop-verilator --verilog '--chip pebble'
+bbdev bebop-verilator --build '--jobs 16'
+bbdev bebop-verilator --batch '--chip pebble --test elf-tests --clean-before'
 ```
 
 Batch DiffTest requires building the chip-specific Verilator+BEMU executable with `--diff`, then passing `--diff` to batch:
 
 ```bash
-bbdev bebop-verilator --build '--diff --jobs 16 --config sims.verilator.BuckyballToyVerilatorConfig'
-bbdev bebop-verilator --batch '--diff --chip toy --config sims.verilator.BuckyballToyVerilatorConfig --test elf-tests --clean-before'
+bbdev bebop-verilator --build '--diff --jobs 16'
+bbdev bebop-verilator --batch '--diff --chip toy --test elf-tests --clean-before'
 ```
 
 ==Parameter 1 chip== `--chip` is required. Determines which chip's regression toml to read.
 
-==Parameter 2 config== `--config` is required. Determines which built Verilator RTL/simulator to use.
+==Parameter 2 output-dir== `--output-dir` is optional.
 
 ==Parameter 3 test== `--test` is required; `elf-tests` or `pk-tests`.
 

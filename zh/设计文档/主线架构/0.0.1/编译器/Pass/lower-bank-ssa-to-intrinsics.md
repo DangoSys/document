@@ -13,7 +13,7 @@ compiler/src/Conversion/LowerBuckyball/LowerBuckyballPass.cpp
 ```text
 buckyball.mvin
 buckyball.mvout
-buckyball.mul_warp16
+buckyball.vecmat16
 buckyball.intr.transpose
 buckyball.intr.im2col
 buckyball.intr.fp2int

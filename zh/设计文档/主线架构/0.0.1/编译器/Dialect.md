@@ -13,7 +13,7 @@ B: memref<KxNxf32>
 C: memref<MxNxf32>
 ```
 
-这一层不关心 Buckyball 有多少 bank，也不关心 `mul_warp16` 一次能算多少列。它只说明 `C = A * B`。从 PyTorch 导出的模型，或者手写 OpTest，一般会先落到这一层或更低一层。
+这一层不关心 Buckyball 有多少 bank，也不关心 `vecmat16` 一次能算多少列。它只说明 `C = A * B`。从 PyTorch 导出的模型，或者手写 MLIRTest，一般会先落到这一层或更低一层。
 
 ## Tile Dialect
 
@@ -52,7 +52,7 @@ buckyball.bank_alloc
 buckyball.bank_mvin
 buckyball.bank_fp2int
 buckyball.bank_transpose
-buckyball.bank_mul_warp16
+buckyball.bank_vecmat16
 buckyball.bank_int2fp
 buckyball.bank_mvout
 buckyball.bank_release
@@ -66,7 +66,7 @@ buckyball.bank_release
 buckyball.mset
 buckyball.mvin
 buckyball.mvout
-buckyball.mul_warp16
+buckyball.vecmat16
 buckyball.fp2int
 buckyball.int2fp
 buckyball.transpose

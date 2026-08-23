@@ -45,7 +45,7 @@ When you see this, the repository install is complete:
 3. Verify the install by running:
 
 ```bash
-bbdev bebop-verilator --run '--binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig --itrace --mtrace --pmctrace --ctrace --banktrace'
+bbdev bebop-verilator --run '--binary toy_vecunit_matmul_ones-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
 ```
 
 If it completes with output like the following, the repository is set up (the first run may take a while because it performs additional setup):

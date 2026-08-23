@@ -25,26 +25,26 @@ sims.verilator.BuckyballPebbleVerilatorConfig
 用法如下：
 
 ```bash
-bbdev bebop-verilator --clean '--config sims.verilator.BuckyballToyVerilatorConfig'
+bbdev bebop-verilator --clean '--chip toy'
 ```
 
-==参数1 config== `--config` 必填。Scala/Chipyard 侧的仿真配置全名。
+==参数1 chip== `--chip` 必填。mill 类名来自 `chip.toml` 的 `runtime.verilatorConfig`。
 
 ==参数2 output-dir== `--output-dir` 可选。指定要清的目录。不写就按 config 推导默认路径。
 
 
 ## verilog
 
-`bebop-verilator verilog` 只做 RTL 导出，不编译仿真器。实际会按 `--config` 调 mill，把 Chisel 生成到 `arch/build/<config名>/`。
+`bebop-verilator verilog` 只做 RTL 导出，不编译仿真器。实际会按 `--chip`（`runtime.verilatorConfig`）调 mill，把 Chisel 生成到 `arch/build/<config名>/`。
 
 用法如下：
 
 ```bash
-bbdev bebop-verilator --verilog '--config sims.verilator.BuckyballToyVerilatorConfig'
-bbdev bebop-verilator --verilog '--config sims.verilator.BuckyballPebbleVerilatorConfig'
+bbdev bebop-verilator --verilog '--chip toy'
+bbdev bebop-verilator --verilog '--chip pebble'
 ```
 
-==参数1 config== `--config` 必填。
+==参数1 chip== `--chip` 必填。
 
 ==参数2 output-dir== `--output-dir` 可选。指定 Verilog 输出目录。
 
@@ -56,10 +56,10 @@ bbdev bebop-verilator --verilog '--config sims.verilator.BuckyballPebbleVerilato
 用法如下：
 
 ```bash
-bbdev bebop-verilator --build '--jobs 16 --config sims.verilator.BuckyballToyVerilatorConfig'
+bbdev bebop-verilator --build '--jobs 16'
 ```
 
-==参数1 config== `--config` 必填。
+==参数1 chip== `--chip` 必填。
 
 ==参数2 jobs== `--jobs` 可选，默认 `16`。传给 `cargo build` 的并行度。
 
@@ -71,22 +71,22 @@ bbdev bebop-verilator --build '--jobs 16 --config sims.verilator.BuckyballToyVer
 实际执行步骤如下：
 
 1. 检查 `arch/build/<config名>` 是否存在。
-2. 检查 `bebop/target/debug/bebop` 和 build marker。
-3. 在 `bb-tests/output/workloads/src` 里按名字找 ELF。
+2. 检查 `bebop/target/<chip>/release/bebop` 和 build marker（`bebop/target/<chip>/.bbdev-verilator-build.json`）。
+3. 在 `bb-tests/output/<chip>/workloads/src` 里按名字找 ELF。
 4. 执行 `bebop run verilator --elf ...`。
 5. 日志写到 `log/<时间戳>-verilator-<binary>`；波形写到该目录下的 `waveform/`。
 
 用法如下：
 
 ```bash
-bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig'
-bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig --itrace --mtrace --pmctrace --ctrace --banktrace'
-bbdev bebop-verilator --sim '--binary pebble_conv_im2col_test-singlecore-baremetal --config sims.verilator.BuckyballPebbleVerilatorConfig --no-wave'
+bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-baremetal'
+bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
+bbdev bebop-verilator --sim '--binary pebble_conv_im2col_test-baremetal --no-wave'
 ```
 
-==参数1 config== `--config` 必填。
+==参数1 chip== `--chip` 必填。
 
-==参数2 binary== `--binary` 必填。写 workload 产物名，和 bemu 一样先搜 `bb-tests/output/workloads/src`。
+==参数2 binary== `--binary` 必填。写 workload 产物名，和 bemu 一样先搜 `bb-tests/output/<chip>/workloads/src`。
 
 ==参数3 no-wave== `--no-wave` 可选。关掉波形，batch 或只关心 pass/fail 时可以开，会快一点。
 
@@ -102,11 +102,11 @@ bbdev bebop-verilator --sim '--binary pebble_conv_im2col_test-singlecore-baremet
 用法如下：
 
 ```bash
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig'
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig --itrace --mtrace --pmctrace --ctrace --banktrace'
+bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal'
+bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
 ```
 
-参数和 `clean` / `verilog` / `build` / `sim` 那几项基本同一套：`--config`、`--binary` 必填，`--jobs`、各类 trace、`--no-wave` 可选。
+参数和 `clean` / `verilog` / `build` / `sim` 那几项基本同一套：`--chip`、`--binary` 必填，`--jobs`、各类 trace、`--no-wave` 可选。
 
 
 ## batch
@@ -118,27 +118,27 @@ examples/chips/<chip>/regression/batch/verilator/workloads-elf.toml
 examples/chips/<chip>/regression/batch/verilator/workloads-pk.toml
 ```
 
-注意：batch 不会帮你重新 `build`。跑之前要保证该 `--config` 已经 `verilog` + `build` 完成，否则会因 `VSRC_PATH` 不存在或仿真器不对而失败。
+注意：batch 不会帮你重新 `build`。跑之前要保证该 `--chip` 已经 `verilog` + `build` 完成，否则会因 `VSRC_PATH` 不存在或仿真器不对而失败。
 
 用法如下：
 
 ```bash
-bbdev bebop-verilator --clean '--config sims.verilator.BuckyballPebbleVerilatorConfig'
-bbdev bebop-verilator --verilog '--config sims.verilator.BuckyballPebbleVerilatorConfig'
-bbdev bebop-verilator --build '--jobs 16 --config sims.verilator.BuckyballPebbleVerilatorConfig'
-bbdev bebop-verilator --batch '--chip pebble --config sims.verilator.BuckyballPebbleVerilatorConfig --test elf-tests --clean-before'
+bbdev bebop-verilator --clean '--chip pebble'
+bbdev bebop-verilator --verilog '--chip pebble'
+bbdev bebop-verilator --build '--jobs 16'
+bbdev bebop-verilator --batch '--chip pebble --test elf-tests --clean-before'
 ```
 
 批量 DiffTest 需要先用 `--diff` 构建对应 chip 的 Verilator+BEMU 可执行文件，再在 batch 中加入 `--diff`：
 
 ```bash
-bbdev bebop-verilator --build '--diff --jobs 16 --config sims.verilator.BuckyballToyVerilatorConfig'
-bbdev bebop-verilator --batch '--diff --chip toy --config sims.verilator.BuckyballToyVerilatorConfig --test elf-tests --clean-before'
+bbdev bebop-verilator --build '--diff --jobs 16'
+bbdev bebop-verilator --batch '--diff --chip toy --test elf-tests --clean-before'
 ```
 
 ==参数1 chip== `--chip` 必填。决定读哪个 chip 的 regression toml。
 
-==参数2 config== `--config` 必填。决定用哪套已构建好的 Verilator RTL/仿真器。
+==参数2 test== `--test` 必填。
 
 ==参数3 test== `--test` 必填，`elf-tests` 或 `pk-tests`。
 

@@ -53,7 +53,7 @@ bb-tests/output/kernel/fw_payload.hex
 
 1. 在 `bb-tests/workloads/lib/kernel` 的 `build` 目录开始执行命令。
 2. 构建 BusyBox，并把它放进 initramfs。
-3. 创建 rootfs。默认用共享 overlay（交互 shell）；指定 `--chip` 时再叠一层该 chip 的 OS overlay（`examples/chips/<chip>/kernel/overlay`），并把该 chip 的 bemu `workloads-pk.toml` 里的 `*-linux` 装进 `/root`。指定 `--model` 时只装对应 ModelTest 运行文件。`--chip` 与 `--model` 互斥。
+3. 创建 rootfs。默认用共享 overlay（交互 shell）；仅指定 `--chip` 时再叠一层该 chip 的 OS overlay（`examples/chips/<chip>/kernel/overlay`），并把该 chip 的 bemu `workloads-pk.toml` 里的 `*-linux` 装进 `/root`。指定 `--model` 时必须同时给 `--chip`，只装 `archs/buckyball/<chip>/<Model>` 下对应 ModelTest 运行文件。
 4. 构建带 initramfs 的 Linux Image。
 5. 用 OpenSBI 把 Linux Image 打包成 `fw_payload.bin`。
 6. 把 `fw_payload.bin` 转成 `fw_payload.hex`。
@@ -63,32 +63,34 @@ bb-tests/output/kernel/fw_payload.hex
 ```bash
 bbdev kernel --build
 bbdev kernel --build '--chip pebble'
-bbdev kernel --build '--model lenet'
-bbdev kernel --build '--model lenet --interactive'
+bbdev kernel --build '--chip pebble --model lenet'
+bbdev kernel --build '--chip pebble --model lenet --interactive'
 bbdev kernel --build '--visible-hart-count 64 --total-hart-count 256'
 ```
 
-==参数1 chip== `--chip` 指定 per-chip Linux OS。每个 chip 在 `examples/chips/<chip>/kernel/` 维护自己的 OS（至少 `overlay/init`）。指定后：
+==参数1 chip== `--chip` 在两种模式下都有意义：
 
-- overlay：共享 `bb-tests/workloads/lib/kernel/overlay` + chip overlay 覆盖
-- `/root`：只安装该 chip `regression/batch/bemu/workloads-pk.toml` 中的 `*-linux`（缺文件直接失败）
-- 产物：`fw_payload-<chip>-pk.bin` / `.hex`
-- chip 的 `/init` 负责串跑 `/root/*-linux`；全过 `poweroff -f`（OpenSBI → `scu_sim_exit=0`），失败 `reboot -f`（`sim_exit=1`）
-- cmdline 带 `panic=1`：kernel panic 会冷重启，同样走 OpenSBI → `sim_exit=1`
+- **仅 `--chip`（pk 回归）**：每个 chip 在 `examples/chips/<chip>/kernel/` 维护自己的 OS（至少 `overlay/init`）。指定后：
+  - overlay：共享 `bb-tests/workloads/lib/kernel/overlay` + chip overlay 覆盖
+  - `/root`：只安装该 chip `regression/batch/bemu/workloads-pk.toml` 中的 `*-linux`（缺文件直接失败）
+  - 产物：`fw_payload-<chip>-pk.bin` / `.hex`
+  - chip 的 `/init` 负责串跑 `/root/*-linux`；全过 `poweroff -f`（OpenSBI → `scu_sim_exit=0`），失败 `reboot -f`（`sim_exit=1`）
+  - cmdline 带 `panic=1`：kernel panic 会冷重启，同样走 OpenSBI → `sim_exit=1`
+- **与 `--model` 合用**：只用来定位 ModelTest 产物目录 `archs/buckyball/<chip>/...`，不启用 pk overlay / workloads-pk 安装。
 
-==参数2 model== `--model` 用于指定要打包进 rootfs 的端到端模型。指定后，kernel 只会安装这个模型对应的 ModelTest 运行文件，不会把所有 workload 都放进 `/root`。当前支持的 model 参数包括：`bert`, `deepseekr1`, `gemma4`, `lenet`,`llama2`,`mobilenet`,`qwen3`,`resnet`,`stable-diffusion`,`yolo`。
+==参数2 model== `--model` 用于指定要打包进 rootfs 的端到端模型，**必须同时指定 `--chip`**。指定后，kernel 只会安装这个模型对应的 ModelTest 运行文件，不会把所有 workload 都放进 `/root`。当前支持的 model 参数包括：`bert`, `deepseekr1`, `gemma4`, `lenet`,`llama2`,`mobilenet`,`qwen3`,`resnet`,`stable-diffusion`,`yolo`。
 
 指定 `--model` 前，需要先构建对应 ModelTest workload。
 
 ```bash
-bbdev workload --build '--model lenet'
+bbdev workload --build '--chip pebble --model lenet'
 ```
 
-否则 kernel 构建时找不到模型运行文件，会直接报错。指定模型也会影响产物文件名，例如 `--model lenet` 会生成 `fw_payload-lenet.bin` 和 `fw_payload-lenet.hex`。
+否则 kernel 构建时找不到模型运行文件，会直接报错。指定模型也会影响产物文件名，例如 `--chip pebble --model lenet` 会生成 `fw_payload-lenet.bin` 和 `fw_payload-lenet.hex`。
 
 `--model` 的 `/init` 会在 `/root` 下自动执行对应 `buddy-buckyball-*-run`：成功 `poweroff -f`，失败 `reboot -f`（与 chip pk 回归一致）。
 
-==参数3 interactive== `--interactive` 保留共享 overlay 的交互 shell（`/init` → `/bin/sh -i`），不自动跑 chip/model 用例。仍会把对应 `/root` 文件打进 rootfs，便于手动执行。可与 `--chip` 或 `--model` 合用。
+==参数3 interactive== `--interactive` 保留共享 overlay 的交互 shell（`/init` → `/bin/sh -i`），不自动跑 chip/model 用例。仍会把对应 `/root` 文件打进 rootfs，便于手动执行。可与 `--chip` 或 `--chip --model` 合用。
 
 - [ ] TODO: 将模型构建加入自动workflow
 

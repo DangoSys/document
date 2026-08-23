@@ -1,35 +1,33 @@
 # workload
 
-`workload` 负责构建 `bb-tests/workloads` 里的程序，当前主要包括 CTest、OpTest、ModelTest 和 tutorial 四类。
+`workload` 负责构建 `bb-tests/workloads` 里的程序，当前主要包括 CTest、MLIRTest、ModelTest 和 tutorial 四类。
 - tutorial 是教程用的小程序，帮助不熟悉CMake的开发者学习。
 - CTest 是手写 C 测试，用于快速测试硬件功能和自定义指令。CTest直接调用软件侧的 Buckyball 指令封装，比如`mvin/mvout`、vecunit、transpose、TLB、MMIO、多核 barrier 等。
-- OpTest 是编译器算子测试，用于快速验证编译器实现。输入为 MLIR，检查 Linalg、Tile、Buckyball 这些编译层级能不能正确降到 RISC-V workload。
+- MLIRTest 是编译器算子测试，用于快速验证编译器实现。输入为 MLIR，检查 Linalg、Tile、Buckyball 这些编译层级能不能正确降到 RISC-V workload。
 - ModelTest 是端到端模型测试，用于进行实际任务的性能评估。把 LeNet、YOLO、Llama、Qwen 等模型从 pytorch 编译到加速器能运行的指令流。
 
 ## clean
 
-`workload clean` 用于清理 workload 输出目录，只会删除 `bb-tests/output`，不会删除 `bb-tests/build`。因此清理后会保留 CMake/Ninja 的构建缓存，下一次 `workload build` 仍可复用已有构建目录。
-
-这个命令适合在切换 chip 重新构建 workload 前使用，避免 `bb-tests/output` 中残留其它 chip 的 ELF，导致 bebop 生成测试列表时出现重复用例名。
+`workload clean` 用于清理指定 chip 的 workload 输出目录，只会删除 `bb-tests/output/<chip>`，不会删除 `bb-tests/workloads/build/<chip>`。因此清理后会保留 CMake/Ninja 的构建缓存，下一次 `workload build` 仍可复用已有构建目录。
 
 用法如下：
 
 ```bash
-bbdev workload --clean
+bbdev workload --clean '--chip toy'
 ```
 
-该 API 没有参数。
+`--chip` 是必填参数。
 
 ## build
 
-`workload build` 用于编译 workload。命令会进入 `bb-tests/build`，执行 `cmake -G Ninja ..` 和 `ninja`，基于 CMake + Ninja 进行构建。用法如下：
+`workload build` 用于编译 workload。命令会进入 `bb-tests/workloads/build/<chip>`，执行 `cmake -G Ninja ..` 和 `ninja`，基于 CMake + Ninja 进行构建。用法如下：
 
 ```shell
 bbdev workload --build '--chip toy'
 bbdev workload --build '--chip toy --model lenet'
 ```
 
-`--chip` 是必填参数。不指定 `--model` 时，构建指定 chip 下除了端到端模型外的所有 workload，包括 tutorial、CTest、OpTest、embench、coremark 等常规测试程序。构建结束后，会自动将 `*-baremetal`、`*-linux` 这些可执行文件同步到 `bb-tests/output/workloads`。对于路径形态为 `*/chips/<chip>` 的 chip workload，只会同步 `--chip` 指定的 chip 目录。
+`--chip` 是必填参数。不指定 `--model` 时，构建指定 chip 下除了端到端模型外的所有 workload，包括 tutorial、CTest、MLIRTest、embench、coremark 等常规测试程序。构建结束后，会自动将 `*-baremetal`、`*-linux` 这些可执行文件同步到 `bb-tests/output/<chip>/workloads`。对于路径形态为 `*/chips/<chip>` 的 chip workload，只会同步 `--chip` 指定的 chip 目录。
 ==参数 model==通过 `--model` 可指定端到端模型目标，当前支持 `lenet`、`mobilenet`、`resnet`、`yolo`、`bert`、`qwen3`、`gemma4`、`deepseekr1`、`llama2`、`stable-diffusion`、`whisper`。指定 `--model` 时只构建对应 ModelTest 目标，并不会更新其它 workload 如ctest。
 
 
@@ -37,7 +35,7 @@ bbdev workload --build '--chip toy --model lenet'
 
 `workload tohex` 用于把 workload 转成 P2E 可以加载的 hex 文件。P2E 上板流程通过 DDR backdoor 加载程序，输入不是 ELF，而是约定的 hex 格式，所以 baremetal 程序在上板前需要先做一次转换。
 
-命令会扫描 `bb-tests/output/workloads/src` 下所有文件名以 `-baremetal` 结尾的 ELF，并在同目录生成对应的 `.hex` 文件。因为起操作系统的情况，测试用例会被打包成一个完整的kernel烧录进FPGA，kernel的`tohex`转换在`bbdev kernel`中实现。
+命令会扫描 `bb-tests/output/<chip>/workloads/src` 下所有文件名以 `-baremetal` 结尾的 ELF，并在同目录生成对应的 `.hex` 文件。因为起操作系统的情况，测试用例会被打包成一个完整的kernel烧录进FPGA，kernel的`tohex`转换在`bbdev kernel`中实现。
 
 每个 ELF 的转换分两步，具体逻辑见`elf2hex.py`：
 

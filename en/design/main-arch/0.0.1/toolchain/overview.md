@@ -43,8 +43,8 @@ A minimal example (toy):
 bbdev compiler --build '--core toy'
 bbdev workload --clean
 bbdev workload --build '--chip toy'
-bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-singlecore-baremetal'
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig'
+bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-baremetal'
+bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal'
 ```
 
 For pebble, replace `toy` with `pebble` and use verilator config `sims.verilator.BuckyballPebbleVerilatorConfig`.

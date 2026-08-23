@@ -19,7 +19,7 @@ buckyball.bank_alloc
 buckyball.bank_mvin
 buckyball.bank_fp2int
 buckyball.bank_transpose
-buckyball.bank_mul_warp16
+buckyball.bank_vecmat16
 buckyball.bank_int2fp
 buckyball.bank_mvout
 buckyball.bank_release
@@ -65,7 +65,7 @@ bank_mvin(B_tile -> bFp32)
 bank_fp2int(aFp32 -> aI8)
 bank_fp2int(bFp32 -> bI8)
 bank_transpose(aI8 -> aI8T)
-bank_mul_warp16(aI8T, bI8 -> cI32)
+bank_vecmat16(aI8T, bI8 -> cI32)
 bank_int2fp(cI32 -> cFp32)
 bank_mvout(cFp32 -> C_tile)
 fence
@@ -85,7 +85,7 @@ buddy-opt input.mlir -lower-buckyball-to-bank-ssa
 Related tests:
 
 ```text
-bb-tests/workloads/src/OpTest/buckyball/matmul_16x64_64x16.mlir
-bb-tests/workloads/src/OpTest/buckyball/matmul_64x16_16x64.mlir
-bb-tests/workloads/src/OpTest/buckyball/matmul_1024x16_16x1024.mlir
+bb-tests/workloads/src/MLIRTest/buckyball/matmul_16x64_64x16.mlir
+bb-tests/workloads/src/MLIRTest/buckyball/matmul_64x16_16x64.mlir
+bb-tests/workloads/src/MLIRTest/buckyball/matmul_1024x16_16x1024.mlir
 ```

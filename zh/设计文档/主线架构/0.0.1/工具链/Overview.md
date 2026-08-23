@@ -43,8 +43,8 @@ compiler build → workload build → bebop-bemu → bebop-verilator
 bbdev compiler --build '--core toy'
 bbdev workload --clean
 bbdev workload --build '--chip toy'
-bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-singlecore-baremetal'
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig'
+bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-baremetal'
+bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal'
 ```
 
 pebble 把上面的 `toy` 换成 `pebble`，verilator config 换成 `sims.verilator.BuckyballPebbleVerilatorConfig` 即可。

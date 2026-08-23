@@ -34,5 +34,5 @@ buddy-opt input.mlir -convert-linalg-to-tile
 
 ```text
 compiler/thirdparty/buddy-mlir/tests/Conversion/lower-linalg-to-tile-batchmatmul-transpose-b.mlir
-bb-tests/workloads/src/OpTest/linalg
+bb-tests/workloads/src/MLIRTest/linalg
 ```

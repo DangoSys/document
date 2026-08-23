@@ -13,7 +13,7 @@ buckyball.bank_alloc
 buckyball.bank_release
 buckyball.bank_mvin
 buckyball.bank_mvout
-buckyball.bank_mul_warp16
+buckyball.bank_vecmat16
 buckyball.bank_transpose
 buckyball.bank_im2col
 buckyball.bank_fp2int
@@ -26,7 +26,7 @@ buckyball.bank_int2fp
 buckyball.mset(bankId, alloc=true, row, col)
 buckyball.mvin
 buckyball.mvout
-buckyball.mul_warp16
+buckyball.vecmat16
 buckyball.intr.transpose
 buckyball.intr.im2col
 buckyball.intr.fp2int
@@ -34,7 +34,7 @@ buckyball.intr.int2fp
 buckyball.mset(bankId, alloc=false, row=0, col=0)
 ```
 
-其中 `bank_mvin`、`bank_mvout`、`bank_mul_warp16` 会变成普通 `buckyball.mvin`、`buckyball.mvout`、`buckyball.mul_warp16`。`bank_transpose`、`bank_im2col`、`bank_fp2int`、`bank_int2fp` 会在这个 pass 里把 rs1/rs2 字段打包好，直接生成 `buckyball.intr.*`。
+其中 `bank_mvin`、`bank_mvout`、`bank_vecmat16` 会变成普通 `buckyball.mvin`、`buckyball.mvout`、`buckyball.vecmat16`。`bank_transpose`、`bank_im2col`、`bank_fp2int`、`bank_int2fp` 会在这个 pass 里把 rs1/rs2 字段打包好，直接生成 `buckyball.intr.*`。
 
 分配模型很直接：默认有 16 个物理 bank。`bank_alloc` 上的 `row` 和 `col` 表示这次分配需要连续占用多少个 bank：
 

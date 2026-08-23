@@ -47,8 +47,13 @@ K direction: 16
 The pass tries to increase K tile first, then N tile, then M tile. Each candidate tile must satisfy current bank depth and the hard-coded mvin/mvout depth limits in the code:
 
 ```text
-kMaxI8MvinDepthLines = 1024
-kMaxAccMvoutDepthLines = 256
+kMaxMvinDepth8b = 1024
+kMaxMvoutDepth32b = 256
+kBankLane = 16
+
+Tiling is bank-unit: each `smatmul_matmul` covers at most one bank depth on M
+and one bank lane on N/K (8-bit), or full K with bank-SSA lane splitting (f32).
+Not one matmul for an entire problem tile; HW scoreboard overlaps multi-bank work.
 ```
 
 If K needs only one tile, lowering is roughly:
@@ -95,7 +100,7 @@ filter: [KH, KW, C, OC]
 output: [N, OH, OW, OC]
 ```
 
-Lowering rewrites convolution into an im2col + matmul style dataflow. Input channels C are padded when needed to satisfy 16-byte bank row layout. Patches are then taken from the input feature map via `bank_im2col`, compute runs through `bank_mul_warp16`, and results are written to output.
+Lowering rewrites convolution into an im2col + matmul style dataflow. Input channels C are padded when needed to satisfy 16-byte bank row layout. Patches are then taken from the input feature map via `bank_im2col`, compute runs through `bank_vecmat16`, and results are written to output.
 
 Usage example:
 
@@ -106,5 +111,5 @@ buddy-opt input.mlir -convert-tile-to-buckyball
 Related tests:
 
 ```text
-bb-tests/workloads/src/OpTest/tile
+bb-tests/workloads/src/MLIRTest/tile
 ```

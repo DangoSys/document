@@ -12,7 +12,7 @@ compiler/src/Conversion/LowerBuckyball/LowerBuckyballPass.cpp
 buckyball.mset
 buckyball.mvin
 buckyball.mvout
-buckyball.mul_warp16
+buckyball.vecmat16
 buckyball.fp2int
 buckyball.int2fp
 buckyball.transpose
@@ -32,7 +32,7 @@ buckyball.counter_stop
 @llvm.riscv.bb.mset
 @llvm.riscv.bb.mvin
 @llvm.riscv.bb.mvout
-@llvm.riscv.bb.mul.warp16
+@llvm.riscv.bb.vecmat16
 @llvm.riscv.bb.fp2int
 @llvm.riscv.bb.int2fp
 @llvm.riscv.bb.transpose

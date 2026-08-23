@@ -13,7 +13,7 @@ buckyball.bank_alloc
 buckyball.bank_release
 buckyball.bank_mvin
 buckyball.bank_mvout
-buckyball.bank_mul_warp16
+buckyball.bank_vecmat16
 buckyball.bank_transpose
 buckyball.bank_im2col
 buckyball.bank_fp2int
@@ -26,7 +26,7 @@ Output is Buckyball ops with physical bank IDs, `buckyball.mset`, and a few intr
 buckyball.mset(bankId, alloc=true, row, col)
 buckyball.mvin
 buckyball.mvout
-buckyball.mul_warp16
+buckyball.vecmat16
 buckyball.intr.transpose
 buckyball.intr.im2col
 buckyball.intr.fp2int
@@ -34,7 +34,7 @@ buckyball.intr.int2fp
 buckyball.mset(bankId, alloc=false, row=0, col=0)
 ```
 
-Among these, `bank_mvin`, `bank_mvout`, and `bank_mul_warp16` become ordinary `buckyball.mvin`, `buckyball.mvout`, and `buckyball.mul_warp16`. `bank_transpose`, `bank_im2col`, `bank_fp2int`, and `bank_int2fp` pack rs1/rs2 fields in this pass and emit `buckyball.intr.*` directly.
+Among these, `bank_mvin`, `bank_mvout`, and `bank_vecmat16` become ordinary `buckyball.mvin`, `buckyball.mvout`, and `buckyball.vecmat16`. `bank_transpose`, `bank_im2col`, `bank_fp2int`, and `bank_int2fp` pack rs1/rs2 fields in this pass and emit `buckyball.intr.*` directly.
 
 The allocation model is straightforward: there are 16 physical banks by default. `row` and `col` on `bank_alloc` mean how many consecutive banks this allocation occupies:
 
