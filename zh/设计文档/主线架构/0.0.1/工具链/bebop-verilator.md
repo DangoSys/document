@@ -1,5 +1,7 @@
 # bebop-verilator
 
+RushB Host 驱动模式的内部原理见 [RushB 机制](./RushB机制.md)。
+
 `bebop-verilator` 是 bebop 加速过的 Verilator RTL 仿真。和 `bebop-bemu` 不同，这里会真正跑生成出来的 RTL，所以能抓到时序、接口握手、bank 访问这些纯软件模拟看不出来的问题。代价是更慢，而且第一次要把 Verilog 生成、仿真器编译这两步做完。
 
 推荐顺序：
