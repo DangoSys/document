@@ -22,7 +22,7 @@ sims.verilator.BuckyballPebbleVerilatorConfig
 
 ## clean
 
-`bebop-verilator clean` 删除指定 config 的构建目录，也就是 `arch/build/<config名>`。换 config、Verilog 生成异常、或者怀疑构建缓存脏了时用。
+`bebop-verilator clean` 删除指定 config 的构建目录，也就是 `arch/build/<config名>`。
 
 用法如下：
 

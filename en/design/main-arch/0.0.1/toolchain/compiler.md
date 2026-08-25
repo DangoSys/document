@@ -6,7 +6,7 @@ This builds `compiler/thirdparty/buddy-mlir` in the repository. After compilatio
 
 ## build
 
-`compiler build` product entry is the chip: `bazel build //examples/chips/<chip>:compiler` (or bbdev `--chip`). The default Core is the unique `cores/<pkg>` in the topology; cmake/ninja only compile buddy-mlir. Execution steps:
+`compiler build` product entry is the chip: `bbdev compiler --build '--chip <chip>'`. The default Core is the unique `cores/<pkg>` in the topology; cmake/ninja only compile buddy-mlir. Execution steps:
 
 1. Configure `compiler/thirdparty/buddy-mlir/build/cores/<compilerCore>` with cmake and set `BUDDY_EXTERNAL_DIALECTS_DIR` to `examples/cores/<compilerCore>/compiler`. Each `compilerCore` has its own CMake output tree; different cores can be built in parallel.
 2. Then `ninja` builds `buddy-opt`, `buddy-translate`, and `buddy-llc`. Symlinks such as `build/bin/buddy-opt-<core>` are created for manual invocation.

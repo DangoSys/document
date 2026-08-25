@@ -2,7 +2,7 @@
 
 `bebop-bemu` is pure software functional simulation. It does not run RTL; it executes workloads according to instruction semantics, used to verify test cases and ball functional behavior first. When writing balls and ctests day to day, run here first before moving to Verilator.
 
-The chip product entry for BEMU is Bazel: `bazel build //examples/chips/<chip>:emu`. Cargo only builds `bebop/Cargo.toml`. Chips with `emu/src/main.rs` (multi-hart) use `bebop-chip`; others use the bebop CLI `run bemu`.
+The chip entry for BEMU is bbdev: `bbdev bebop-bemu --sim '--chip <chip> ...'`. Cargo builds `examples/chips/<chip>/generated/bemu/Cargo.toml`. Chips with `emu/src/main.rs` (multi-hart) use `bebop-chip`; others use the bebop CLI `run bemu`.
 
 Build the workload before running:
 

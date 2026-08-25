@@ -2,7 +2,7 @@
 
 `bebop-bemu` 是纯软件功能模拟。它不跑 RTL，只按指令语义执行 workload，用来先验证测试用例和 ball 的功能行为对不对。日常写 ball、写 ctest 时应该先在这里跑通，再上 Verilator。
 
-每个 chip 的 BEMU 产品入口是 Bazel：`bazel build //examples/chips/<chip>:emu`。Cargo 只编 `bebop/Cargo.toml`。有 `emu/src/main.rs` 的 chip（多 hart）走 `bebop-chip`；否则走 bebop CLI 的 `run bemu`。
+每个 chip 的 BEMU 入口是 bbdev：`bbdev bebop-bemu --sim '--chip <chip> ...'`。Cargo 编 `examples/chips/<chip>/generated/bemu/Cargo.toml`。有 `emu/src/main.rs` 的 chip（多 hart）走 `bebop-chip`；否则走 bebop CLI 的 `run bemu`。
 
 跑之前需要先把 workload 编出来：
 

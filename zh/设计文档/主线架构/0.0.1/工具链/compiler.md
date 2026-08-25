@@ -6,7 +6,7 @@
 
 ## build
 
-`compiler build` 的产品入口是 chip：`bazel build //examples/chips/<chip>:compiler`（或 bbdev `--chip`）。默认 Core 来自 topology 里唯一的 `cores/<pkg>`；cmake/ninja 只负责编 buddy-mlir。实际执行步骤如下：
+`compiler build` 的产品入口是 chip：`bbdev compiler --build '--chip <chip>'`。默认 Core 来自 topology 里唯一的 `cores/<pkg>`；cmake/ninja 只负责编 buddy-mlir。实际执行步骤如下：
 
 1. 用 cmake 配置 `compiler/thirdparty/buddy-mlir/build/cores/<compilerCore>`，并把 `BUDDY_EXTERNAL_DIALECTS_DIR` 指到 `examples/cores/<compilerCore>/compiler`。每个 `compilerCore` 独立一份 CMake 输出，不同 core 可并行编。
 2. 再 `ninja` 编 `buddy-opt`、`buddy-translate`、`buddy-llc` 这三个后续 workload 会用到的工具；`build/bin/` 下会生成 `buddy-opt-<core>` 等 symlink 方便手工调用。

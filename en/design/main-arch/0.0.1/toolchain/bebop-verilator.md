@@ -8,11 +8,11 @@ Recommended order:
 2. Then use `bebop-verilator` on the same workload for RTL cross-check.
 3. After RTL or config changes, redo `verilog` + `build`; when only the workload changes, an existing simulator can go straight to `sim`.
 
-Common configs:
+The mill class is not a CLI flag; it lives in `examples/chips/<chip>/chip.toml` as `[chip].verilatorConfig`, e.g.:
 
 ```text
-sims.verilator.BuckyballToyVerilatorConfig
-sims.verilator.BuckyballPebbleVerilatorConfig
+toy    → sims.verilator.BuckyballToyVerilatorConfig
+pebble → sims.verilator.BuckyballPebbleVerilatorConfig
 ```
 
 Artifacts default to `arch/build/<config-name>/`.
@@ -28,14 +28,14 @@ Usage:
 bbdev bebop-verilator --clean '--chip toy'
 ```
 
-==Parameter 1 chip== `--chip` is required. Mill class comes from `chip.toml` `runtime.verilatorConfig`.
+==Parameter 1 chip== `--chip` is required. Mill class comes from `chip.toml` `[chip].verilatorConfig`.
 
 ==Parameter 2 output-dir== `--output-dir` is optional. Specifies the directory to clean. Defaults to the path derived from config.
 
 
 ## verilog
 
-`bebop-verilator verilog` only exports RTL; it does not compile the simulator. It invokes mill from `--chip` (`runtime.verilatorConfig`) and generates Chisel output to `arch/build/<config-name>/`.
+`bebop-verilator verilog` only exports RTL; it does not compile the simulator. It invokes mill from `--chip` (`[chip].verilatorConfig`) and generates Chisel output to `arch/build/<config-name>/`.
 
 Usage:
 

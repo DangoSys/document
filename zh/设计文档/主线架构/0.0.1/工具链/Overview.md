@@ -47,4 +47,4 @@ bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-baremetal'
 bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal'
 ```
 
-pebble 把上面的 `toy` 换成 `pebble`，verilator config 换成 `sims.verilator.BuckyballPebbleVerilatorConfig` 即可。
+pebble 把上面的 `toy` 换成 `pebble` 即可；mill 类名在 `examples/chips/<chip>/chip.toml` 的 `[chip].verilatorConfig`。

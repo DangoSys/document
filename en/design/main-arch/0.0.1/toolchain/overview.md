@@ -47,4 +47,4 @@ bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-baremetal'
 bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal'
 ```
 
-For pebble, replace `toy` with `pebble` and use verilator config `sims.verilator.BuckyballPebbleVerilatorConfig`.
+For pebble, replace `toy` with `pebble`; the mill class is in `examples/chips/<chip>/chip.toml` as `[chip].verilatorConfig`.

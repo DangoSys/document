@@ -34,10 +34,10 @@ bbdev <command> --<operation> '<operation args>'
 例如：
 
 ```bash
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-singlecore-baremetal --config sims.verilator.BuckyballToyVerilatorConfig --no-wave'
+bbdev bebop-verilator --run '--jobs 16 --chip toy --binary toy_vecunit_matmul_ones-singlecore-baremetal --no-wave'
 ```
 
-这里 `bebop-verilator` 是 command，`run` 是 operation，`--jobs`、`--binary`、`--config` 和 `--no-wave` 都是 `run` 自己的参数。
+这里 `bebop-verilator` 是 command，`run` 是 operation，`--jobs`、`--chip`、`--binary` 和 `--no-wave` 都是 `run` 自己的参数。
 
 > [!important] 注意
 > operation 后面的参数要用引号包成一个字符串。例如要写 `--build '--chip toy --model lenet'`，不要写 `--build --chip toy --model lenet`。不带参数的操作可以直接写，例如 `bbdev workload --clean`。
