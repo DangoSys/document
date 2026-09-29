@@ -3,7 +3,7 @@
 `lower-buckyball` lowers the Buckyball dialect to the LLVM dialect. Code lives at:
 
 ```text
-compiler/src/Conversion/LowerBuckyball/LowerBuckyballPass.cpp
+stack/compiler/src/Conversion/LowerBuckyball/LowerBuckyballPass.cpp
 ```
 
 This step is the final exit. Input may include:

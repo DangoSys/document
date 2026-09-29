@@ -39,7 +39,7 @@ Buckyball intrinsic wrapper
 LLVM IR
 ```
 
-`convert-linalg-to-tile` comes from buddy-mlir and turns Linalg matmul, batch matmul, and some conv2d ops into `tile.*` ops. Buckyball’s own main pipeline starts at `convert-tile-to-buckyball`, with code under `compiler/src/Conversion`. If a workload already contains `tile.*` or `buckyball.*` ops, testing can start from an intermediate layer without running the full pipeline from Linalg every time.
+`convert-linalg-to-tile` comes from buddy-mlir and turns Linalg matmul, batch matmul, and some conv2d ops into `tile.*` ops. Buckyball’s own main pipeline starts at `convert-tile-to-buckyball`, with code under `stack/compiler/src/Conversion`. If a workload already contains `tile.*` or `buckyball.*` ops, testing can start from an intermediate layer without running the full pipeline from Linalg every time.
 
 The Tile layer is the most important buffer in this pipeline. For example, matmul inputs might be `127x17 @ 17x127`, but the hardware’s basic granularity is 16 rows, 16 columns, and 16-byte bank rows. The Tile pass first checks that `A[M,K]`, `B[K,N]`, and `C[M,N]` match, then pads M/K/N to multiples of 16 and chooses tile sizes according to bank depth and mvin/mvout depth limits. If K is split into multiple segments, partial accumulation is also done in the Tile layer. That lets later `buckyball.matmul` ops keep simple semantics: one op covers writing one regular tile.
 

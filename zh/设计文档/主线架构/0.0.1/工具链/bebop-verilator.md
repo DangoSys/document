@@ -1,7 +1,5 @@
 # bebop-verilator
 
-RushB Host 驱动模式的内部原理见 [RushB 机制](./RushB机制.md)。
-
 `bebop-verilator` 是 bebop 加速过的 Verilator RTL 仿真。和 `bebop-bemu` 不同，这里会真正跑生成出来的 RTL，所以能抓到时序、接口握手、bank 访问这些纯软件模拟看不出来的问题。代价是更慢，而且第一次要把 Verilog 生成、仿真器编译这两步做完。
 
 推荐顺序：
@@ -146,7 +144,7 @@ bbdev bebop-verilator --batch '--diff --chip toy --test elf-tests --clean-before
 
 ==参数4 clean-before== `--clean-before` 可选。清 `bebop/test-artifacts` 后再跑。
 
-==参数5 diff== `--diff` 可选。让列表中的每个 workload 同时运行 Verilator RTL 与对应 chip 的 BEMU，并执行 bank DiffTest。该参数不能与 `--rushB` 同时使用；每个用例的 `bank_diff.ndjson` 保存在 `examples/chips/<chip>/emu/test-artifacts/difftest-<时间>-<workload>/log/` 下。
+==参数5 diff== `--diff` 可选。让列表中的每个 workload 同时运行 Verilator RTL 与对应 chip 的 BEMU，并执行 bank DiffTest。每个用例的 `bank_diff.ndjson` 保存在 `examples/chips/<chip>/emu/test-artifacts/difftest-<时间>-<workload>/log/` 下。
 
 
 ## 常见踩坑

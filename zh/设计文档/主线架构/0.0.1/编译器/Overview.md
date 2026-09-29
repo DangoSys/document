@@ -39,7 +39,7 @@ Buckyball intrinsic wrapper
 LLVM IR
 ```
 
-`convert-linalg-to-tile` 来自 buddy-mlir，负责把 Linalg 的 matmul、batch matmul、部分 conv2d 变成 `tile.*` op。Buckyball 自己实现的主线从 `convert-tile-to-buckyball` 开始，代码在 `compiler/src/Conversion`。如果 workload 里已经是 `tile.*` 或 `buckyball.*`，就可以从中间层开始测，不一定每次都从 Linalg 跑完整链路。
+`convert-linalg-to-tile` 来自 buddy-mlir，负责把 Linalg 的 matmul、batch matmul、部分 conv2d 变成 `tile.*` op。Buckyball 自己实现的主线从 `convert-tile-to-buckyball` 开始，代码在 `stack/compiler/src/Conversion`。如果 workload 里已经是 `tile.*` 或 `buckyball.*`，就可以从中间层开始测，不一定每次都从 Linalg 跑完整链路。
 
 Tile 层是这条链路里最重要的缓冲层。比如 matmul 的原始输入可以是 `127x17 @ 17x127`，但硬件的基本粒度是 16 行、16 列和 16-byte bank row。Tile pass 会先检查 `A[M,K]`、`B[K,N]`、`C[M,N]` 是否匹配，再把 M/K/N pad 到 16 的倍数，按 bank depth 和 mvin/mvout 深度限制选择 tile size。如果 K 被拆成多段，partial accumulation 也在 Tile 层完成。这样后面的 `buckyball.matmul` 就可以保持简单语义：一次 op 只覆盖写一个规则 tile。
 

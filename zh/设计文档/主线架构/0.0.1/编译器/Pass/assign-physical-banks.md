@@ -3,7 +3,7 @@
 `assign-physical-banks` 把 Bank SSA 里的虚拟 bank handle 分配成物理 bank ID。代码在：
 
 ```text
-compiler/src/Conversion/LowerBuckyball/AssignBuckyballBanksPass.cpp
+stack/compiler/src/Conversion/LowerBuckyball/AssignBuckyballBanksPass.cpp
 ```
 
 输入是：

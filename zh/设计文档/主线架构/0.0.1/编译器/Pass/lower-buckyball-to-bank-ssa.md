@@ -3,7 +3,7 @@
 `lower-buckyball-to-bank-ssa` 把 high-level Buckyball op 展开成显式 bank 数据流。代码在：
 
 ```text
-compiler/src/Conversion/LowerBuckyball/LowerBuckyballToBankSSAPass.cpp
+stack/compiler/src/Conversion/LowerBuckyball/LowerBuckyballToBankSSAPass.cpp
 ```
 
 当前这个 pass 主要处理 `buckyball.matmul`。输入还是算子形式：

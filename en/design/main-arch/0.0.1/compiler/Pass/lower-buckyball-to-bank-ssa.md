@@ -3,7 +3,7 @@
 `lower-buckyball-to-bank-ssa` expands high-level Buckyball ops into explicit bank dataflow. Code lives at:
 
 ```text
-compiler/src/Conversion/LowerBuckyball/LowerBuckyballToBankSSAPass.cpp
+stack/compiler/src/Conversion/LowerBuckyball/LowerBuckyballToBankSSAPass.cpp
 ```
 
 Currently this pass mainly handles `buckyball.matmul`. Input is still operator form:

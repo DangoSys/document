@@ -38,7 +38,7 @@ bbdev bebop-bemu --sim '--binary buddy-buckyball-mobilenetv3-run --pk --chip peb
 
 ==参数4 disasm== `--disasm` 可选。启用逐指令反汇编日志 `disasm.log`，仅在调试指令执行时使用；默认关闭。
 
-==参数5 tool-profile== `--tool-profile` 可选。输出 NPU 功能模型与 Spike/guest CPU 执行的粗粒度 host 时间占比；默认关闭。
+==参数5 tool-profile== `--tool-profile` 可选。输出 NPU 功能模型与 RVSim CPU 执行的粗粒度 host 时间占比；默认关闭。
 
 
 ## analysis

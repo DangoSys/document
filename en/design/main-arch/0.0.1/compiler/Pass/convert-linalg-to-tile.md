@@ -1,9 +1,9 @@
 # convert-linalg-to-tile
 
-`convert-linalg-to-tile` rewrites Linalg operators into the Tile dialect. The implementation is not in Buckyball’s own `compiler/src`; it lives in buddy-mlir:
+`convert-linalg-to-tile` rewrites Linalg operators into the Tile dialect. The implementation is not in Buckyball’s own `stack/compiler/src`; it lives in buddy-mlir:
 
 ```text
-compiler/thirdparty/buddy-mlir/midend/lib/Conversion/LowerLinalgToTile/LowerLinalgToTile.cpp
+stack/compiler/thirdparty/buddy-mlir/midend/lib/Conversion/LowerLinalgToTile/LowerLinalgToTile.cpp
 ```
 
 This pass handles entry points including `linalg.matmul`, `linalg.batch_matmul`, and some `linalg.conv_2d_*` ops. Output is `tile.tile_matmul` or `tile.tile_conv2d`. For example, an ordinary matmul goes from:
@@ -33,6 +33,6 @@ buddy-opt input.mlir -convert-linalg-to-tile
 Related tests:
 
 ```text
-compiler/thirdparty/buddy-mlir/tests/Conversion/lower-linalg-to-tile-batchmatmul-transpose-b.mlir
+stack/compiler/thirdparty/buddy-mlir/tests/Conversion/lower-linalg-to-tile-batchmatmul-transpose-b.mlir
 bb-tests/workloads/src/MLIRTest/linalg
 ```

@@ -27,7 +27,6 @@ bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-baremetal'
 bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-linux --pk'
 bbdev bebop-bemu --sim '--chip pebble --binary pebble_conv_im2col_test-baremetal'
 bbdev bebop-bemu --sim '--binary buddy-buckyball-mobilenetv3-run --pk --chip pebble --disasm'
-bbdev bebop-bemu --sim '--binary buddy-buckyball-mobilenetv3-run --pk --chip pebble --step-n 256'
 ```
 
 ==Parameter 1 chip== `--chip` is required. Specifies which chip's BEMU to use, e.g. `toy`, `pebble`, `goban`. `examples/chips/<chip>/chip.toml` must exist.
@@ -38,9 +37,8 @@ bbdev bebop-bemu --sim '--binary buddy-buckyball-mobilenetv3-run --pk --chip peb
 
 ==Parameter 4 disasm== `--disasm` is optional. Enables the per-instruction `disasm.log`, intended only for instruction-level debugging; it is disabled by default.
 
-==Parameter 5 tool-profile== `--tool-profile` is optional. Prints a coarse host-time breakdown between the NPU functional model and Spike/guest CPU execution; it is disabled by default.
+==Parameter 5 tool-profile== `--tool-profile` is optional. Prints a coarse host-time breakdown between the NPU functional model and RVSim CPU execution; it is disabled by default.
 
-==Parameter 6 step-n== `--step-n` is optional and defaults to `1`. It processes up to `N` guest instructions in one Rust-to-native BEMU call. Syscall, exit, and PC checks remain per guest instruction in native code; larger values reduce host wrapper overhead.
 
 Direct `bebop run bemu` requires `--log-dir`.
 

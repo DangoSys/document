@@ -3,7 +3,7 @@
 `lower-bank-ssa-to-intrinsics` lowers Buckyball ops to intrinsic wrappers. Code shares a file with `lower-buckyball`:
 
 ```text
-compiler/src/Conversion/LowerBuckyball/LowerBuckyballPass.cpp
+stack/compiler/src/Conversion/LowerBuckyball/LowerBuckyballPass.cpp
 ```
 
 Input should already have gone through `assign-physical-banks`. That is, virtual bank handles in Bank SSA are replaced by physical bank IDs, and `bank_alloc` / `bank_release` have become `buckyball.mset`.

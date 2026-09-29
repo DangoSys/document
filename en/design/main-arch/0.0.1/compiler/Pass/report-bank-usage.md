@@ -3,7 +3,7 @@
 `report-bank-usage` is a diagnostic pass; it does not change IR. Code lives at:
 
 ```text
-compiler/src/Conversion/LowerBuckyball/ReportBankUsagePass.cpp
+stack/compiler/src/Conversion/LowerBuckyball/ReportBankUsagePass.cpp
 ```
 
 It reads the alloc/release timeline of `buckyball.mset` and reports peak physical bank usage in a function. Input should already have gone through `assign-physical-banks`, because this pass needs constant-form bank IDs.

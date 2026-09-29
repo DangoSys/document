@@ -144,7 +144,7 @@ bbdev bebop-verilator --batch '--diff --chip toy --test elf-tests --clean-before
 
 ==Parameter 4 clean-before== `--clean-before` is optional. Clears `bebop/test-artifacts` before running.
 
-==Parameter 5 diff== `--diff` is optional. It runs every workload with both Verilator RTL and the selected chip's BEMU and performs bank DiffTest. It cannot be combined with `--rushB`. Each case writes `bank_diff.ndjson` under `examples/chips/<chip>/emu/test-artifacts/difftest-<timestamp>-<workload>/log/`.
+==Parameter 5 diff== `--diff` is optional. It runs every workload with both Verilator RTL and the selected chip's BEMU and performs bank DiffTest. Each case writes `bank_diff.ndjson` under `examples/chips/<chip>/emu/test-artifacts/difftest-<timestamp>-<workload>/log/`.
 
 
 ## Common Pitfalls

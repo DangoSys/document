@@ -1,9 +1,9 @@
 # convert-linalg-to-tile
 
-`convert-linalg-to-tile` 把 Linalg 算子改写成 Tile dialect。实现不在 Buckyball 自己的 `compiler/src` 里，而在 buddy-mlir：
+`convert-linalg-to-tile` 把 Linalg 算子改写成 Tile dialect。实现不在 Buckyball 自己的 `stack/compiler/src` 里，而在 buddy-mlir：
 
 ```text
-compiler/thirdparty/buddy-mlir/midend/lib/Conversion/LowerLinalgToTile/LowerLinalgToTile.cpp
+stack/compiler/thirdparty/buddy-mlir/midend/lib/Conversion/LowerLinalgToTile/LowerLinalgToTile.cpp
 ```
 
 这个 pass 处理的入口包括 `linalg.matmul`、`linalg.batch_matmul` 和部分 `linalg.conv_2d_*`。输出是 `tile.tile_matmul` 或 `tile.tile_conv2d`。例如普通 matmul 会从：
@@ -33,6 +33,6 @@ buddy-opt input.mlir -convert-linalg-to-tile
 相关测试可以看：
 
 ```text
-compiler/thirdparty/buddy-mlir/tests/Conversion/lower-linalg-to-tile-batchmatmul-transpose-b.mlir
+stack/compiler/thirdparty/buddy-mlir/tests/Conversion/lower-linalg-to-tile-batchmatmul-transpose-b.mlir
 bb-tests/workloads/src/MLIRTest/linalg
 ```

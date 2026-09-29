@@ -3,7 +3,7 @@
 `assign-physical-banks` maps virtual bank handles in Bank SSA to physical bank IDs. Code lives at:
 
 ```text
-compiler/src/Conversion/LowerBuckyball/AssignBuckyballBanksPass.cpp
+stack/compiler/src/Conversion/LowerBuckyball/AssignBuckyballBanksPass.cpp
 ```
 
 Input ops:

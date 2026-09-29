@@ -3,7 +3,7 @@
 `report-bank-usage` 是诊断 pass，不改变 IR。代码在：
 
 ```text
-compiler/src/Conversion/LowerBuckyball/ReportBankUsagePass.cpp
+stack/compiler/src/Conversion/LowerBuckyball/ReportBankUsagePass.cpp
 ```
 
 它读取 `buckyball.mset` 的 alloc/release 时间线，统计一个函数里物理 bank 的使用峰值。输入应该已经经过 `assign-physical-banks`，因为这个 pass 需要看到常量形式的 bank ID。

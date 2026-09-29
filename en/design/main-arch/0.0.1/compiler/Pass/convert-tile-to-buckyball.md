@@ -3,7 +3,7 @@
 `convert-tile-to-buckyball` is Buckyball’s own Tile lowering pass. Code lives at:
 
 ```text
-compiler/src/Conversion/LowerTileToBuckyball/LowerTileToBuckyball.cpp
+stack/compiler/src/Conversion/LowerTileToBuckyball/LowerTileToBuckyball.cpp
 ```
 
 Input is `tile.tile_matmul`, `tile.tile_transpose`, and `tile.tile_conv2d`. Output is `scf.for`, `memref.subview`, and Buckyball ops. It is not a simple rename: shape, padding, tiling, and some hardware limits are handled here.
