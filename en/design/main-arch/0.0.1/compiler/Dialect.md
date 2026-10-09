@@ -70,7 +70,6 @@ buckyball.vecmat16
 buckyball.fp2int
 buckyball.int2fp
 buckyball.transpose
-buckyball.fence
 ```
 
 This layer is close to the ISA. Operands should be physical bank IDs, depth, stride, iter, mode, and similar parameters. After that, `lower-buckyball` lowers them to LLVM intrinsics.

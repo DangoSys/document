@@ -18,7 +18,6 @@ buckyball.intr.transpose
 buckyball.intr.im2col
 buckyball.intr.fp2int
 buckyball.intr.int2fp
-buckyball.fence
 ```
 
 These continue toward `buckyball.intr.*` / LLVM export patterns. For `transpose`, `im2col`, `fp2int`, and `int2fp`, `assign-physical-banks` already packed bank IDs, iter, and related fields into rs1/rs2 form, so this pass does no bank allocation.

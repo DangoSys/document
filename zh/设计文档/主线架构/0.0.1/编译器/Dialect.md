@@ -70,7 +70,6 @@ buckyball.vecmat16
 buckyball.fp2int
 buckyball.int2fp
 buckyball.transpose
-buckyball.fence
 ```
 
 这一层已经接近 ISA。操作数里应该是物理 bank ID、depth、stride、iter、mode 这类参数。再往后，`lower-buckyball` 会把它们降到 LLVM intrinsic。

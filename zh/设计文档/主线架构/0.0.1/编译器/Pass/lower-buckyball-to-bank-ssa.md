@@ -23,7 +23,6 @@ buckyball.bank_vecmat16
 buckyball.bank_int2fp
 buckyball.bank_mvout
 buckyball.bank_release
-buckyball.fence
 ```
 
 `buckyball.matmul` 要求输入是 static rank-2 memref，shape 满足：

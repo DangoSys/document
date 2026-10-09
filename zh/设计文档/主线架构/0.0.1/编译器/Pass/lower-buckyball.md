@@ -17,7 +17,6 @@ buckyball.fp2int
 buckyball.int2fp
 buckyball.transpose
 buckyball.im2col
-buckyball.fence
 buckyball.print_memref
 buckyball.print_scalar
 buckyball.counter_start
@@ -37,7 +36,6 @@ buckyball.counter_stop
 @llvm.riscv.bb.int2fp
 @llvm.riscv.bb.transpose
 @llvm.riscv.bb.im2col
-@llvm.riscv.bb.fence
 ```
 
 `print_memref` 和 `print_scalar` 会降到 `printf` 调用。`counter_start` / `counter_stop` 会使用 inline asm 读 `rdcycle`，用于简单性能计数。

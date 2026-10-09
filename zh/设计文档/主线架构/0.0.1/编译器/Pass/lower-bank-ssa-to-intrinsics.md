@@ -18,7 +18,6 @@ buckyball.intr.transpose
 buckyball.intr.im2col
 buckyball.intr.fp2int
 buckyball.intr.int2fp
-buckyball.fence
 ```
 
 会继续往 `buckyball.intr.*` / LLVM export pattern 方向转换。`transpose`、`im2col`、`fp2int`、`int2fp` 在 `assign-physical-banks` 里已经把 bank ID、iter 等字段打包到了 rs1/rs2 形式，所以这里不再做 bank 分配。

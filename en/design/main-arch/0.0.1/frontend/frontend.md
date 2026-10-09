@@ -32,7 +32,7 @@ The frontend domain accepts `RoCCCommandBB` from the CPU. That packet still carr
 
 - Instruction ownership: `domain_id` distinguishes FRONTEND, MEM, GP, and BALL.
 - Data access: `BankAccessInfo` describes up to two read banks and one write bank.
-- Frontend control: `isFence` and `isBarrier` mark control instructions that do not enter the ROB.
+- Frontend control: `isBarrier` mark control instructions that do not enter the ROB.
 
 
 Decoded `PostGDCmd` is the instruction form all downstream frontend modules share. Bank information is analogous to register information in a CPU instruction. Bank access comes from `funct7[6:4]` and `rs1Data`: the former describes the access pattern; the latter describes where bank ids come from:

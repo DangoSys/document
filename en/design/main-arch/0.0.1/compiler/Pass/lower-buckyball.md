@@ -17,7 +17,6 @@ buckyball.fp2int
 buckyball.int2fp
 buckyball.transpose
 buckyball.im2col
-buckyball.fence
 buckyball.print_memref
 buckyball.print_scalar
 buckyball.counter_start
@@ -37,7 +36,6 @@ Output is RISC-V intrinsic calls in the LLVM dialect, for example:
 @llvm.riscv.bb.int2fp
 @llvm.riscv.bb.transpose
 @llvm.riscv.bb.im2col
-@llvm.riscv.bb.fence
 ```
 
 `print_memref` and `print_scalar` lower to `printf` calls. `counter_start` / `counter_stop` use inline asm to read `rdcycle` for simple performance counting.
