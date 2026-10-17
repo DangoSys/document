@@ -22,7 +22,7 @@ matmul 支持默认 indexing map，也支持 B 转置的形式。遇到 B 转置
 
 batch matmul 会按 batch 维度拆成多个子矩阵。每个 batch slice 会生成一次 `tile.tile_matmul`。这一步还是静态展开，不是在 Tile 层保留一个 batch op。
 
-conv2d 只在满足当前 Buckyball Tile lowering 能处理的条件时才转成 `tile.tile_conv2d`。代码里会检查输入、filter、输出都是 rank-4 static memref，元素类型是 f32，并且 im2col 相关参数能放进当前 bank depth 和指令字段限制。不满足这些条件时，pass 不会强行改写。
+conv2d 只在满足规定条件时才转成 `tile.tile_conv2d`。代码里会检查输入、filter、输出都是 rank-4 static memref，输入和输出的元素类型是 f32，filter 是 f32 或 i8，并且 shape、stride 和 padding 符合约束。不满足这些条件时，pass 不会强行改写。
 
 用法示例：
 
@@ -34,5 +34,4 @@ buddy-opt input.mlir -convert-linalg-to-tile
 
 ```text
 stack/compiler/thirdparty/buddy-mlir/tests/Conversion/lower-linalg-to-tile-batchmatmul-transpose-b.mlir
-bb-tests/workloads/src/MLIRTest/linalg
 ```

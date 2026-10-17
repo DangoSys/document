@@ -6,7 +6,7 @@
 stack/compiler/src/Conversion/LowerBuckyball/ReportBankUsagePass.cpp
 ```
 
-它读取 `buckyball.mset` 的 alloc/release 时间线，统计一个函数里物理 bank 的使用峰值。输入应该已经经过 `assign-physical-banks`，因为这个 pass 需要看到常量形式的 bank ID。
+它读取 `buckyball.mset` 的 alloc/release 时间线，统计函数顶层物理 group 的使用峰值。输入应该已经经过 `assign-physical-banks`，因为这个 pass 需要看到常量形式的 bank ID。
 
 输出打印到 stderr，格式类似：
 
@@ -16,7 +16,7 @@ stack/compiler/src/Conversion/LowerBuckyball/ReportBankUsagePass.cpp
 
 其中：
 
-- `peak` 是同时占用的物理 bank 峰值。
+- `peak` 是同时占用的物理 group 峰值。
 - `alloc` 是 alloc 事件数量。
 - `release` 是 release 事件数量。
 - `leaked` 是函数结束时还没释放的 allocation 数量。
@@ -33,9 +33,9 @@ buddy-opt input.mlir -report-bank-usage='bank_num=16 verbose=true'
 - bank ID 不是常量会失败。
 - bank ID 超出范围会失败。
 - alloc 的 row/col 非法会失败。
-- 同一个 base bank 重复 alloc 会失败。
-- 两次 alloc 有重叠 bank 会失败。
+- 同一个虚拟 bank 重复 alloc 会失败。
+- 同时映射的 group 数超过 `bank_num` 会失败。
 - release 没有对应 alloc 会失败。
 - 函数结束还有未释放 allocation 会失败。
 
-它适合放在 `assign-physical-banks` 后面，用来确认某个 lowering 的 bank 生命周期是否符合预期。
+它适合放在 `assign-physical-banks` 后面，用来确认函数顶层的 bank 生命周期是否符合预期；当前不递归统计循环和分支内部的操作。

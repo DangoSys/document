@@ -153,11 +153,11 @@ bbdev bebop-verilator --run '--chip pebble --binary pebble-pebble-ctest-transpos
 结果正确后，再运行 Ball 的 UVM 验证。TransposeBall 的验证目录包含 case generator、scoreboard、coverage 和 testbench：
 
 ```bash
-bbdev uvm --build '--ball=transpose'
-bbdev uvm --run '--ball=transpose' -- '+BID=0'
+bbdev uvm --build '--chip pebble --ball transpose'
+bbdev uvm --run '--chip pebble --ball transpose'
 ```
 
-`BID` 必须和当前 Verilator 配置中的 Ball ID 一致。UVM 直接观察 bank 请求、写回数据和完成响应，可以在整芯片 workload 之外定位协议问题。
+`BID` 由所选 Chip 的配置确定。UVM 直接观察 bank 请求、写回数据和完成响应，可以在整芯片 workload 之外定位协议问题。
 
 ## 以 ReluBall 为例
 
@@ -507,7 +507,7 @@ bbdev workload --build "--chip toy --ctest"
 bbdev verilator --sim "--chip toy --binary <二进制名字> --batch"
 ```
 
-`--binary` 传的是**名字**，不是路径。名字取决于仓库当时的命名规则，所以不要凭印象写，先去输出目录里找：
+`--binary` 可以传**名字**，也可以传 ELF 路径。名字取决于仓库当时的命名规则，所以不要凭印象写，先去输出目录里找：
 
 ```bash
 find bb-tests/output -name '*relu*'

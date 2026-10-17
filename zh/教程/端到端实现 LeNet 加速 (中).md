@@ -9,7 +9,6 @@
 ```bash
 bbdev config --install
 bbdev model --build '--chip pebble --model lenet'
-bbdev workload --build '--chip pebble --model lenet'
 ```
 
 模型构建目录的职责不同：
@@ -27,13 +26,13 @@ stack/models/build/pebble/lenet/
 BEMU 只执行指令语义，适合确认模型程序、资源布局和 Ball 功能模型：
 
 ```bash
-bbdev bebop-bemu --sim '--chip pebble --binary <lenet-run-产物> --pk --itrace --mtrace'
+bbdev bebop-bemu --sim '--chip pebble --model lenet --itrace --mtrace'
 ```
 
-`<lenet-run-产物>` 应从 `bb-tests/output/pebble/workloads/src` 或模型 artifact 目录中确认，不要凭文件名猜。运行日志中至少要检查：
+模型包应从模型 artifact 目录中确认，不要凭文件名猜。运行日志中至少要检查：
 
 - 程序能找到 `model.json` 和 payload；
-- 输入图像和输出分类的形状一致；
+- 输入图像和输出分类的形状正确；
 - `mtrace` 中的 bank 分配、搬入、计算、搬出顺序符合预期；
 - 没有因为 shape 不对而走未实现的 fallback。
 
@@ -41,10 +40,12 @@ bbdev bebop-bemu --sim '--chip pebble --binary <lenet-run-产物> --pk --itrace 
 
 ## 3. 用 Verilator 对照 RTL
 
-功能模型通过后，生成并编译 pebble 的 RTL：
+功能模型通过后，把模型打包进 kernel，再生成并编译 pebble 的 RTL：
 
 ```bash
-bbdev bebop-verilator --run '--chip pebble --binary <lenet-run-产物> --itrace --mtrace --pmctrace --ctrace'
+bbdev kernel --build '--chip pebble --model lenet'
+find bb-tests/output/kernel/pebble -name 'fw_payload*.elf'
+bbdev bebop-verilator --run '--chip pebble --binary <上一步生成的固件ELF文件名> --itrace --mtrace --pmctrace --ctrace'
 ```
 
 对照时需要保持以下内容相同：
@@ -61,8 +62,10 @@ bbdev bebop-verilator --run '--chip pebble --binary <lenet-run-产物> --itrace 
 BEMU 和 Verilator 可以使用同一个 workload 做对照。差分测试关注的是 bank 级状态：
 
 ```bash
+bbdev workload --build '--chip pebble'
+bbdev bebop-verilator --verilog '--chip pebble --diff'
 bbdev bebop-verilator --build '--chip pebble --diff --jobs 16'
-bbdev bebop-verilator --batch '--chip pebble --diff --test elf-tests --clean-before'
+bbdev bebop-verilator --batch '--chip pebble --diff --test bare-tests --clean-before'
 ```
 
 差分失败时，先区分三类情况：
@@ -71,7 +74,7 @@ bbdev bebop-verilator --batch '--chip pebble --diff --test elf-tests --clean-bef
 2. **指令流相同但 bank 状态不同**：检查 RTL 的地址、掩码、延迟和完成握手；
 3. **bank 状态相同但最终输出不同**：检查运行时解包、输入数据和模型参数。
 
-差分报告位于对应 Chip 的 `examples/chips/<chip>/emu/test-artifacts/`。保留失败目录中的日志和输入，修复后用同一个 case 重跑，不要只看最终分类结果。
+差分报告位于对应 Chip 的 `bebop/target/<chip>/test-artifacts/`。保留失败目录中的日志和输入，修复后用同一个 case 重跑，不要只看最终分类结果。
 
 ## 5. 给模型加 trace
 

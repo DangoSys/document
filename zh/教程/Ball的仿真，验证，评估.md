@@ -95,7 +95,7 @@ bbdev bebop-verilator --build '--chip pebble --jobs 16'
 | `binary not found` | workload 是否为同一个 chip 构建，文件是否在 `bb-tests/output/<chip>/workloads/src` |
 | BEMU 通过、RTL 失败 | bank 地址、ready/valid、复位、完成响应和写掩码 |
 | `VSRC_PATH does not exist` | 是否先执行 `verilog`，以及 build 是否使用同一 chip |
-| build marker mismatch | 清理旧的 `arch/build/<config>` 后重新生成和编译 |
+| build marker mismatch | 清理旧的 `arch/build/<chip>/<config>` 后重新生成和编译 |
 | 仿真超时 | Ball 是否丢失 `cmdResp`，SubROB/ROB ID 是否原样返回 |
 
 ## 4. 用 UVM 验证协议和覆盖率
@@ -103,8 +103,8 @@ bbdev bebop-verilator --build '--chip pebble --jobs 16'
 Ball 的 UVM 环境位于 `examples/balls/<ball>/verify`。以 transpose 为例，环境由 sequence、scoreboard、coverage 和 testbench 组成：
 
 ```bash
-bbdev uvm --build '--ball=transpose'
-bbdev uvm --run '--ball=transpose' -- '+BID=0'
+bbdev uvm --build '--chip pebble --ball transpose'
+bbdev uvm --run '--chip pebble --ball transpose'
 ```
 
 UVM 适合做两类检查：
@@ -137,8 +137,8 @@ examples/chips/<chip>/regression/batch/verilator/workloads-bare.toml
 运行回归：
 
 ```bash
-bbdev bebop-bemu --batch '--chip pebble --test elf-tests --clean-before'
-bbdev bebop-verilator --batch '--chip pebble --test elf-tests --clean-before'
+bbdev bebop-bemu --batch '--chip pebble --test bare-tests --clean-before'
+bbdev bebop-verilator --batch '--chip pebble --test bare-tests --clean-before'
 ```
 
 回归清单是 Ball 进入主线前的最低保护。它应覆盖普通输入、边界输入、非法字段和至少一个多 Ball 或多核场景。

@@ -4,12 +4,11 @@
 
 ## 1. 准备 FPGA 需要的产物
 
-先构建模型、workload 和 kernel：
+先构建模型和 kernel：
 
 ```bash
 bbdev config --install
 bbdev model --build '--chip pebble --model lenet'
-bbdev workload --build '--chip pebble --model lenet'
 bbdev kernel --build '--chip pebble --model lenet'
 ```
 
@@ -23,13 +22,15 @@ bbdev kernel --build '--chip pebble --model lenet --model-storage ddr --guest-me
 
 ## 2. 先用 P2E 验证 bitstream
 
-`bebop-p2e` 负责生成 Verilog、构建 bitstream 和运行镜像。运行阶段必须同时给出 `.hex` 镜像和 bitstream 路径：
+`bebop-p2e` 负责生成 Verilog、构建 bitstream 和运行镜像。使用 hex 镜像时，运行阶段必须同时给出 `.hex` 镜像和 bitstream 路径：
 
 ```bash
 bbdev bebop-p2e --verilog '--chip pebble'
 bbdev bebop-p2e --buildbitstream '--chip pebble'
 bbdev bebop-p2e --runworkload '--chip pebble --image <kernel-or-workload-hex> --bitstream <build-dir>/fpgaCompDir/bitstream.bit'
 ```
+
+DDR 模型运行时，把上面命令的 `--image <kernel-or-workload-hex>` 换成 `--load-manifest <本次构建生成的.load.json路径>`，两者只能选一个。
 
 具体 FPGA 平台由 Chip 的配置决定。构建时间通常比 Verilator 长，调试时应先固定 bitstream，只替换 workload 或输入。若必须重新生成 RTL，先清理旧的 P2E 构建目录，避免把旧 bitstream 和新配置混在一起。
 

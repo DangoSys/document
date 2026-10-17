@@ -13,7 +13,7 @@ B: memref<KxNxf32>
 C: memref<MxNxf32>
 ```
 
-这一层不关心 Buckyball 有多少 bank，也不关心 `vecmat16` 一次能算多少列。它只说明 `C = A * B`。从 PyTorch 导出的模型，或者手写 MLIRTest，一般会先落到这一层或更低一层。
+这一层不关心 Buckyball 有多少 bank，也不关心 `vecmat16` 一次能算多少列。它只说明 `C += A * B`。从 PyTorch 导出的模型，或者手写 MLIRTest，一般会先落到这一层或更低一层。
 
 ## Tile Dialect
 
@@ -40,7 +40,7 @@ Buckyball dialect 表达加速器相关的操作。它内部又分三类。
 第一类是 high-level op，比如：
 
 ```text
-buckyball.matmul A B C
+buckyball.smatmul_matmul A B C
 ```
 
 它表示一次硬件矩阵乘 tile，但还没有显式 bank 生命周期。
@@ -50,15 +50,15 @@ buckyball.matmul A B C
 ```text
 buckyball.bank_alloc
 buckyball.bank_mvin
-buckyball.bank_fp2int
+buckyball.bank_quant_f32_to_i8
 buckyball.bank_transpose
 buckyball.bank_vecmat16
-buckyball.bank_int2fp
+buckyball.bank_int32_to_fp32
 buckyball.bank_mvout
 buckyball.bank_release
 ```
 
-这一层把数据流写清楚了，但 bank 仍然是虚拟 handle。虚拟 bank 的好处是 lowering 可以先描述“需要哪些片上缓冲”，再由后面的 pass 统一分配物理 bank ID。
+这一层把数据流写清楚了，但 bank 仍然是虚拟 handle。虚拟 bank 的好处是 lowering 可以先描述“需要哪些片上缓冲”，再由后面的 pass 统一分配虚拟 bank ID。
 
 第三类是 intrinsic wrapper，比如：
 
@@ -67,9 +67,9 @@ buckyball.mset
 buckyball.mvin
 buckyball.mvout
 buckyball.vecmat16
-buckyball.fp2int
-buckyball.int2fp
+buckyball.quant_f32_to_i8
+buckyball.int32_to_fp32
 buckyball.transpose
 ```
 
-这一层已经接近 ISA。操作数里应该是物理 bank ID、depth、stride、iter、mode 这类参数。再往后，`lower-buckyball` 会把它们降到 LLVM intrinsic。
+这一层已经接近 ISA。操作数里应该是虚拟 bank ID、depth、stride、iter、mode 这类参数。再往后，`lower-buckyball` 会把它们降到 intrinsic wrapper。

@@ -107,7 +107,7 @@ bbdev model --build '--chip pebble --model lenet'
 - `configs/model.toml` 保存模型参数；
 - `pack.py` 把可执行文件和模型资源打成运行时包。
 
-构建过程的中间文件位于 `stack/models/build/pebble/lenet/`。其中 `forward.mlir` 描述前向计算，`subgraph0.mlir` 是交给加速器 lowering 的子图，`lenet.payload/` 保存权重和参数。先查看这些文件，确认导入阶段没有把算子合并成无法解释的黑盒。
+构建过程的中间文件位于 `stack/models/build/pebble/lenet/`。其中 `generated/forward.mlir` 描述前向计算，`generated/subgraph0.mlir` 是交给加速器 lowering 的子图，`artifact/lenet.payload/` 保存权重和参数。先查看这些文件，确认导入阶段没有把算子合并成无法解释的黑盒。
 
 ## 3. 从 Linalg 到 Buckyball
 
@@ -126,7 +126,7 @@ Bank SSA        把数据在片上存储（bank）里怎么流动写出来
    ↓ assign-physical-banks
                 把虚拟的 bank 绑定到具体的 bank 编号
    ↓ lower-bank-ssa-to-intrinsics → lower-buckyball
-LLVM IR         带上 RISC-V 自定义指令，后面交给 LLVM
+指令 wrapper    完成其余方言转换后，导出 LLVM IR，交给 LLVM
 ```
 
 对应的主要 Pass 是：
@@ -134,9 +134,9 @@ LLVM IR         带上 RISC-V 自定义指令，后面交给 LLVM
 1. `convert-linalg-to-tile`：把卷积和矩阵乘变成硬件无关的 Tile 操作；
 2. `convert-tile-to-buckyball`：处理 padding、tiling 和 partial accumulation；
 3. `lower-buckyball-to-bank-ssa`：把一次算子展开成 bank 分配、搬入、计算、搬出和释放；
-4. `assign-physical-banks`：把虚拟 bank 绑定到具体 bank，并插入 `mset`；
+4. `assign-physical-banks`：把虚拟 bank 绑定到具体 bank 编号，并插入 `mset`；
 5. `lower-bank-ssa-to-intrinsics`：生成 Buckyball intrinsic wrapper；
-6. `lower-buckyball`：导出 LLVM dialect 和 RISC-V intrinsic。
+6. `lower-buckyball`：生成可导出的指令 wrapper；LLVM IR 由后续翻译步骤导出。
 
 每一层只解决一类问题。shape 和 padding 在 Tile 层完成，bank 生命周期在 Bank SSA 层完成，最终编码留给 LLVM 后端。这样修改 bank 数量时，不需要重新解释模型算子；修改模型 shape 时，也不会把物理 bank ID 写进高层 MLIR。
 
@@ -161,9 +161,9 @@ LeNet 的全连接层按这个规则处理时，行数、列数会变成这样�
 
 ```bash
 buddy-opt input.mlir -convert-linalg-to-tile -o tile.mlir
-buddy-opt tile.mlir -convert-tile-to-buckyball -o buckyball.mlir
-buddy-opt buckyball.mlir -lower-buckyball-to-bank-ssa -o bank.mlir
-buddy-opt bank.mlir -assign-physical-banks -o physical.mlir
+buddy-opt --target=pebble tile.mlir -convert-tile-to-buckyball -o buckyball.mlir
+buddy-opt --target=pebble buckyball.mlir -lower-buckyball-to-bank-ssa -o bank.mlir
+buddy-opt --target=pebble bank.mlir -assign-physical-banks -o physical.mlir
 ```
 
 一个小提醒：这一步要求输入里的数据已经是内存形式（memref），如果直接喂纯数值形式（tensor）的 IR，会报 `expected static memref operands`。先做一遍 bufferize 再喂进去就行。
@@ -182,13 +182,13 @@ buddy-opt bank.mlir -assign-physical-banks -o physical.mlir
 
 ## 5. 生成 workload
 
-模型 lowering 通过后，构建目标 Chip 的 ModelTest：
+模型 lowering 通过后，构建目标 Chip 的模型程序：
 
 ```bash
-bbdev workload --build '--chip pebble --model lenet'
+bbdev model --build '--chip pebble --model lenet'
 ```
 
-普通 CTest 和模型 workload 共用 `bb-tests/output/pebble/workloads/src` 作为产物目录，但模型还会在 `stack/models/build/pebble/lenet/artifact/` 保留资源和运行包。后续仿真时必须使用同一个 Chip 生成的产物，不能把 toy 的模型二进制拿到 pebble 上运行。
+普通 CTest 使用 `bb-tests/output/pebble/workloads/src` 作为产物目录，模型会在 `stack/models/build/pebble/lenet/artifact/` 保留资源和运行包。后续仿真时必须使用同一个 Chip 生成的产物，不能把 toy 的模型二进制拿到 pebble 上运行。
 
 ## 小结
 

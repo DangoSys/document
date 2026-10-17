@@ -15,7 +15,7 @@ accelerator reset
   -> Frontend accepts the first CPU RoCC command
 ```
 
-CPU 不会等待 Buckyball boot 才执行普通指令。它在系统启动期间可以继续取指、访问内存和运行 Linux；但在 Buckyball boot 未完成时，RoCC 的 Buckyball 命令入口保持不可用：`cmd.ready=0`，`busy=1`。因此软件无法向一个尚未完成初始化的加速器提交命令。
+CPU 不会等待 Buckyball boot 才执行普通指令。它在系统启动期间可以继续取指、访问内存和运行 Linux；但在 Buckyball boot 未完成时，RoCC 的 Buckyball 命令入口保持不可用：`cmd.ready=0`，`busy=0`。因此软件无法向一个尚未完成初始化的加速器提交命令。
 
 ## Buckyball Boot 顺序
 
@@ -38,7 +38,8 @@ MSET rs2
   [9:5]   col / group count
   [10]    alloc
   [11]    clear
-  [63:12] reserved, must be zero
+  [12]    transfer, boot uses 0
+  [63:13] reserved, must be zero
 ```
 
 `clear` 仅在 `alloc=1` 时合法：

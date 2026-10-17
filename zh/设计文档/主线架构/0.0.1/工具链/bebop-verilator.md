@@ -15,12 +15,12 @@ sims.verilator.ToyVerilatorTarget
 sims.verilator.PebbleVerilatorTarget
 ```
 
-生成物默认落在 `arch/build/<config名>/`。
+生成物默认落在 `arch/build/<chip>/<config名>/`。
 
 
 ## clean
 
-`bebop-verilator clean` 删除指定 config 的构建目录，也就是 `arch/build/<config名>`。
+`bebop-verilator clean` 删除指定 config 的构建目录，也就是 `arch/build/<chip>/<config名>`。
 
 用法如下：
 
@@ -35,7 +35,7 @@ bbdev bebop-verilator --clean '--chip toy'
 
 ## verilog
 
-`bebop-verilator verilog` 只做 RTL 导出，不编译仿真器。实际会按 `--chip`（`[sims].verilator`）调 mill，把 Chisel 生成到 `arch/build/<config名>/`。
+`bebop-verilator verilog` 只做 RTL 导出，不编译仿真器。实际会按 `--chip`（`[sims].verilator`）调 mill，把 Chisel 生成到 `arch/build/<chip>/<config名>/`。
 
 用法如下：
 
@@ -56,7 +56,7 @@ bbdev bebop-verilator --verilog '--chip pebble'
 用法如下：
 
 ```bash
-bbdev bebop-verilator --build '--jobs 16'
+bbdev bebop-verilator --build '--chip pebble --jobs 16'
 ```
 
 ==参数1 chip== `--chip` 必填。
@@ -70,23 +70,23 @@ bbdev bebop-verilator --build '--jobs 16'
 
 实际执行步骤如下：
 
-1. 检查 `arch/build/<config名>` 是否存在。
+1. 检查 `arch/build/<chip>/<config名>` 是否存在。
 2. 检查 `bebop/target/<chip>/release/bebop` 和 build marker（`bebop/target/<chip>/.bbdev-verilator-build.json`）。
-3. 在 `bb-tests/output/<chip>/workloads/src` 里按名字找 ELF。
+3. 解析 ELF 路径，或在 `bb-tests/output` 中按唯一文件名查找。
 4. 执行 `bebop run verilator --elf ...`。
-5. 日志写到 `log/<时间戳>-verilator-<binary>`；波形写到该目录下的 `waveform/`。
+5. 日志写到 `log/<时间戳>-<chip>-verilator-<binary>`；波形写到该目录下的 `waveform/`。
 
 用法如下：
 
 ```bash
 bbdev bebop-verilator --sim '--chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal'
 bbdev bebop-verilator --sim '--chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
-bbdev bebop-verilator --sim '--chip pebble --binary pebble_conv_im2col_test-baremetal --no-wave'
+bbdev bebop-verilator --sim '--chip pebble --binary pebble-pebble-ctest-transpose_i8_16x16_test-baremetal --no-wave'
 ```
 
 ==参数1 chip== `--chip` 必填。
 
-==参数2 binary== `--binary` 必填。写 workload 产物名，和 bemu 一样先搜 `bb-tests/output/<chip>/workloads/src`。
+==参数2 binary== `--binary` 必填。写 ELF 路径，或 `bb-tests/output` 下唯一匹配的 workload 产物名。
 
 ==参数3 no-wave== `--no-wave` 可选。关掉波形，batch 或只关心 pass/fail 时可以开，会快一点。
 
@@ -125,26 +125,25 @@ examples/chips/<chip>/regression/batch/verilator/workloads-linux.toml
 ```bash
 bbdev bebop-verilator --clean '--chip pebble'
 bbdev bebop-verilator --verilog '--chip pebble'
-bbdev bebop-verilator --build '--jobs 16'
-bbdev bebop-verilator --batch '--chip pebble --test elf-tests --clean-before'
+bbdev bebop-verilator --build '--chip pebble --jobs 16'
+bbdev bebop-verilator --batch '--chip pebble --test bare-tests --clean-before'
 ```
 
 批量 DiffTest 需要先用 `--diff` 构建对应 chip 的 Verilator+BEMU 可执行文件，再在 batch 中加入 `--diff`：
 
 ```bash
-bbdev bebop-verilator --build '--diff --jobs 16'
-bbdev bebop-verilator --batch '--diff --chip toy --test elf-tests --clean-before'
+bbdev bebop-verilator --verilog '--chip toy --diff'
+bbdev bebop-verilator --build '--chip toy --diff --jobs 16'
+bbdev bebop-verilator --batch '--diff --chip toy --test bare-tests --clean-before'
 ```
 
 ==参数1 chip== `--chip` 必填。决定读哪个 chip 的 regression toml。
 
-==参数2 test== `--test` 必填。
+==参数2 test== `--test` 必填，取 `bare-tests` 或 `linux-tests`。
 
-==参数3 test== `--test` 必填，`elf-tests` 或 `pk-tests`。
+==参数3 clean-before== `--clean-before` 可选。清 `bebop/target/<chip>/test-artifacts` 后再跑。
 
-==参数4 clean-before== `--clean-before` 可选。清 `bebop/test-artifacts` 后再跑。
-
-==参数5 diff== `--diff` 可选。让列表中的每个 workload 同时运行 Verilator RTL 与对应 chip 的 BEMU，并执行 bank DiffTest。每个用例的 `bank_diff.ndjson` 保存在 `examples/chips/<chip>/emu/test-artifacts/difftest-<时间>-<workload>/log/` 下。
+==参数4 diff== `--diff` 可选。让列表中的每个 workload 同时运行 Verilator RTL 与对应 chip 的 BEMU，并执行 bank DiffTest。每个用例的 `bank_diff.ndjson` 保存在 `bebop/target/<chip>/test-artifacts/difftest-<时间>-<workload>/log/` 下。
 
 
 ## 常见踩坑
@@ -152,4 +151,4 @@ bbdev bebop-verilator --batch '--diff --chip toy --test elf-tests --clean-before
 1. bemu 过了、verilator 不过：优先怀疑 RTL、接口时序、bank layout，不要先怀疑测试用例本身。这也是为什么要先跑 bemu。
 2. `binary not found`：多半是没 `workload --build`，或者 `--chip` 和编出来的产物不是一套。
 3. `VSRC_PATH does not exist` / build marker mismatch：Verilog 没生成，或者换了 config 却还在用旧 build。重新 `verilog` + `build`。
-4. 切 chip 前先 `bbdev workload --clean`，再按新 chip build，避免 `bb-tests/output` 里残留同名 ELF，batch 列表对不上。
+4. 切 chip 前先 `bbdev workload --clean '--chip toy'`，再按新 chip build，避免 `bb-tests/output` 里残留同名 ELF，batch 列表对不上。
