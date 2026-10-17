@@ -1,19 +1,78 @@
-# Ball Simulation, Verification, and Evaluation
+# Ball simulation, verification, and evaluation
 
-We have now written a systolic-array Ball. The next question is how to evaluate whether the Ball behaves as expected, and its PPA (performance, area, and power), so we can guide the next round of optimization.
+RTL is only one part of a Ball. We also need evidence that the result is correct, the interface obeys the protocol, and the design meets its performance and PPA goals.
 
-# Ball design flow
+## The evidence chain
 
-Mature chip design usually iterates in small steps on an existing architecture, so most of the system has a golden reference (before a change there were no bugs; after the change a bug appears, making it easy to localize the problem).
+```text
+spec → workload → BEMU → Verilator → UVM → PPA
+```
 
-For a newly implemented Ball, however, the RTL is often uncertain and unlikely to be correct on the first try. Test cases may also be wrong, and some instructions or design choices may only prove incorrect once you actually run tests. So for a Ball built from scratch, you need a layered progression where implementations cross-check against golden references.
+Each stage answers a different question:
 
-# ctest and bebop: getting correct test cases
+| Stage | Question |
+| --- | --- |
+| spec | Are the fields, bank layout, bounds, and completion semantics defined? |
+| workload | Is the input and expected output correct? |
+| BEMU | Does the functional model implement the instruction semantics? |
+| Verilator | Does RTL preserve data, handshakes, and cycle-level behavior? |
+| UVM | Do protocol, random cases, and coverage hold without a full chip workload? |
+| PPA | What are throughput, area, timing, and power? |
 
-In the previous section, to keep things approachable and avoid too many concepts at once, our flow was spec→workload→rtl. Here we extend it to:
+A BEMU failure points to the test or functional model. A BEMU pass followed by an RTL failure points first to RTL, bank addressing, reset, or handshake. An RTL pass followed by a UVM failure usually points to a protocol assumption or testbench constraint.
 
-spec→workload→bebop→rtl
+## BEMU first
 
-bebop is Buckyball's software simulator. It hides hardware timing details and ensures functional correctness.
+```bash
+bbdev config --install
+bbdev workload --build '--chip pebble'
+bbdev bebop-bemu --sim '--chip pebble --binary pebble-pebble-ctest-transpose_i8_16x16_test-baremetal --itrace --mtrace'
+```
 
-The purpose of adding workload→bebop is to verify that test cases are correct: if a workload passes on bebop but fails on RTL, the problem is in the RTL.
+`itrace` records instructions and `mtrace` records bank activity. The resulting `bdb.ndjson` can be summarized with:
+
+```bash
+bbdev bebop-bemu --analysis '--chip pebble --log-dir /abs/path/to/log-dir --itrace --mtrace'
+```
+
+Keep the software expected result independent from the Ball implementation. Otherwise a bug in the model and a bug in the test can cancel each other.
+
+## RTL with Verilator
+
+```bash
+bbdev bebop-verilator --run '--chip pebble --binary pebble-pebble-ctest-transpose_i8_16x16_test-baremetal'
+```
+
+After workload-only changes, use `sim` directly. After RTL or configuration changes, regenerate and rebuild:
+
+```bash
+bbdev bebop-verilator --verilog '--chip pebble'
+bbdev bebop-verilator --build '--chip pebble --jobs 16'
+```
+
+Keep waveforms when debugging; remove `--no-wave` and add trace flags when the software and RTL timelines must be aligned. Common failures are a missing workload, stale Verilator markers, incorrect bank addresses, dropped `cmdResp`, or a ready/valid deadlock.
+
+## UVM and regression
+
+A Ball UVM environment lives under `examples/balls/<ball>/verify`. It can check bank data, addresses, masks, completion IDs, and coverage without bringing up a full Linux image:
+
+```bash
+bbdev uvm --build '--ball=transpose'
+bbdev uvm --run '--ball=transpose' -- '+BID=0'
+```
+
+Once a single case passes, add it to both Chip regression manifests:
+
+```text
+examples/chips/<chip>/regression/batch/bemu/workloads-bare.toml
+examples/chips/<chip>/regression/batch/verilator/workloads-bare.toml
+```
+
+```bash
+bbdev bebop-bemu --batch '--chip pebble --test elf-tests --clean-before'
+bbdev bebop-verilator --batch '--chip pebble --test elf-tests --clean-before'
+```
+
+## PPA
+
+Measure PPA only after correctness is stable. Keep the Chip config, input, compiler parameters, logs, traces, synthesis reports, and power reports together. Compare the same workload before and after a change, and use traces to explain whether a speedup comes from more Ball work, fewer memory stalls, or a changed schedule.

@@ -36,7 +36,7 @@ Chip, model, memory, and storage options add suffixes to the filename, such as `
 ## Parameters
 
 - `--chip`: select a chip configuration. The chip must exist and its configuration must be installed.
-- `--model`: place a ModelTest in the rootfs; requires `--chip`. Build the model workload first with `bbdev workload --build '--chip <chip> --model <model>'`.
+- `--model`: place a ModelTest in the rootfs; requires `--chip`. Build the model workload first with `bbdev model --build '--chip <chip> --model <model>'`.
 - `--interactive`: keep an interactive `/init` and enter a shell instead of running workloads automatically.
 - `--hart-count`: set the number of visible harts. With `--chip`, it must match the generated topology; without a chip, the default is 64.
 - `--guest-memory-mib`: set guest memory from 1 to 16384 MiB; the default is 512 MiB.

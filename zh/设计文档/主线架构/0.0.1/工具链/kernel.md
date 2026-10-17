@@ -36,7 +36,7 @@ bb-tests/output/kernel/fw_payload.hex
 ## 参数
 
 - `--chip`：选择芯片配置。芯片必须存在，并且配置已经安装。
-- `--model`：把指定 ModelTest 放进 rootfs，必须和 `--chip` 一起使用。模型产物需要先用 `bbdev workload --build '--chip <chip> --model <model>'` 构建。
+- `--model`：把指定 ModelTest 放进 rootfs，必须和 `--chip` 一起使用。模型产物需要先用 `bbdev model --build '--chip <chip> --model <model>'` 构建。
 - `--interactive`：保留交互式 `/init`，启动后进入 shell，不自动执行 workload。
 - `--hart-count`：设置 Linux 可见的 hart 数量；指定 chip 时必须与生成配置中的拓扑一致，未指定 chip 时默认值为 64。
 - `--guest-memory-mib`：设置 guest 内存大小，范围是 1 到 16384 MiB，默认 512 MiB。
