@@ -43,8 +43,8 @@ compiler build → workload build → bebop-bemu → bebop-verilator
 bbdev compiler --build '--core toy'
 bbdev workload --clean
 bbdev workload --build '--chip toy'
-bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-baremetal'
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal'
+bbdev bebop-bemu --sim '--chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal'
+bbdev bebop-verilator --run '--jobs 16 --chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal'
 ```
 
-pebble 把上面的 `toy` 换成 `pebble` 即可；mill 类名在 `examples/chips/<chip>/chip.toml` 的 `[chip].verilatorConfig`。
+pebble 把上面的 `toy` 换成 `pebble` 即可；mill 类名在 `examples/chips/<chip>/configs/chip.toml` 的 `[sims].verilator`。

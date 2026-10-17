@@ -21,7 +21,7 @@ bbdev/
 ```bash
 bbdev --help
 bbdev workload --build '--chip toy'
-bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-singlecore-baremetal'
+bbdev bebop-bemu --sim '--chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal'
 ```
 
 一条 bbdev 命令分三层：
@@ -34,7 +34,7 @@ bbdev <command> --<operation> '<operation args>'
 例如：
 
 ```bash
-bbdev bebop-verilator --run '--jobs 16 --chip toy --binary toy_vecunit_matmul_ones-singlecore-baremetal --no-wave'
+bbdev bebop-verilator --run '--jobs 16 --chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal --no-wave'
 ```
 
 这里 `bebop-verilator` 是 command，`run` 是 operation，`--jobs`、`--chip`、`--binary` 和 `--no-wave` 都是 `run` 自己的参数。
