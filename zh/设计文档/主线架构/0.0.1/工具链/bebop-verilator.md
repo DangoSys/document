@@ -11,8 +11,8 @@
 常用 config：
 
 ```text
-sims.verilator.BuckyballToyVerilatorConfig
-sims.verilator.BuckyballPebbleVerilatorConfig
+sims.verilator.ToyVerilatorTarget
+sims.verilator.PebbleVerilatorTarget
 ```
 
 生成物默认落在 `arch/build/<config名>/`。
@@ -28,14 +28,14 @@ sims.verilator.BuckyballPebbleVerilatorConfig
 bbdev bebop-verilator --clean '--chip toy'
 ```
 
-==参数1 chip== `--chip` 必填。mill 类名来自 `chip.toml` 的 `runtime.verilatorConfig`。
+==参数1 chip== `--chip` 必填。mill 类名来自 `chip.toml` 的 `[sims].verilator`。
 
 ==参数2 output-dir== `--output-dir` 可选。指定要清的目录。不写就按 config 推导默认路径。
 
 
 ## verilog
 
-`bebop-verilator verilog` 只做 RTL 导出，不编译仿真器。实际会按 `--chip`（`runtime.verilatorConfig`）调 mill，把 Chisel 生成到 `arch/build/<config名>/`。
+`bebop-verilator verilog` 只做 RTL 导出，不编译仿真器。实际会按 `--chip`（`[sims].verilator`）调 mill，把 Chisel 生成到 `arch/build/<config名>/`。
 
 用法如下：
 
@@ -79,9 +79,9 @@ bbdev bebop-verilator --build '--jobs 16'
 用法如下：
 
 ```bash
-bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-baremetal'
-bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
-bbdev bebop-verilator --sim '--binary pebble_conv_im2col_test-baremetal --no-wave'
+bbdev bebop-verilator --sim '--chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal'
+bbdev bebop-verilator --sim '--chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
+bbdev bebop-verilator --sim '--chip pebble --binary pebble_conv_im2col_test-baremetal --no-wave'
 ```
 
 ==参数1 chip== `--chip` 必填。
@@ -102,8 +102,8 @@ bbdev bebop-verilator --sim '--binary pebble_conv_im2col_test-baremetal --no-wav
 用法如下：
 
 ```bash
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal'
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
+bbdev bebop-verilator --run '--jobs 16 --chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal'
+bbdev bebop-verilator --run '--jobs 16 --chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
 ```
 
 参数和 `clean` / `verilog` / `build` / `sim` 那几项基本同一套：`--chip`、`--binary` 必填，`--jobs`、各类 trace、`--no-wave` 可选。
@@ -114,8 +114,8 @@ bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremeta
 `bebop-verilator batch` 按 chip 的回归列表批量跑 nextest。和 bemu 一样，列表在：
 
 ```text
-examples/chips/<chip>/regression/batch/verilator/workloads-elf.toml
-examples/chips/<chip>/regression/batch/verilator/workloads-pk.toml
+examples/chips/<chip>/regression/batch/verilator/workloads-bare.toml
+examples/chips/<chip>/regression/batch/verilator/workloads-linux.toml
 ```
 
 注意：batch 不会帮你重新 `build`。跑之前要保证该 `--chip` 已经 `verilog` + `build` 完成，否则会因 `VSRC_PATH` 不存在或仿真器不对而失败。

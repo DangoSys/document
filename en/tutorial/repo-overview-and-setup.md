@@ -1,36 +1,36 @@
-### What is Buckyball
+# Repository overview and setup
 
-Buckyball is a general-purpose open-source architecture framework for DSA. DSA, or Domain-Specific Architecture, refers to architectures specifically optimized for a particular class of computational tasks—for example, dedicated accelerators designed for machine learning, graph computing, signal processing, or scientific computing, such as systolic array implementations for accelerating Transformers. Buckyball's goal is not to define one fixed accelerator, but to provide unified architecture abstractions, interface specifications, and system support so that different domain-specific architectures can be seamlessly integrated into the same system and be efficiently scheduled, verified, and executed.
+## What is Buckyball?
 
-### Why do we need such a framework?
+Buckyball is a software and hardware framework for domain-specific architectures (DSAs). It keeps instruction interfaces, scheduling, bank memory, compilation, simulation, verification, and runtime support in the shared mainline so a project can focus on its Core, Balls, and Chip.
 
-In many cases, the core compute logic of a DSA does not occupy much area on a chip or FPGA, but bringing it to production requires handling instruction interfacing, task scheduling, memory access, synchronization mechanisms, software stacks, test verification, performance analysis, efficient simulation, and many other system-level concerns. These costs recur across projects and significantly raise the barrier from DSA design to usability. Buckyball aims to consolidate these common system capabilities into a reusable, extensible open-source mainline, so researchers and developers can focus more on their own DSA designs while making it easier to publish, integrate into the system, and collaborate with other accelerators.
+The repository is organized by responsibility:
 
-We hope Buckyball helps you build your DSA projects faster and at higher quality, sharing infrastructure along the way.
-
-### Environment setup
-
-Either way, we need to get buckyball running first.
-
-> [!tip] Environment requirements
-> Any Linux system, plus reliable access to GitHub (a stable network connection matters!)
-
-Let's install everything in one go.
-
-1. Install Nix.
-
-This tool manages our environment and ensures that installs from this repository stay consistent whether you set up today or ten years from now. This step requires sudo and is the only one that does.
-
-```bash
-sudo curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+```text
+arch/       shared hardware framework: Frontend, MemDomain, BallDomain, banks, interconnect
+bbdev/      unified developer entry point: CLI, HTTP API, MCP
+bebop/      BEMU, Verilator nodes, and traces
+stack/      compiler, runtime, platforms, models, serving, simulations
+examples/   Ball, Core, and Chip instances and configuration
+bb-tests/   CTest, MLIRTest, kernels, workloads, and regression output
+verify/     shared UVM environments and IP/Ball verification
 ```
 
-When you see this, Nix installation is complete:
+A Ball is connected to a Core's BallDomain. A Chip selects a Core through its Tile configuration, then runs it with BEMU, Verilator, or an FPGA flow. Chip configuration starts at `examples/chips/<chip>/configs/chip.toml`; files under `configs/generated/` are generated outputs.
 
-![image.png|697](image1-1.png)
+## Environment setup
 
+Buckyball uses a Nix Flake for the compiler, RISC-V toolchains, Verilator, CMake, Ninja, Rust, and simulation dependencies. Linux and network access to GitHub are recommended.
 
-2. Install the repository
+### 1. Install Nix
+
+Install Nix using the official installer or Determinate Systems. Confirm that `nix --version` works and that flakes are enabled.
+
+```bash
+curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+```
+
+### 2. Initialize the repository
 
 ```bash
 git clone https://github.com/DangoSys/buckyball.git
@@ -38,18 +38,30 @@ cd buckyball
 ./scripts/nix/build-all.sh
 ```
 
-When you see this, the repository install is complete:
-
-![image.png](image1-2.png)
-
-3. Verify the install by running:
+The setup script enters the Nix environment, initializes submodules, installs `bbdev`, and builds the compiler, RTL prerequisites, workloads, Bebop, and verification environment. Later sessions only need:
 
 ```bash
-bbdev bebop-verilator --run '--binary toy_vecunit_matmul_ones-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
+nix develop
 ```
 
-If it completes with output like the following, the repository is set up (the first run may take a while because it performs additional setup):
+### 3. Build and run a workload
 
-![image.png](image1-3.png)
+```bash
+bbdev config --install
+bbdev workload --build '--chip toy'
+bbdev bebop-bemu --sim '--chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal'
+```
 
-This run invokes the vector acceleration unit for matrix multiply—your Buckyball journey starts here.
+BEMU checks instruction and functional-model behavior. To run the same workload against generated RTL:
+
+```bash
+bbdev bebop-verilator --run '--chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal --no-wave'
+```
+
+Remove `--no-wave` and add trace flags such as `--itrace`, `--mtrace`, `--pmctrace`, `--ctrace`, or `--banktrace` when debugging. Logs are written under `log/`; waveforms are under the corresponding `waveform/` directory.
+
+## Next steps
+
+- Read the [design overview](../design/overview.md) and [main architecture overview](../design/main-arch/0.0.1/overview/overview.md).
+- Read [what is a Ball and how to write one](what-is-ball-and-how-to-write-one.md) before adding a Ball.
+- Read the [toolchain overview](../design/main-arch/0.0.1/toolchain/overview.md) for compiler and regression workflows.

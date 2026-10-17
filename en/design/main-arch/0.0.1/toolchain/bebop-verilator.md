@@ -8,11 +8,11 @@ Recommended order:
 2. Then use `bebop-verilator` on the same workload for RTL cross-check.
 3. After RTL or config changes, redo `verilog` + `build`; when only the workload changes, an existing simulator can go straight to `sim`.
 
-The mill class is not a CLI flag; it lives in `examples/chips/<chip>/chip.toml` as `[chip].verilatorConfig`, e.g.:
+The mill class is not a CLI flag; it lives in `examples/chips/<chip>/configs/chip.toml` as `[sims].verilator`, e.g.:
 
 ```text
-toy    → sims.verilator.BuckyballToyVerilatorConfig
-pebble → sims.verilator.BuckyballPebbleVerilatorConfig
+toy    → sims.verilator.ToyVerilatorTarget
+pebble → sims.verilator.PebbleVerilatorTarget
 ```
 
 Artifacts default to `arch/build/<config-name>/`.
@@ -28,14 +28,14 @@ Usage:
 bbdev bebop-verilator --clean '--chip toy'
 ```
 
-==Parameter 1 chip== `--chip` is required. Mill class comes from `chip.toml` `[chip].verilatorConfig`.
+==Parameter 1 chip== `--chip` is required. Mill class comes from `chip.toml` `[sims].verilator`.
 
 ==Parameter 2 output-dir== `--output-dir` is optional. Specifies the directory to clean. Defaults to the path derived from config.
 
 
 ## verilog
 
-`bebop-verilator verilog` only exports RTL; it does not compile the simulator. It invokes mill from `--chip` (`[chip].verilatorConfig`) and generates Chisel output to `arch/build/<config-name>/`.
+`bebop-verilator verilog` only exports RTL; it does not compile the simulator. It invokes mill from `--chip` (`[sims].verilator`) and generates Chisel output to `arch/build/<config-name>/`.
 
 Usage:
 
@@ -79,8 +79,8 @@ Execution steps:
 Usage:
 
 ```bash
-bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-baremetal'
-bbdev bebop-verilator --sim '--binary toy_vecunit_matmul_ones-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
+bbdev bebop-verilator --sim '--binary toy-toy-ctest-relu_i32_16x16_test-baremetal'
+bbdev bebop-verilator --sim '--binary toy-toy-ctest-relu_i32_16x16_test-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
 bbdev bebop-verilator --sim '--binary pebble_conv_im2col_test-baremetal --no-wave'
 ```
 
@@ -102,8 +102,8 @@ Direct `bebop run verilator` requires `--log-dir`; waveforms go to `log_dir/wave
 Usage:
 
 ```bash
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal'
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
+bbdev bebop-verilator --run '--jobs 16 --binary toy-toy-ctest-relu_i32_16x16_test-baremetal'
+bbdev bebop-verilator --run '--jobs 16 --binary toy-toy-ctest-relu_i32_16x16_test-baremetal --itrace --mtrace --pmctrace --ctrace --banktrace'
 ```
 
 Parameters align with `clean` / `verilog` / `build` / `sim`: `--chip`, `--binary` required; `--jobs`, trace flags, `--no-wave` optional.
@@ -114,8 +114,8 @@ Parameters align with `clean` / `verilog` / `build` / `sim`: `--chip`, `--binary
 `bebop-verilator batch` runs nextest in bulk according to the chip's regression list. Same as bemu, lists are at:
 
 ```text
-examples/chips/<chip>/regression/batch/verilator/workloads-elf.toml
-examples/chips/<chip>/regression/batch/verilator/workloads-pk.toml
+examples/chips/<chip>/regression/batch/verilator/workloads-bare.toml
+examples/chips/<chip>/regression/batch/verilator/workloads-linux.toml
 ```
 
 Note: batch does not rebuild for you. Ensure `--chip` has completed `verilog` + `build` before running, or it will fail due to missing `VSRC_PATH` or a mismatched simulator.

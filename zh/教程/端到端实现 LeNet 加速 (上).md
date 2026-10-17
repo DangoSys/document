@@ -1,20 +1,29 @@
-# 端到端实现 LeNet 加速 (上篇: workload分析 与 编译器)
+# 端到端实现 LeNet 加速（上）：模型分析与编译器
 
+前面的 Ball 教程从 `spec → workload → BEMU → RTL` 讲了一个算子如何落地。模型加速再往前走一步：先看模型在做什么，再决定哪些算子交给 Ball，最后让编译器生成能在目标 Chip 上运行的指令。
 
-上一节我们的设计流程从spec→workload→rtl拓展为spec→workload→bebop→rtl。
-这一节让我们来继续延长这个设计的链条。
+本篇使用仓库里的 LeNet。它的模型定义在 `stack/models/models/lenet/model.py`，包含两层卷积、两层池化和三层全连接；针对不同 Chip 的 lowering 和运行时位于 `stack/models/archs/buckyball/<chip>/lenet/`。
 
-model→profiling→spec→compiler→test case→bebop→rtl
+## 1. 先做模型分析
 
-这一篇只走前半段：从 model 到 compiler。后半段（test case、bebop、rtl）放到中篇。
+不要从 RTL 开始。先列出模型的算子、张量形状和数据类型，再看它们是否适合现有 Ball：
 
-## 为什么是 LeNet
+| 模型算子 | 需要的能力 | 需要确认的约束 |
+| --- | --- | --- |
+| Conv2d | im2col、矩阵乘、累加 | 输入布局、kernel、stride、padding |
+| MaxPool2d | 窗口归约 | 窗口大小和边界处理 |
+| ReLU | 点运算 | 数据类型和 bank 原地写回 |
+| Linear | 矩阵乘 | M/K/N 是否能切成硬件 tile |
+
+分析的结果不是一份性能报表，而是一份实现边界：哪些操作可以直接降到 Buckyball，哪些需要 RVV 或软件 kernel，哪些需要新增 Ball。LeNet 的输入和权重还要考虑 bank 宽度、对齐和量化方式，否则编译器即使生成了指令，运行时也无法正确搬运数据。
+
+### 为什么是 LeNet
 
 要加速一个模型，总得先挑一个。LeNet 是识别手写数字的小网络，参数不到 5 万个，一张 28×28 的灰度图进去，出来 10 个数字的得分。它小，但该有的东西都有：卷积、池化、全连接。拿它走通一遍，换成更大的模型时流程是一样的。
 
-## model：看看它长什么样
+### model：看看它长什么样
 
-下面是 `buddy-mlir/examples/BuddyLeNet/model.py` 里的定义：
+下面是 `stack/models/models/lenet/model.py` 里的定义：
 
 ```python
 class LeNet(nn.Module):
@@ -49,7 +58,7 @@ class LeNet(nn.Module):
 | 拉平 | 256 |
 | fc1 → fc2 → fc3 | 120 → 84 → 10 |
 
-## profiling：时间都花在哪
+### profiling：时间都花在哪
 
 profiling 要测量各层的实际耗时，再决定加速什么。这里先数一遍乘加次数（MAC，一次乘法加一次加法），看看计算量怎么分布，作为选择加速对象的参考：
 
@@ -68,7 +77,7 @@ profiling 要测量各层的实际耗时，再决定加速什么。这里先数�
 
 从 MAC 数量看，可以先把卷积列为加速候选。实际时间花在哪，还受访存、数据布局和算子实现影响，需要在目标平台上测量；pool 和 relu 的耗时也要一起看。
 
-## spec：决定要加速什么
+### spec：决定要加速什么
 
 spec 就是把“要做什么”先写清楚，不用一上来就写得很细。
 
@@ -76,9 +85,33 @@ spec 就是把“要做什么”先写清楚，不用一上来就写得很细。
 
 Ball 具体怎么写，见 [[什么是Ball & 如何写一个Ball]]。
 
-## compiler：模型怎么变成指令
+## 2. 准备模型和编译器
 
-模型是用 PyTorch 写的，硬件认的是一条条自定义指令，中间差着很远。编译器的活就是一层一层往下翻译。Buckyball 的编译器把这个过程拆成了几层：
+先安装 Chip 配置并构建对应的 compiler：
+
+```bash
+bbdev config --install
+bbdev compiler --build '--chip pebble'
+```
+
+模型构建由 `bbdev model` 负责。它会准备 buddy-mlir 工具，训练或读取 checkpoint，再执行 importer：
+
+```bash
+bbdev model --build '--chip pebble --model lenet'
+```
+
+模型源代码在 `stack/models/models/lenet/`：
+
+- `prepare.py` 训练或准备 LeNet checkpoint；
+- `importer.py` 把模型导入 MLIR，并生成权重和输入资源；
+- `configs/model.toml` 保存模型参数；
+- `pack.py` 把可执行文件和模型资源打成运行时包。
+
+构建过程的中间文件位于 `stack/models/build/pebble/lenet/`。其中 `forward.mlir` 描述前向计算，`subgraph0.mlir` 是交给加速器 lowering 的子图，`lenet.payload/` 保存权重和参数。先查看这些文件，确认导入阶段没有把算子合并成无法解释的黑盒。
+
+## 3. 从 Linalg 到 Buckyball
+
+LeNet 的 `CMakeLists.txt` 把编译链分成几个阶段：
 
 ```text
 PyTorch 模型
@@ -96,7 +129,16 @@ Bank SSA        把数据在片上存储（bank）里怎么流动写出来
 LLVM IR         带上 RISC-V 自定义指令，后面交给 LLVM
 ```
 
-为什么要分这么多层？每一层只解决一类问题：形状的事在 Tile 层处理完，不留给指令层；存储怎么分配在 Bank 这几层处理，不在最上面去猜。出了问题也好定位，是哪一层的事就去看哪一层。
+对应的主要 Pass 是：
+
+1. `convert-linalg-to-tile`：把卷积和矩阵乘变成硬件无关的 Tile 操作；
+2. `convert-tile-to-buckyball`：处理 padding、tiling 和 partial accumulation；
+3. `lower-buckyball-to-bank-ssa`：把一次算子展开成 bank 分配、搬入、计算、搬出和释放；
+4. `assign-physical-banks`：把虚拟 bank 绑定到具体 bank，并插入 `mset`；
+5. `lower-bank-ssa-to-intrinsics`：生成 Buckyball intrinsic wrapper；
+6. `lower-buckyball`：导出 LLVM dialect 和 RISC-V intrinsic。
+
+每一层只解决一类问题。shape 和 padding 在 Tile 层完成，bank 生命周期在 Bank SSA 层完成，最终编码留给 LLVM 后端。这样修改 bank 数量时，不需要重新解释模型算子；修改模型 shape 时，也不会把物理 bank ID 写进高层 MLIR。
 
 ### 拿 LeNet 举个例子：形状要补齐
 
@@ -113,17 +155,40 @@ LeNet 的全连接层按这个规则处理时，行数、列数会变成这样�
 
 补上去的部分填 0，计算后取回原始形状范围内的结果。这样会增加存储和计算开销：例如 fc3 的输出按 16 列计算，其中真正有用的只有 10 列。卷积的通道数怎么处理，要看对应的卷积 lowering，不能直接套用这个矩阵乘规则。
 
-### 自己看一层的结果
+## 4. 用一个算子检查 lowering
 
-编译器里每一层都是一个 pass，可以单独拿出来跑，看输入输出长什么样。比如看 Linalg 到 Tile 这一步：
+不必一开始就编完整个 LeNet。可以先构造一个 `linalg.matmul` 或 `tile.tile_matmul`，观察每一步的输出：
 
 ```bash
-buddy-opt input.mlir -convert-linalg-to-tile
+buddy-opt input.mlir -convert-linalg-to-tile -o tile.mlir
+buddy-opt tile.mlir -convert-tile-to-buckyball -o buckyball.mlir
+buddy-opt buckyball.mlir -lower-buckyball-to-bank-ssa -o bank.mlir
+buddy-opt bank.mlir -assign-physical-banks -o physical.mlir
 ```
 
 一个小提醒：这一步要求输入里的数据已经是内存形式（memref），如果直接喂纯数值形式（tensor）的 IR，会报 `expected static memref operands`。先做一遍 bufferize 再喂进去就行。
 
 每一层的细节在设计文档的“编译器”部分，有每个 pass 单独的一页。第一次看不用全读，知道有哪几层、各管什么就够了。
+
+检查重点是：
+
+- shape 是否被补齐到目标 tile；
+- `bank_alloc` 和 `bank_release` 是否成对；
+- 同一时刻的 bank 数是否超过 Core 配置；
+- partial accumulation 是否在 Tile 层已经处理；
+- 最终 `rs1`、`rs2` 字段是否满足 Ball 的 ISA 约束。
+
+如果某一步失败，先看该层的输入和错误信息，不要直接修改下一层的指令编码。
+
+## 5. 生成 workload
+
+模型 lowering 通过后，构建目标 Chip 的 ModelTest：
+
+```bash
+bbdev workload --build '--chip pebble --model lenet'
+```
+
+普通 CTest 和模型 workload 共用 `bb-tests/output/pebble/workloads/src` 作为产物目录，但模型还会在 `stack/models/build/pebble/lenet/artifact/` 保留资源和运行包。后续仿真时必须使用同一个 Chip 生成的产物，不能把 toy 的模型二进制拿到 pebble 上运行。
 
 ## 小结
 
@@ -133,4 +198,6 @@ buddy-opt input.mlir -convert-linalg-to-tile
 2. 数计算量：卷积占约 85.2% 的 MAC，先作为加速候选，实际耗时需要测量
 3. 了解编译器：从 Linalg 一层层降到指令，形状按目标 Ball 和具体 lowering 的要求补齐
 
-下一篇从 test case 开始，真正动手搭一个 NPU，并用差分测试去验证它。
+下一篇会把这个 workload 放进 BEMU、Verilator，并用差分结果检查编译器生成的 bank 操作是否和 RTL 一致。
+
+继续阅读：[第二篇：构建 NPU 与差分测试](端到端实现%20LeNet%20加速%20%28中%29.md) · [第三篇：FPGA 仿真与评估](端到端实现%20LeNet%20加速%20%28下%29.md)

@@ -43,8 +43,8 @@ A minimal example (toy):
 bbdev compiler --build '--core toy'
 bbdev workload --clean
 bbdev workload --build '--chip toy'
-bbdev bebop-bemu --sim '--chip toy --binary toy_vecunit_matmul_ones-baremetal'
-bbdev bebop-verilator --run '--jobs 16 --binary toy_vecunit_matmul_ones-baremetal'
+bbdev bebop-bemu --sim '--chip toy --binary toy-toy-ctest-relu_i32_16x16_test-baremetal'
+bbdev bebop-verilator --run '--jobs 16 --binary toy-toy-ctest-relu_i32_16x16_test-baremetal'
 ```
 
-For pebble, replace `toy` with `pebble`; the mill class is in `examples/chips/<chip>/chip.toml` as `[chip].verilatorConfig`.
+For pebble, replace `toy` with `pebble`; the mill class is in `examples/chips/<chip>/configs/chip.toml` as `[sims].verilator`.

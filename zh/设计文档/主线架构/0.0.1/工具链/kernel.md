@@ -1,111 +1,45 @@
 # kernel
 
-`kernel` 负责构建 Buckyball 使用的 Linux 启动镜像。源码在 `bb-tests/workloads/lib/kernel`，最终产物在 `bb-tests/output/kernel`。
+`kernel` 构建 Buckyball 使用的 RISC-V 启动镜像。源码在 `bb-tests/workloads/lib/kernel`，产物写入 `bb-tests/output/kernel`；指定 `--chip` 时写入 `bb-tests/output/kernel/<chip>`。
 
-## 什么是 Kernel
+## 镜像内容
 
-我们将包含 Linux 系统及可执行文件和数据的所有东西打包成的一个镜像称为 kernel。
-
-Linux 启动有很多种方式，在 Buckyball 的仿真和上板流程里，我们约定只使用一种：Kernel提前烧录在DDR中，上电后 BootROM 跳到 DDR 里的执行Kernel的内容。
-
-Buckyball 的 kernel 镜像主要包含三部分：第一部分是 OpenSBI，负责机器态初始化和 SBI 服务；第二部分是 Linux Image，是真正运行用户程序的操作系统；第三部分是打进 Linux 里的 rootfs，里面有 BusyBox、启动脚本，以及 workload 或指定模型的运行文件。当前地址空间按下面这样排布：
+镜像由 OpenSBI、Linux Image 和 rootfs 组成。OpenSBI 负责机器态初始化，Linux 运行用户程序，rootfs 包含 BusyBox、`/init` 和 workload 或模型文件。仿真和上板流程使用同一套 `fw_payload` 产物。
 
 ```text
 0x00010000  BootROM
-            CPU reset 后先从这里执行
-
-0x80000000  fw_payload.bin
-            |
-            +-- 0x80000000  OpenSBI
-            |               运行在 M-mode，负责初始化中断、定时器、console 和 SBI
-            |
-            +-- 0x80200000  Linux Image
-                            运行在 S-mode，里面带 initramfs/rootfs
-                            rootfs 里放 BusyBox、/init、workload 或模型文件
+0x80000000  OpenSBI + Linux Image + initramfs/rootfs
 ```
-
-![kernel](kernel.svg)
-
-启动流程：
-1. 系统上电，烧录 Kernel 进入 DDR。
-2. DDR烧录完成，CPU上电 reset。
-3. CPU 进入 BootROM，BootROM 做最小的多核同步，然后带着 `hartid` 和 DTB 地址跳到 `0x80000000`。
-4. 开始执行 OpenSBI，OpenSBI 初始化 CLINT、PLIC、SCU console 等平台资源，准备好给 Linux 使用的 SBI 接口。
-5. 切到 S-mode 并跳到 `0x80200000`。Linux 接管系统，解析 DTB，挂载内置 rootfs，进入 `/init`
-6. Linux启动完成，之后可以在 Linux 环境中运行 `/root` 下的 workload 或模型程序。
-
 
 ## build
 
-`kernel build` 用于构建 Linux 固件。默认产物是：
+```bash
+bbdev kernel --build
+bbdev kernel --build '--chip toy'
+bbdev kernel --build '--chip pebble --model lenet'
+bbdev kernel --build '--chip pebble --model lenet --model-storage ddr --guest-memory-mib 4096'
+bbdev kernel --build '--chip toy --interactive'
+```
+
+构建流程由 `bbdev/api/steps/kernel/01_build_event.step.py` 驱动：先用 CMake 配置 `bb-tests/workloads/lib/kernel`，再构建 `kernel-build`，最后把二进制转换成 Verilog hex。指定 chip 且不指定 model 时，workload 列表来自 `examples/chips/<chip>/kernel/workloads.toml`。
+
+默认产物为：
 
 ```text
 bb-tests/output/kernel/fw_payload.bin
+bb-tests/output/kernel/fw_payload.elf
 bb-tests/output/kernel/fw_payload.hex
 ```
 
-其中 `.bin` 是 OpenSBI fw_payload，`.hex` 是给 FPGA 的 DDR 后门加载用的 hex 文件。
+指定 chip、model、内存大小或存储方式后，文件名会带上相应后缀，例如 `fw_payload-pebble-linux.bin`、`fw_payload-lenet.bin` 或 `fw_payload-lenet-mem4096M-ddr.bin`。
 
-> [!tip] 注意
-> 真实系统中提前向DDR烧录数据并不现实，具体芯片的boot流程请查看对应文档。
+## 参数
 
-`kernel build` 的实际执行步骤如下：
+- `--chip`：选择芯片配置。芯片必须存在，并且配置已经安装。
+- `--model`：把指定 ModelTest 放进 rootfs，必须和 `--chip` 一起使用。模型产物需要先用 `bbdev model --build '--chip <chip> --model <model>'` 构建。
+- `--interactive`：保留交互式 `/init`，启动后进入 shell，不自动执行 workload。
+- `--hart-count`：设置 Linux 可见的 hart 数量；指定 chip 时必须与生成配置中的拓扑一致，未指定 chip 时默认值为 64。
+- `--guest-memory-mib`：设置 guest 内存大小，范围是 1 到 16384 MiB，默认 512 MiB。
+- `--model-storage`：模型存储位置，取 `initramfs` 或 `ddr`。使用 `ddr` 时必须指定 model，且 guest 内存小于 16384 MiB；构建结果还会包含 `.load.json` 清单。
 
-1. 在 `bb-tests/workloads/lib/kernel` 的 `build` 目录开始执行命令。
-2. 构建 BusyBox，并把它放进 initramfs。
-3. 创建 rootfs。默认用共享 overlay（交互 shell）；仅指定 `--chip` 时再叠一层该 chip 的 OS overlay（`examples/chips/<chip>/kernel/overlay`），并把该 chip 的 bemu `workloads-pk.toml` 里的 `*-linux` 装进 `/root`。指定 `--model` 时必须同时给 `--chip`，只装 `archs/buckyball/<chip>/<Model>` 下对应 ModelTest 运行文件。
-4. 构建带 initramfs 的 Linux Image。
-5. 用 OpenSBI 把 Linux Image 打包成 `fw_payload.bin`。
-6. 把 `fw_payload.bin` 转成 `fw_payload.hex`。
-
-用法如下：
-
-```bash
-bbdev kernel --build
-bbdev kernel --build '--chip pebble'
-bbdev kernel --build '--chip pebble --model lenet'
-bbdev kernel --build '--chip pebble --model lenet --interactive'
-bbdev kernel --build '--visible-hart-count 64 --total-hart-count 256'
-```
-
-==参数1 chip== `--chip` 在两种模式下都有意义：
-
-- **仅 `--chip`（pk 回归）**：每个 chip 在 `examples/chips/<chip>/kernel/` 维护自己的 OS（至少 `overlay/init`）。指定后：
-  - overlay：共享 `bb-tests/workloads/lib/kernel/overlay` + chip overlay 覆盖
-  - `/root`：只安装该 chip `regression/batch/bemu/workloads-pk.toml` 中的 `*-linux`（缺文件直接失败）
-  - 产物：`fw_payload-<chip>-pk.bin` / `.hex`
-  - chip 的 `/init` 负责串跑 `/root/*-linux`；全过 `poweroff -f`（OpenSBI → `scu_sim_exit=0`），失败 `reboot -f`（`sim_exit=1`）
-  - cmdline 带 `panic=1`：kernel panic 会冷重启，同样走 OpenSBI → `sim_exit=1`
-- **与 `--model` 合用**：只用来定位 ModelTest 产物目录 `archs/buckyball/<chip>/...`，不启用 pk overlay / workloads-pk 安装。
-
-==参数2 model== `--model` 用于指定要打包进 rootfs 的端到端模型，**必须同时指定 `--chip`**。指定后，kernel 只会安装这个模型对应的 ModelTest 运行文件，不会把所有 workload 都放进 `/root`。当前支持的 model 参数包括：`bert`, `deepseekr1`, `gemma4`, `lenet`,`llama2`,`mobilenet`,`qwen3`,`resnet`,`stable-diffusion`,`yolo`。
-
-指定 `--model` 前，需要先构建对应 ModelTest workload。
-
-```bash
-bbdev workload --build '--chip pebble --model lenet'
-```
-
-否则 kernel 构建时找不到模型运行文件，会直接报错。指定模型也会影响产物文件名，例如 `--chip pebble --model lenet` 会生成 `fw_payload-lenet.bin` 和 `fw_payload-lenet.hex`。
-
-`--model` 的 `/init` 会在 `/root` 下自动执行对应 `buddy-buckyball-*-run`：成功 `poweroff -f`，失败 `reboot -f`（与 chip pk 回归一致）。
-
-==参数3 interactive== `--interactive` 保留共享 overlay 的交互 shell（`/init` → `/bin/sh -i`），不自动跑 chip/model 用例。仍会把对应 `/root` 文件打进 rootfs，便于手动执行。可与 `--chip` 或 `--chip --model` 合用。
-
-- [ ] TODO: 将模型构建加入自动workflow
-
-
-==参数4 total-hart-count== `--total-hart-count` 用于指定硬件里一共有多少个 hart。默认值等于 `visible-hart-count`。
-
-这个参数主要用于多核或异构核配置。硬件里可能有很多 hart，但不一定都要交给 Linux 管理。`total-hart-count` 表示硬件总数，OpenSBI 会根据这个数量处理平台初始化和 DTB 里的 hart 信息。
-
-==参数5 visible-hart-count== `--visible-hart-count` 用于指定 Linux 能看到多少个 hart，默认是 64。
-
-这个参数会传给 OpenSBI 和 Linux 启动配置。Linux 启动后，只会调度这些 visible hart。其它 hart 即使硬件存在，也会在启动时从 DTB 里隐藏掉，不交给 Linux 使用。
-
-如果 `total-hart-count` 不等于1，产物文件名会带上 `t` 后缀。如果 `visible-hart-count` 不等于1，产物文件名会带上 `v` 后缀。例如 `--visible-hart-count 64 --total-hart-count 256` 会生成：
-
-```text
-fw_payload-v64-t256.bin
-fw_payload-v64-t256.hex
-```
+`--model` 和 `--chip` 的派生产物都由工具生成，不要手动复制到 `bb-tests/output`。如果配置、workload 或模型发生变化，重新运行对应的 build 命令。
