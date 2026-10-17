@@ -72,6 +72,7 @@ examples/balls/relu/
 ├── configs/default.toml    # ball 自己的参数（relu 没有参数）
 ├── emu/src/                # bebop 里的模拟模型（Rust）
 │   ├── lib.rs
+│   ├── dispatch.rs         # 指令执行和延迟的分发入口
 │   └── 50_relu.rs
 └── workloads/
     ├── isa/relu.h          # C 里发指令用的宏
@@ -96,8 +97,7 @@ examples/balls/relu/
 ballNum = 5
 
 ballIdMappings = [
-  { ballId = 4, ballName = "XxxBall", ballClass = "examples.balls.xxx.XxxBall",
-    config = "../../../../balls/xxx/configs/default.toml", inBW = 1, outBW = 1 },
+  { ballId = 4, ballName = "XxxBall", ballClass = "examples.balls.xxx.XxxBall", config = "../../../../balls/xxx/configs/default.toml", inBW = 1, outBW = 1 },
 ]
 
 ballISA = [
@@ -173,7 +173,6 @@ bb_mem_alloc(bank, 1, 1);                   // 分一块 bank
 bb_mvin((uintptr_t)packed_input, bank, ITER, 1);   // 内存 → bank
 bb_relu(bank, 0, ITER, ITER);               // 发指令
 bb_mvout((uintptr_t)packed_output, bank, ITER, 1); // bank → 内存
-bb_fence();                                 // 等硬件做完
 bb_mem_release(bank);                       // 还掉 bank
 unpack(packed_output, output);
 
@@ -214,20 +213,52 @@ add_buckyball_ctests(
 
 ### 第三步：Golden Reference Model
 
-测试用例有了，但这时候 RTL 还没写。怎么知道这个测试本身写得对不对？先在 bebop（Buckyball 的软件模拟器）里跑一遍。bebop 不管时序，只管功能，所以它能验证“指令的语义”和“测试用例”有没有问题。
+测试用例有了，但这时候 RTL 还没写。怎么知道这个测试本身写得对不对？先在 bebop（Buckyball 的软件模拟器） 的 BEMU 软件模拟器里跑一遍。BEMU 按指令语义做功能验证，可以先检查“指令的语义”和“测试用例”有没有问题。
 
-每个 ball 要给 bebop 提供一个模拟模型，放在 `emu/src/` 下。`lib.rs` 负责按 ball 类名和 `funct7` 分发：
+每个 ball 要给 BEMU 提供一个模拟模型，放在 `emu/src/` 下。`lib.rs` 声明模块，并导出执行和延迟两个分发入口：
 
 ```rust
+pub(crate) use crate::inst::{decode, instruction};
+
+#[path = "50_relu.rs"]
+mod f50_relu;
+
+mod dispatch;
+
+pub use dispatch::{cycles_after_issue, execute_known};
+```
+
+`dispatch.rs` 按 ball 类名和 `funct7` 分发：`execute_known` 调用 `exec` 执行指令，`cycles_after_issue` 调用 `latency` 返回延迟。配置生成的 BEMU 代码会调用这两个入口，新 ball 都要实现并导出：
+
+```rust
+use crate::inst::instruction::{BallInstruction, ExecContext};
+
+use super::f50_relu;
+
 const BALL_CLASS: &str = "examples.balls.relu.ReluBall";
 
-pub fn execute_known(ball_class: &str, funct: u32, xs1: u64, xs2: u64,
-                     ctx: &mut ExecContext) -> Option<u64> {
+pub fn execute_known(
+    ball_class: &str,
+    funct: u32,
+    xs1: u64,
+    xs2: u64,
+    ctx: &mut ExecContext,
+) -> Option<u64> {
     if ball_class != BALL_CLASS {
         return None;
     }
     match crate::config::ball_domain::mnemonic_for_funct(funct).as_deref() {
         Some("RELU") => Some(f50_relu::Relu::exec(xs1, xs2, ctx)),
+        Some(_) | None => None,
+    }
+}
+
+pub fn cycles_after_issue(ball_class: &str, funct: u32, xs1: u64, xs2: u64) -> Option<u64> {
+    if ball_class != BALL_CLASS {
+        return None;
+    }
+    match crate::config::ball_domain::mnemonic_for_funct(funct).as_deref() {
+        Some("RELU") => Some(f50_relu::Relu::latency(xs1, xs2)),
         Some(_) | None => None,
     }
 }
@@ -255,7 +286,7 @@ for segment in (0..lines).step_by(stride) {
 }
 ```
 
-同一个文件里还有一个 `latency`，返回这条指令大概要多少个周期（relu 里是 `lines / stride * iter * 4`），模拟器靠它估计时间。
+`50_relu.rs` 里还要实现 `latency`，返回这条指令的估计周期数。relu 的公式是 `lines / stride * iter * 4`，由 `cycles_after_issue` 分发给模拟器，用来估计时间。
 
 这样一来，同一个 `.c` 测试先在 bebop 里跑：在 bebop 里过、RTL 里不过，问题在 RTL；在 bebop 里就过不了，先看测试和指令定义。下一篇会讲怎么跑。
 
